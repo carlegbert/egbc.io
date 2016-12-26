@@ -27,6 +27,7 @@
     "webpack-dev-server": "^1.16.2"
   },
   "dependencies": {
-    "eslint": "^3.12.2"
+    "eslint": "^3.12.2",
+    "jquery": "^3.1.1"
   }
 }

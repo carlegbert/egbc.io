@@ -1,0 +1,65 @@
+/* general styling */
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: 'Inconsolata', monospace;
+  font-size: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style-type: none;
+  margin-left: 0px;
+}
+
+a {
+  color: #53f4ef;
+}
+
+a:hover {
+  color: #99faff;
+}
+
+.cursor {
+  color: #000;
+  background-color: #fff;
+}
+
+.blink {
+  background-color: #fff;
+  color: inherit;
+}
+
+.user {
+  color: #56f442;
+}
+
+.path, .dir {
+  color: #3c79b2;
+}
+
+.ls:hover {
+  cursor: pointer;
+  opacity: .85;
+}
+
+.txt {
+  max-width: 75%;
+}
+
+.underline {
+  text-decoration: underline;
+  text-align: center;
+}
+
+/* styling for non-terminal part of site */
+#notshell {
+  display: none;
+  width: 65%;
+  margin: auto;
+}
+
+.header {
+  margin: 80px 0px;
+}

@@ -1,4 +1,4 @@
-class FileObject {
+export class FileObject {
   constructor(name, fullPath, filetype, parentRef) {
     this.name = name;
     this.fullPath = fullPath;
@@ -25,10 +25,10 @@ class FileObject {
 
 }
 
-class DirFile extends FileObject {
-  constructor(name, fullPath, filetype, parentRef, contents) {
+export class DirFile extends FileObject {
+  constructor(name, fullPath, filetype, parentRef, children) {
     super(name, fullPath, filetype, parentRef);
-    this.contents = contents;
+    this.children = children;
   }
 
   /* returns list of files that match up with anything
@@ -44,10 +44,10 @@ class DirFile extends FileObject {
 
 }
 
-class TxtFile extends FileObject {
-  constructor(name, fullPath, filetype, parentRef, children) {
+export class TxtFile extends FileObject {
+  constructor(name, fullPath, filetype, parentRef, contents) {
     super(name, fullPath, filetype, parentRef);
-    this.children = children;
+    this.contents = contents;
   }
 
 }
