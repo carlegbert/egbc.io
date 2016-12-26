@@ -1,0 +1,1 @@
+require('./fileobject.js');
