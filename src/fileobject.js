@@ -28,7 +28,7 @@ export class FileObject {
 export class DirFile extends FileObject {
   constructor(name, fullPath, filetype, parentRef, children) {
     super(name, fullPath, filetype, parentRef);
-    this.children = children;
+    this.children = children || [];
   }
 
   /* returns list of files that match up with anything

@@ -54,25 +54,43 @@ export class Shell {
     print(this.executeCommand(shellCommand));
   }
 
-  /* return list of valid commands that can be executed */
-  static validCommands() {
-    return [
-      'clear',
-      'pwd',
-    ];
-  }
-
   executeCommand(shellCommand) {
     if (!Shell.validCommands().includes(shellCommand.command)) {
-      return new ShellCommandResult(null, `${shellCommand.command}: command not found`);
+      return `${shellCommand.command}: command not found`;
     }
     const evalStr = `this.${shellCommand.command}(shellCommand)`;
     return eval(evalStr).getDefaultOutput();
   }
 
+  findInDir(dir, filepath, filetype) {
+    if (filepath.length === 0 || filepath === '.') return dir;
+    if (filepath[0] === '~') return this.fileStructure;
+    if (filepath[0] === '..') return dir.parentRef;
+
+    let found = null;
+    const typeToFind = filepath.length === 1 ? filetype : 'dir';
+    dir.children.forEach((child) => {
+      if ((filepath[0] === child.name) && (!typeToFind || typeToFind === child.filetype)) {
+        found = child;
+      }
+    });
+    return filepath.length === 1 ? found : this.findInDir(found, filepath.slice(1), filetype);
+  }
+
   /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
    *                   shell commands                        *
    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+  /* return list of valid commands that can be executed */
+  static validCommands() {
+    return [
+      'clear',
+      'pwd',
+      'cd',
+      'ls',
+    ];
+  }
+
   clear() {
     $('#terminal-output').html('');
     return new ShellCommandResult();
@@ -81,5 +99,49 @@ export class Shell {
   pwd() {
     return new ShellCommandResult(this.currentDir.fullPath);
   }
+
+  cd(shellCommand) {
+    if (shellCommand.args.length === 0) {
+      this.currentDir = this.fileStructure;
+      return new ShellCommandResult();
+    }
+    const dir = this.findInDir(this.currentDir, shellCommand.args[0].split('/'), 'dir');
+    if (dir) {
+      this.currentDir = dir;
+      $('#PS1').html(this.getPS1String());
+      return new ShellCommandResult();
+    }
+    return new ShellCommandResult(null, `${shellCommand.args[0]}: directory not found`);
+  }
+
+  ls(shellCommand) {
+    const res = new ShellCommandResult([]);
+    if (shellCommand.args.length === 0) {
+      res.stdOut.push(Shell.lsHelper(this.currentDir));
+    } else {
+      shellCommand.args.forEach((arg) => {
+        const dir = this.findInDir(this.currentDir, [arg], 'dir');
+        if (!dir) {
+          res.stdErr.push(`ls: cannot access ${arg}: no such file or directory`);
+        } else {
+          let str = '';
+          if (shellCommand.args.length > 1) str += `${arg}:`;
+          str += Shell.lsHelper(dir);
+          res.stdOut.push(str);
+        }
+      });
+    }
+    return res;
+  }
+
+  static lsHelper(dir) {
+    let res = '<div>';
+    dir.children.forEach((child) => {
+      res += `<li class="ls ${child.filetype}">${child.name}</li>`;
+    });
+    res += '</div>';
+    return res;
+  }
+
 
 }

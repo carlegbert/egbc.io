@@ -39,6 +39,11 @@ a:hover {
   color: #3c79b2;
 }
 
+.ls {
+  display: inline-block;
+  margin-right: 35px;
+}
+
 .ls:hover {
   cursor: pointer;
   opacity: .85;
