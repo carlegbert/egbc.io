@@ -1,7 +1,7 @@
 /* eslint-env jquery */
 
 import { getChar, print } from './io';
-import { ShellCommand } from './shell-command';
+import { ShellCommand, ShellCommandResult } from './shell-command';
 
 export class Shell {
   constructor(fileStructure) {
@@ -51,6 +51,35 @@ export class Shell {
     this.inputString = '';
     $('#input').html('');
     this.historyIndex = this.bashHistory.length;
-    return shellCommand;
+    print(this.executeCommand(shellCommand));
   }
+
+  /* return list of valid commands that can be executed */
+  static validCommands() {
+    return [
+      'clear',
+      'pwd',
+    ];
+  }
+
+  executeCommand(shellCommand) {
+    if (!Shell.validCommands().includes(shellCommand.command)) {
+      return new ShellCommandResult(null, `${shellCommand.command}: command not found`);
+    }
+    const evalStr = `this.${shellCommand.command}(shellCommand)`;
+    return eval(evalStr).getDefaultOutput();
+  }
+
+  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+   *                   shell commands                        *
+   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+  clear() {
+    $('#terminal-output').html('');
+    return new ShellCommandResult();
+  }
+
+  pwd() {
+    return new ShellCommandResult(this.currentDir.fullPath);
+  }
+
 }

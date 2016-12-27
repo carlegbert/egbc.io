@@ -26,3 +26,26 @@ export class ShellCommand {
   }
 
 }
+
+export class ShellCommandResult {
+  constructor(stdOut, stdErr, data) {
+    this.stdOut = stdOut;
+    this.stdErr = stdErr;
+    this.data = data;
+  }
+
+  /* return stdErr if it is not undefined, stdOut if it isn't,
+   * and an empty array if neither are. */
+  getDefaultOutput() {
+    return this.stdErr || this.stdOut || [];
+  }
+
+  /* combine two shellCommandResults into one for use in
+   * recursive or chained functions */
+  combine(otherResult) {
+    this.stdErr += otherResult.stdErr;
+    this.stdOut += otherResult.stdOut;
+    this.data += otherResult.data;
+  }
+
+}
