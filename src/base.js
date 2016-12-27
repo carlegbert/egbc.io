@@ -5,7 +5,7 @@ import { Shell } from './shell';
 
 const root = new DirFile('~', '~', 'dir', null);
 const aDir = new DirFile('a_dir', '~/a_dir', 'dir', root);
-const aTextfile = new TxtFile('a_textfile', '~/a_textfile', 'txt', root);
+const aTextfile = new TxtFile('a_textfile', '~/a_textfile', 'txt', root, ['this is some text']);
 root.children = [aDir, aTextfile];
 
 $(document).ready(() => {

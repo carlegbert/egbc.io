@@ -6,7 +6,7 @@ export class FileObject {
     this.parentRef = parentRef;
   }
 
-  jsonToFile(json) {
+  static jsonToFile(json) {
     const newFile = new FileObject(json.name, json.fullPath, json.filetype, json.parentRef);
     if (newFile.filetype === 'dir') {
       newFile.children = [];

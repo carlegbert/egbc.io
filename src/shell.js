@@ -86,8 +86,10 @@ export class Shell {
     return [
       'clear',
       'pwd',
+      'whoami',
       'cd',
       'ls',
+      'cat',
     ];
   }
 
@@ -98,6 +100,10 @@ export class Shell {
 
   pwd() {
     return new ShellCommandResult(this.currentDir.fullPath);
+  }
+
+  whoami() {
+    return new ShellCommandResult(this.user);
   }
 
   cd(shellCommand) {
@@ -143,5 +149,23 @@ export class Shell {
     return res;
   }
 
+  cat(shellCommand) {
+    const res = new ShellCommandResult();
+    if (shellCommand.args.length === 0) {
+      return res;
+    }
+    shellCommand.args.forEach((arg) => {
+      const path = arg.split('/');
+      const file = this.findInDir(this.currentDir, path);
+      if (file && file.filetype === 'dir') {
+        res.stdErr.push(`cat: ${file.name}: Is a directory`);
+      } else if (file) {
+        res.stdOut = res.stdOut.concat(file.contents);
+      } else {
+        res.stdErr.push(`cat: ${arg}: No such file or directory`);
+      }
+    });
+    return res;
+  }
 
 }
