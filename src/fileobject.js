@@ -1,13 +1,14 @@
 export class FileObject {
-  constructor(name, fullPath, filetype, parentRef) {
+  constructor(name, fullPath, filetype, parentRef, lastModified) {
     this.name = name;
     this.fullPath = fullPath;
     this.filetype = filetype;
     this.parentRef = parentRef;
+    this.lastModified = lastModified || new Date();
   }
 
   static jsonToFile(json) {
-    const newFile = new FileObject(json.name, json.fullPath, json.filetype, json.parentRef);
+    const newFile = new FileObject(json.name, json.fullPath, json.filetype, json.parentRef, json.lastModified);
     if (newFile.filetype === 'dir') {
       newFile.children = [];
       json.children.forEach((child) => {
@@ -26,8 +27,8 @@ export class FileObject {
 }
 
 export class DirFile extends FileObject {
-  constructor(name, fullPath, filetype, parentRef, children) {
-    super(name, fullPath, filetype, parentRef);
+  constructor(name, fullPath, filetype, parentRef, lastModified, children) {
+    super(name, fullPath, filetype, parentRef, lastModified);
     this.children = children || [];
   }
 
@@ -45,8 +46,8 @@ export class DirFile extends FileObject {
 }
 
 export class TxtFile extends FileObject {
-  constructor(name, fullPath, filetype, parentRef, contents) {
-    super(name, fullPath, filetype, parentRef);
+  constructor(name, fullPath, filetype, parentRef, lastModified, contents) {
+    super(name, fullPath, filetype, parentRef, lastModified);
     this.contents = contents;
   }
 

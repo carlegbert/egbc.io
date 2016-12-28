@@ -3,10 +3,12 @@
 import { TxtFile, DirFile } from './fileobject';
 import { Shell } from './shell';
 
-const root = new DirFile('~', '~', 'dir', null);
-const aDir = new DirFile('a_dir', '~/a_dir', 'dir', root);
-const aTextfile = new TxtFile('a_textfile', '~/a_textfile', 'txt', root, ['this is some text']);
+const root = new DirFile('~', '~', 'dir', null, null);
+const aDir = new DirFile('a_dir', '~/a_dir', 'dir', root, null);
+const aTextfile = new TxtFile('a_textfile', '~/a_textfile', 'txt', root, null, ['this is some text']);
+const anotherDir = new TxtFile('2_textfile', '~/a_dir/2_textfile', 'txt', aDir, null, ['more text']);
 root.children = [aDir, aTextfile];
+aDir.children = [anotherDir];
 
 $(document).ready(() => {
   const shell = new Shell(root);

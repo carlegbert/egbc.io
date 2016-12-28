@@ -1,6 +1,7 @@
 /* eslint-env jquery */
 
 import { getChar, print } from './io';
+import { TxtFile, DirFile } from './fileobject';
 import { ShellCommand, ShellCommandResult } from './shell-command';
 
 export class Shell {
@@ -62,10 +63,15 @@ export class Shell {
     return eval(evalStr).getDefaultOutput();
   }
 
-  findInDir(dir, filepath, filetype) {
+  findFile(dir, filepath, filetype) {
     if (filepath.length === 0 || filepath === '.') return dir;
-    if (filepath[0] === '~') return this.fileStructure;
-    if (filepath[0] === '..') return dir.parentRef;
+    if (filepath[0] === '~') {
+      return filepath.length === 1 ? this.fileStructure :
+        this.findFile(this.fileStructure, filepath.slice(1), filetype);
+    } else if (filepath[0] === '..') {
+      return filepath.length === 1 ? dir.parentRef :
+        this.findFile(dir.parentRef, filepath.slice(1), filetype);
+    }
 
     let found = null;
     const typeToFind = filepath.length === 1 ? filetype : 'dir';
@@ -74,7 +80,20 @@ export class Shell {
         found = child;
       }
     });
-    return filepath.length === 1 ? found : this.findInDir(found, filepath.slice(1), filetype);
+    return filepath.length === 1 ? found : this.findFile(found, filepath.slice(1), filetype);
+  }
+
+  newFile(filepath, filetype) {
+    let dir;
+    const pathStr = filepath.join('/');
+    if (filepath.length === 1) dir = this.currentDir;
+    else dir = this.findFile(this.currentDir, filepath.slice(0, -1), 'dir');
+    if (!dir) return new ShellCommandResult(null, `${filepath.slice(0, -1).join('/')}: Directory not found`);
+    let file;
+    if (filetype === 'dir') file = new DirFile(filepath.slice(-1)[0], pathStr, filetype, dir);
+    else file = new TxtFile(filepath.slice(-1)[0], pathStr, filetype, dir);
+    dir.children.push(file);
+    return new ShellCommandResult(null, null, file);
   }
 
   /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -90,6 +109,8 @@ export class Shell {
       'cd',
       'ls',
       'cat',
+      'touch',
+      'mkdir',
     ];
   }
 
@@ -109,9 +130,10 @@ export class Shell {
   cd(shellCommand) {
     if (shellCommand.args.length === 0) {
       this.currentDir = this.fileStructure;
+      $('#PS1').html(this.getPS1String());
       return new ShellCommandResult();
     }
-    const dir = this.findInDir(this.currentDir, shellCommand.args[0].split('/'), 'dir');
+    const dir = this.findFile(this.currentDir, shellCommand.args[0].split('/'), 'dir');
     if (dir) {
       this.currentDir = dir;
       $('#PS1').html(this.getPS1String());
@@ -126,7 +148,7 @@ export class Shell {
       res.stdOut.push(Shell.lsHelper(this.currentDir));
     } else {
       shellCommand.args.forEach((arg) => {
-        const dir = this.findInDir(this.currentDir, [arg], 'dir');
+        const dir = this.findFile(this.currentDir, arg.split('/'), 'dir');
         if (!dir) {
           res.stdErr.push(`ls: cannot access ${arg}: no such file or directory`);
         } else {
@@ -151,18 +173,45 @@ export class Shell {
 
   cat(shellCommand) {
     const res = new ShellCommandResult();
-    if (shellCommand.args.length === 0) {
-      return res;
-    }
+    if (shellCommand.args.length === 0) return res;
     shellCommand.args.forEach((arg) => {
       const path = arg.split('/');
-      const file = this.findInDir(this.currentDir, path);
+      const file = this.findFile(this.currentDir, path);
       if (file && file.filetype === 'dir') {
         res.stdErr.push(`cat: ${file.name}: Is a directory`);
       } else if (file) {
         res.stdOut = res.stdOut.concat(file.contents);
       } else {
         res.stdErr.push(`cat: ${arg}: No such file or directory`);
+      }
+    });
+    return res;
+  }
+
+  touch(shellCommand) {
+    const res = new ShellCommandResult();
+    if (shellCommand.args.length === 0) return res;
+    shellCommand.args.forEach((arg) => {
+      const path = arg.split('/');
+      const file = this.findFile(this.currentDir, path, 'txt');
+      if (file) file.lastModified = new Date();
+      else {
+        const newFileRes = this.newFile(path, 'txt');
+        res.combine(newFileRes);
+      }
+    });
+    return res;
+  }
+
+  mkdir(shellCommand) {
+    const res = new ShellCommandResult();
+    if (shellCommand.args.length === 0) return res;
+    shellCommand.args.forEach((arg) => {
+      const path = arg.split('/');
+      const file = this.findFile(this.currentDir, path, 'dir');
+      if (!file) {
+        const newFileRes = this.newFile(path, 'dir');
+        res.combine(newFileRes);
       }
     });
     return res;
