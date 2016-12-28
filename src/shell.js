@@ -15,8 +15,8 @@ export class Shell {
   }
 
   getPS1String() {
-    return `<span class="user">${this.user}@www.carlegbert.com</span>
-      <span class="path">${this.currentDir.fullPath}</span>$&nbsp;`;
+    return `<span class="user">${this.user}@www.carlegbert.com:</span>` +
+      `<span class="path">${this.currentDir.fullPath}</span>$&nbsp;`;
   }
 
   parseKeystroke(event) {
@@ -26,7 +26,7 @@ export class Shell {
     } else if (event.which === 8) { // backspace
       event.preventDefault();
       this.inputString = this.inputString.slice(0, (this.inputString.length - 1));
-      $('#input').html(this.inputString);
+      $('#input').html(this.inputString.replace(/ /g, '&nbsp;'));
     } else if (event.which === 38 && this.historyIndex > 0) { // up arrow
       event.preventDefault();
       this.historyIndex -= 1;
@@ -41,18 +41,23 @@ export class Shell {
     } else {
       const k = getChar(event);
       this.inputString += k;
-      $('#input').append(k);
+      const kSpaceAdjusted = k === ' ' ? '&nbsp;' : k;
+      $('#input').append(kSpaceAdjusted);
     }
   }
 
   handleEnter() {
     const shellCommand = new ShellCommand(this.inputString);
-    if (shellCommand.command) this.bashHistory.push(this.inputString);
-    print(this.getPS1String() + this.inputString);
+    if (!shellCommand.command) {
+      print(this.getPS1String());
+    } else {
+      print(this.getPS1String() + this.inputString.replace(/ /g, '&nbsp;'));
+      print(this.executeCommand(shellCommand));
+      this.bashHistory.push(this.inputString);
+    }
     this.inputString = '';
     $('#input').html('');
     this.historyIndex = this.bashHistory.length;
-    print(this.executeCommand(shellCommand));
   }
 
   executeCommand(shellCommand) {
@@ -111,6 +116,7 @@ export class Shell {
       'cat',
       'touch',
       'mkdir',
+      'echo',
     ];
   }
 
@@ -215,6 +221,11 @@ export class Shell {
       }
     });
     return res;
+  }
+
+  echo(shellCommand) {
+    const output = shellCommand.args.join(' ');
+    return new ShellCommandResult(output);
   }
 
 }

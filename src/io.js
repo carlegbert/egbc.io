@@ -2,7 +2,7 @@
 
 export function getChar(event) {
   const code = event.keyCode;
-  if (code === 32) return ' ';
+  if (code === 32) return ' '; // spacebar
   if (event.shiftKey) { // if shift key depressed
     if (code <= 91 && code >= 65) { // capital letters
       return String.fromCharCode(code);
