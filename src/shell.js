@@ -52,7 +52,8 @@ export class Shell {
     } else {
       print(this.getPS1String() + this.inputString.replace(' ', '&nbsp;'));
       this.bashHistory.push(this.inputString);
-      print(this.executeCommand(this.inputString));
+      const res = this.executeCommand(this.inputString);
+      print(res.getDefaultOutput());
     }
     this.inputString = '';
     $('#input').html('');
@@ -60,12 +61,29 @@ export class Shell {
   }
 
   executeCommand(inputString) {
+    if (inputString.includes('>>')) return this.redirect(inputString, '>>');
+    if (inputString.includes('>')) return this.redirect(inputString, '>');
+
     const shellCommand = new ShellCommand(inputString);
     if (!Shell.validCommands().includes(shellCommand.command)) {
       return `${shellCommand.command}: command not found`;
     }
     const evalStr = `this.${shellCommand.command}(shellCommand)`;
-    return eval(evalStr).getDefaultOutput();
+    return eval(evalStr);
+  }
+
+  redirect(inputString, pattern) {
+    const i = inputString.indexOf(pattern);
+    const afterSymbol = inputString.slice(i + pattern.length).trim().split(' ');
+    if (!afterSymbol || afterSymbol.length === 0) return new ShellCommandResult([], 'Syntax error');
+    const otherArgs = afterSymbol.length === 1 ? [] : afterSymbol.slice(pattern.length);
+    const newInput = inputString.slice(0, i) + otherArgs.join(' ');
+    const res = this.executeCommand(newInput);
+    const filepath = afterSymbol[0];
+    const file = this.findFile(this.currentDir, [filepath], 'txt') || this.newFile([filepath], 'txt').data;
+    if (!file) return new ShellCommandResult(null, `bash: ${filepath}: No such file or directory`);
+    file.contents = pattern === '>' ? res.stdOut : file.contents.concat(res.stdOut);
+    return new ShellCommandResult(null, res.stdErr);
   }
 
   findFile(dir, filepath, filetype) {

@@ -48,7 +48,7 @@ export class DirFile extends FileObject {
 export class TxtFile extends FileObject {
   constructor(name, fullPath, filetype, parentRef, lastModified, contents) {
     super(name, fullPath, filetype, parentRef, lastModified);
-    this.contents = contents;
+    this.contents = contents || [];
   }
 
 }
