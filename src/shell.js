@@ -22,7 +22,7 @@ export class Shell {
   parseKeystroke(event) {
     if (event.which === 13) { // enter
       event.preventDefault();
-      this.handleEnter(this.inputString);
+      this.handleEnter();
     } else if (event.which === 8) { // backspace
       event.preventDefault();
       this.inputString = this.inputString.slice(0, (this.inputString.length - 1));
@@ -47,20 +47,20 @@ export class Shell {
   }
 
   handleEnter() {
-    const shellCommand = new ShellCommand(this.inputString);
-    if (!shellCommand.command) {
+    if (!this.inputString.match(/[^ ]/g)) { // regex for anything but space
       print(this.getPS1String());
     } else {
-      print(this.getPS1String() + this.inputString.replace(/ /g, '&nbsp;'));
-      print(this.executeCommand(shellCommand));
+      print(this.getPS1String() + this.inputString.replace(' ', '&nbsp;'));
       this.bashHistory.push(this.inputString);
+      print(this.executeCommand(this.inputString));
     }
     this.inputString = '';
     $('#input').html('');
     this.historyIndex = this.bashHistory.length;
   }
 
-  executeCommand(shellCommand) {
+  executeCommand(inputString) {
+    const shellCommand = new ShellCommand(inputString);
     if (!Shell.validCommands().includes(shellCommand.command)) {
       return `${shellCommand.command}: command not found`;
     }
