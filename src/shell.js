@@ -154,13 +154,14 @@ export class Shell {
 
   newFile(filepath, filetype) {
     let dir;
-    const pathStr = filepath.join('/');
     if (filepath.length === 1) dir = this.currentDir;
     else dir = this.findFile(this.currentDir, filepath.slice(0, -1), 'dir');
     if (!dir) return new ShellCommandResult(null, `${filepath.slice(0, -1).join('/')}: Directory not found`);
+    const filename = filepath.slice(-1)[0];
+    const pathStr = `${dir.fullPath}/${filename}`;
     let file;
-    if (filetype === 'dir') file = new DirFile(filepath.slice(-1)[0], pathStr, filetype, dir);
-    else file = new TxtFile(filepath.slice(-1)[0], pathStr, filetype, dir);
+    if (filetype === 'dir') file = new DirFile(filename, pathStr, filetype, dir);
+    else file = new TxtFile(filename, pathStr, filetype, dir);
     dir.children.push(file);
     return new ShellCommandResult(null, null, file);
   }

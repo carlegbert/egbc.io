@@ -28,7 +28,6 @@
 
 #### TODO
 * tab autocompletion
-* apparent bug with bad fullPath for new dirs/files
 * unit testing
 * refactoring: cache jquery lookups when possible
 * help
