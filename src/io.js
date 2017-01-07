@@ -63,3 +63,9 @@ export function print(output) {
     output.forEach(line => print(line));
   }
 }
+
+export function printInline(output) {
+  output.forEach((line) => {
+    $('#terminal-output').append(`<li class='inline'>${line}</li>`);
+  });
+}

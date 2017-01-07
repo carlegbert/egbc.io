@@ -22,14 +22,18 @@
 * mkdir
 * cat
 * history navigation with up and down arrows
+* echo
+* redirect with >, >>
+* tab autocompletion (partially done)
 
 #### TODO
+* tab autocompletion
+* apparent bug with bad fullPath for new dirs/files
+* unit testing
+* refactoring: cache jquery lookups when possible
 * help
 * vi
-* redirect with >
 * pipe with |
-* tab autocompletion
 * wire up to api [wwwterm-api](https://github.com/carlegbert/wwwterm-api)
 * results of ls are clickable & other user-friendliness
-* echo
 * 'localstorage' dir

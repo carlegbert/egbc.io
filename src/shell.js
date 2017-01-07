@@ -1,6 +1,6 @@
 /* eslint-env jquery */
 
-import { getChar, print } from './io';
+import { getChar, print, printInline } from './io';
 import { TxtFile, DirFile } from './fileobject';
 import { ShellCommand, ShellCommandResult } from './shell-command';
 
@@ -12,6 +12,7 @@ export class Shell {
     this.inputString = '';
     this.bashHistory = [];
     this.historyIndex = 0;
+    this.tabPressed = false;
   }
 
   getPS1String() {
@@ -21,24 +22,32 @@ export class Shell {
 
   parseKeystroke(event) {
     if (event.which === 13) { // enter
+      this.tabPressed = false;
       event.preventDefault();
       this.handleEnter();
     } else if (event.which === 8) { // backspace
+      this.tabPressed = false;
       event.preventDefault();
       this.inputString = this.inputString.slice(0, (this.inputString.length - 1));
       $('#input').html(this.inputString.replace(/ /g, '&nbsp;'));
     } else if (event.which === 38 && this.historyIndex > 0) { // up arrow
+      this.tabPressed = false;
       event.preventDefault();
       this.historyIndex -= 1;
       this.inputString = this.bashHistory[this.historyIndex];
       $('#input').html(this.inputString);
     } else if (event.which === 40 && this.historyIndex < this.bashHistory.length) { // down
+      this.tabPressed = false;
       event.preventDefault();
       this.historyIndex += 1;
       if (this.historyIndex === this.bashHistory.length) this.inputString = '';
       else this.inputString = this.bashHistory[this.historyIndex];
       $('#input').html(this.inputString);
+    } else if (event.which === 9) { // tab
+      event.preventDefault();
+      this.handleTab();
     } else {
+      this.tabPressed = false;
       const k = getChar(event);
       this.inputString += k;
       const kSpaceAdjusted = k === ' ' ? '&nbsp;' : k;
@@ -66,7 +75,7 @@ export class Shell {
 
     const shellCommand = new ShellCommand(inputString);
     if (!Shell.validCommands().includes(shellCommand.command)) {
-      return `${shellCommand.command}: command not found`;
+      return new ShellCommandResult([], `${shellCommand.command}: command not found`);
     }
     const evalStr = `this.${shellCommand.command}(shellCommand)`;
     return eval(evalStr);
@@ -84,6 +93,43 @@ export class Shell {
     if (!file) return new ShellCommandResult(null, `bash: ${filepath}: No such file or directory`);
     file.contents = pattern === '>' ? res.stdOut : file.contents.concat(res.stdOut);
     return new ShellCommandResult(null, res.stdErr);
+  }
+
+  handleTab() {
+    const spaceAtEnd = (this.inputString[this.inputString.length - 1] === ' ');
+    const cmd = new ShellCommand(this.inputString);
+    if (!cmd.command) {
+      this.printAutoCompleteOptions(Shell.validCommands());
+    } else if (!spaceAtEnd && cmd.args.length === 0) {
+      const options = Shell.parseAutoCompleteOptions(cmd.command, Shell.validCommands());
+      this.printAutoCompleteOptions(options);
+    }
+  }
+
+  static parseAutoCompleteOptions(partial, options) {
+    const len = partial.length;
+    const validOptions = [];
+    options.forEach((opt) => {
+      if (opt.length >= len && opt.slice(0, len) === partial) {
+        validOptions.push(opt);
+      }
+    });
+    return validOptions;
+  }
+
+  printAutoCompleteOptions(options) {
+    if (this.tabPressed) {
+      print(this.getPS1String() + this.inputString);
+      printInline(options);
+    } else {
+      this.tabPressed = true;
+    }
+  }
+
+  executeAutoComplete(partial, complete) {
+    const completion = complete.slice(partial.length);
+    this.inputString += completion;
+    $('#input').append(completion);
   }
 
   findFile(dir, filepath, filetype) {
@@ -189,7 +235,7 @@ export class Shell {
   static lsHelper(dir) {
     let res = '<div>';
     dir.children.forEach((child) => {
-      res += `<li class="ls ${child.filetype}">${child.name}</li>`;
+      res += `<li class="inline ${child.filetype}">${child.name}</li>`;
     });
     res += '</div>';
     return res;
