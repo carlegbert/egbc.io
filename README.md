@@ -24,10 +24,11 @@
 * history navigation with up and down arrows
 * echo
 * redirect with >, >>
-* tab autocompletion (partially done)
+* tab autocompletion
 
 #### TODO
-* tab autocompletion
+* autocompletion with >, >>
+* QA autocompletion
 * unit testing
 * refactoring: cache jquery lookups when possible
 * help

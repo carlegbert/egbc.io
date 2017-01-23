@@ -98,15 +98,30 @@ export class Shell {
   handleTab() {
     const spaceAtEnd = (this.inputString[this.inputString.length - 1] === ' ');
     const cmd = new ShellCommand(this.inputString);
+    let appendBackslash = false;
+    let options;
+    let partial;
     if (!cmd.command) {
-      this.printAutoCompleteOptions(Shell.validCommands());
+      partial = '';
+      options = Shell.validCommands();
     } else if (!spaceAtEnd && cmd.args.length === 0) {
-      const options = Shell.parseAutoCompleteOptions(cmd.command, Shell.validCommands());
-      this.printAutoCompleteOptions(options);
+      partial = cmd.command;
+      options = Shell.filterAutoCompleteOptions(partial, Shell.validCommands());
+    } else {
+      partial = cmd.args[cmd.args.length - 1] || '';
+      const filenames = this.getAutocompleteFiles(partial, Shell.getValidTypes(cmd.command));
+      options = Shell.filterAutoCompleteOptions(partial, filenames);
+      if (options.length === 0) {
+        const dirs = this.getAutocompleteFiles(partial, ['dir']);
+        options = Shell.filterAutoCompleteOptions(partial, dirs);
+        appendBackslash = true;
+      }
     }
+    if (options.length === 1) this.executeAutoComplete(partial, options[0], appendBackslash);
+    else if (options.length > 1) this.printAutoCompleteOptions(options);
   }
 
-  static parseAutoCompleteOptions(partial, options) {
+  static filterAutoCompleteOptions(partial, options) {
     const len = partial.length;
     const validOptions = [];
     options.forEach((opt) => {
@@ -115,6 +130,19 @@ export class Shell {
       }
     });
     return validOptions;
+  }
+
+  /**
+   * returns list of all files in a directory for autocompletion purposes.
+   * @param {string} partial Filepath to be completed, eg, 'path/to/fi' or 'pat'
+   * @param {string[]} filetype Optional filetypes to filter for
+   * @return {string[]} array of filenames
+   */
+  getAutocompleteFiles(partial, filetypes) {
+    const dirPath = partial.split('/').slice(0, -1);
+    const dir = this.findFile(this.currentDir, dirPath, 'dir');
+    const options = dir.getContentNamesByType(filetypes);
+    return options;
   }
 
   printAutoCompleteOptions(options) {
@@ -126,14 +154,15 @@ export class Shell {
     }
   }
 
-  executeAutoComplete(partial, complete) {
-    const completion = complete.slice(partial.length);
+  executeAutoComplete(partial, complete, appendBackslash) {
+    let completion = complete.slice(partial.length);
+    if (appendBackslash) completion += '/';
     this.inputString += completion;
     $('#input').append(completion);
   }
 
   findFile(dir, filepath, filetype) {
-    if (filepath.length === 0 || filepath === '.') return dir;
+    if (filepath.length === 0 || filepath[0] === '.') return dir;
     if (filepath[0] === '~') {
       return filepath.length === 1 ? this.fileStructure :
         this.findFile(this.fileStructure, filepath.slice(1), filetype);
@@ -170,7 +199,9 @@ export class Shell {
    *                   shell commands                        *
    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-  /* return list of valid commands that can be executed */
+  /**
+   * @return {string[]} List of valid commands that can be executed
+   */
   static validCommands() {
     return [
       'clear',
@@ -184,6 +215,26 @@ export class Shell {
       'echo',
     ];
   }
+
+  /**
+   * determine valid filetypes for command arguments
+   * @param {string} cmd Command name, eg, 'ls', 'cat', etc
+   * @return {string[]} array of valid filetypes
+   */
+  static getValidTypes(cmdName) {
+    const typeDict = {
+      ls: ['dir'],
+      cd: ['dir'],
+      mkdir: ['dir'],
+      whoami: [],
+      pwd: [],
+      clear: [],
+      cat: ['txt'],
+      '>': ['txt'],
+    };
+    return typeDict[cmdName] || ['dir', 'txt'];
+  }
+
 
   clear() {
     $('#terminal-output').html('');

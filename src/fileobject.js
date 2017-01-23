@@ -8,7 +8,8 @@ export class FileObject {
   }
 
   static jsonToFile(json) {
-    const newFile = new FileObject(json.name, json.fullPath, json.filetype, json.parentRef, json.lastModified);
+    const newFile = new FileObject(json.name, json.fullPath, json.filetype,
+        json.parentRef, json.lastModified);
     if (newFile.filetype === 'dir') {
       newFile.children = [];
       json.children.forEach((child) => {
@@ -32,15 +33,34 @@ export class DirFile extends FileObject {
     this.children = children || [];
   }
 
-  /* returns list of files that match up with anything
-   * in an string array passed to the function */
+  /**
+   * function for getting contents of a directory
+   * @types {string[]} types to filter by
+   * @return {FileObject[]} array of fileobjects contained in directory
+   */
   getContentsByTypes(types) {
     const files = [];
-    this.contents.forEach((child) => {
+    this.children.forEach((child) => {
       if (types.includes(child.filetype)) {
         files.push(child);
       }
     });
+    return files;
+  }
+
+  /**
+   * function for listing contents of a directory
+   * @types {string[]} types to filter by
+   * @return {string[]} array of fileobjects contained in directory
+   */
+  getContentNamesByType(types) {
+    const filenames = [];
+    this.children.forEach((child) => {
+      if (types.includes(child.filetype)) {
+        filenames.push(child.name);
+      }
+    });
+    return filenames;
   }
 
 }
