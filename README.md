@@ -30,7 +30,6 @@
 * autocompletion with >, >>
 * QA autocompletion
 * unit testing
-* refactoring: cache jquery lookups when possible
 * help
 * vi
 * pipe with |

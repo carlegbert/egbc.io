@@ -13,8 +13,14 @@ export class Shell {
     this.bashHistory = [];
     this.historyIndex = 0;
     this.tabPressed = false;
+    this.inputPromptElement = $('#input');
+    this.PS1Element = $('#PS1');
+    this.outputElement = $('#terminal-output');
   }
 
+  /**
+   * @return {string} PS1 string
+   */
   getPS1String() {
     return `<span class="user">${this.user}@www.carlegbert.com:</span>` +
       `<span class="path">${this.currentDir.fullPath}</span>$&nbsp;`;
@@ -29,20 +35,20 @@ export class Shell {
       this.tabPressed = false;
       event.preventDefault();
       this.inputString = this.inputString.slice(0, (this.inputString.length - 1));
-      $('#input').html(this.inputString.replace(/ /g, '&nbsp;'));
+      this.inputPromptElement.html(this.inputString.replace(/ /g, '&nbsp;'));
     } else if (event.which === 38 && this.historyIndex > 0) { // up arrow
       this.tabPressed = false;
       event.preventDefault();
       this.historyIndex -= 1;
       this.inputString = this.bashHistory[this.historyIndex];
-      $('#input').html(this.inputString);
+      this.inputPromptElement.html(this.inputString);
     } else if (event.which === 40 && this.historyIndex < this.bashHistory.length) { // down
       this.tabPressed = false;
       event.preventDefault();
       this.historyIndex += 1;
       if (this.historyIndex === this.bashHistory.length) this.inputString = '';
       else this.inputString = this.bashHistory[this.historyIndex];
-      $('#input').html(this.inputString);
+      this.inputPromptElement.html(this.inputString);
     } else if (event.which === 9) { // tab
       event.preventDefault();
       this.handleTab();
@@ -51,21 +57,22 @@ export class Shell {
       const k = getChar(event);
       this.inputString += k;
       const kSpaceAdjusted = k === ' ' ? '&nbsp;' : k;
-      $('#input').append(kSpaceAdjusted);
+      this.inputPromptElement.append(kSpaceAdjusted);
     }
+    this.inputPromptElement[0].scrollIntoView(false);
   }
 
   handleEnter() {
     if (!this.inputString.match(/[^ ]/g)) { // regex for anything but space
-      print(this.getPS1String());
+      print(this.getPS1String(), this.outputElement);
     } else {
-      print(this.getPS1String() + this.inputString.replace(' ', '&nbsp;'));
+      print(this.getPS1String() + this.inputString.replace(' ', '&nbsp;'), this.outputElement);
       this.bashHistory.push(this.inputString);
       const res = this.executeCommand(this.inputString);
-      print(res.getDefaultOutput());
+      print(res.getDefaultOutput(), this.outputElement);
     }
     this.inputString = '';
-    $('#input').html('');
+    this.inputPromptElement.html('');
     this.historyIndex = this.bashHistory.length;
   }
 
@@ -81,6 +88,12 @@ export class Shell {
     return eval(evalStr);
   }
 
+  /**
+   * redirect with >, >> operators
+   * @param {string} inputString Input string containing redirect operator
+   * @param {string} pattern Redirect operator (either > or >>)
+   * @return {ShellCommandResult} Object containing stderr to print to screen if necessary
+   */
   redirect(inputString, pattern) {
     const i = inputString.indexOf(pattern);
     const afterSymbol = inputString.slice(i + pattern.length).trim().split(' ');
@@ -121,6 +134,11 @@ export class Shell {
     else if (options.length > 1) this.printAutoCompleteOptions(options);
   }
 
+  /**
+   * @param {string} partial String to be autocompleted
+   * @param {string[]} options List of files or commands to check against partial
+   * @return {string[]} Array of strings from options that match against partial
+   */
   static filterAutoCompleteOptions(partial, options) {
     const len = partial.length;
     const validOptions = [];
@@ -145,20 +163,30 @@ export class Shell {
     return options;
   }
 
+  /**
+   * prints valid autocomplete options. to be called only if there are multiple options.
+   * @param {string[]} options Options to print
+   */
   printAutoCompleteOptions(options) {
     if (this.tabPressed) {
-      print(this.getPS1String() + this.inputString);
-      printInline(options);
+      print(this.getPS1String() + this.inputString, this.outputElement);
+      printInline(options, this.outputElement);
     } else {
       this.tabPressed = true;
     }
   }
 
+  /**
+   * executes autocomplete. to be called only if there is one valid autocomplete option.
+   * @param {string} partial Word to be completed
+   * @param {string} complete Word to be autocompleted to
+   * @param {bool} appendBackSlash Flag to determine whether or not to add backslash
+   */
   executeAutoComplete(partial, complete, appendBackslash) {
     let completion = complete.slice(partial.length);
     if (appendBackslash) completion += '/';
     this.inputString += completion;
-    $('#input').append(completion);
+    this.inputPromptElement.append(completion);
   }
 
   findFile(dir, filepath, filetype) {
@@ -181,6 +209,12 @@ export class Shell {
     return filepath.length === 1 ? found : this.findFile(found, filepath.slice(1), filetype);
   }
 
+  /**
+   * create new file
+   * @param {string} filepath Path to file from working directory, including name of new file
+   * @param {string} filetype Type of file (dir, txt)
+   * @return {ShellCommandResult} ShellCommandResult object with ref to file or stderr string
+   */
   newFile(filepath, filetype) {
     let dir;
     if (filepath.length === 1) dir = this.currentDir;
@@ -252,13 +286,13 @@ export class Shell {
   cd(shellCommand) {
     if (shellCommand.args.length === 0) {
       this.currentDir = this.fileStructure;
-      $('#PS1').html(this.getPS1String());
+      this.PS1Element.html(this.getPS1String());
       return new ShellCommandResult();
     }
     const dir = this.findFile(this.currentDir, shellCommand.args[0].split('/'), 'dir');
     if (dir) {
       this.currentDir = dir;
-      $('#PS1').html(this.getPS1String());
+      this.PS1Element.html(this.getPS1String());
       return new ShellCommandResult();
     }
     return new ShellCommandResult(null, `${shellCommand.args[0]}: directory not found`);

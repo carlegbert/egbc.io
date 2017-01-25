@@ -56,16 +56,26 @@ export function getChar(event) {
   return '';
 }
 
-export function print(output) {
+/**
+ * print output to screen. format if necessary
+ * @param {string or string[]} string or array of strings to print
+ * target {HTMLElement} target HTML element to print to
+ */
+export function print(output, target) {
   if (typeof output === 'string') {
-    $('#terminal-output').append(`<li>${output}</li>`);
+    target.append(`<li>${output}</li>`);
   } else if (typeof output === 'object') {
-    output.forEach(line => print(line));
+    output.forEach(line => print(line, target));
   }
 }
 
-export function printInline(output) {
+/**
+ * print output to screen without linebreaks
+ * @param {string[]} array of strings to print
+ * target {HTMLElement} target HTML element to print to
+ */
+export function printInline(output, target) {
   output.forEach((line) => {
-    $('#terminal-output').append(`<li class='inline'>${line}</li>`);
+    target.append(`<li class='inline'>${line}</li>`);
   });
 }
