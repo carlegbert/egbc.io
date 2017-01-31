@@ -122,11 +122,9 @@ export class Shell {
       options = Shell.filterAutoCompleteOptions(partial, Shell.validCommands());
     } else {
       partial = cmd.args[cmd.args.length - 1] || '';
-      const filenames = this.getAutocompleteFiles(partial, Shell.getValidTypes(cmd.command));
-      options = Shell.filterAutoCompleteOptions(partial, filenames);
+      options = this.getAutocompleteFiles(partial, Shell.getValidTypes(cmd.command));
       if (options.length === 0) {
-        const dirs = this.getAutocompleteFiles(partial, ['dir']);
-        options = Shell.filterAutoCompleteOptions(partial, dirs);
+        options = this.getAutocompleteFiles(partial, ['dir']);
         appendBackslash = true;
       }
     }
@@ -157,10 +155,12 @@ export class Shell {
    * @return {string[]} array of filenames
    */
   getAutocompleteFiles(partial, filetypes) {
-    const dirPath = partial.split('/').slice(0, -1);
+    const partialAsArray = partial.split('/');
+    const partialName = partialAsArray.slice(-1)[0];
+    const dirPath = partialAsArray.slice(0, -1);
     const dir = this.findFile(this.currentDir, dirPath, 'dir');
     const options = dir.getContentNamesByType(filetypes);
-    return options;
+    return Shell.filterAutoCompleteOptions(partialName, options);
   }
 
   /**
@@ -189,24 +189,40 @@ export class Shell {
     this.inputPromptElement.append(completion);
   }
 
+  /**
+   * Function to find file in a directory. Returns null if unsuccesful; it is the responsibility
+   * of the calling function to otherwise deal with failure.
+   *
+   * @param {DirFile} dir Directory to find file in
+   * @param {string[]} filepath Path to file to be found
+   * @param {string} filetype Type of file to find (optional)
+   * @return {FileObject} Returns file object if found, null if not
+   */
   findFile(dir, filepath, filetype) {
-    if (filepath.length === 0 || filepath[0] === '.') return dir;
-    if (filepath[0] === '~') {
-      return filepath.length === 1 ? this.fileStructure :
-        this.findFile(this.fileStructure, filepath.slice(1), filetype);
-    } else if (filepath[0] === '..') {
-      return filepath.length === 1 ? dir.parentRef :
-        this.findFile(dir.parentRef, filepath.slice(1), filetype);
+    if ((filepath.length === 0) && filetype === 'dir') return dir;
+    let found = null;
+    const pathArg = filepath[0];
+    const typeToFind = filepath.length === 1 ? filetype : 'dir';
+    switch (pathArg) {
+      case '.':
+        found = dir;
+        break;
+      case '..':
+        found = dir.parentRef;
+        break;
+      case '~':
+        found = this.fileStructure;
+        break;
+      default:
+        dir.children.forEach((child) => {
+          if (pathArg === child.name && (!typeToFind || typeToFind === child.filetype)) {
+            found = child;
+          }
+        });
     }
 
-    let found = null;
-    const typeToFind = filepath.length === 1 ? filetype : 'dir';
-    dir.children.forEach((child) => {
-      if ((filepath[0] === child.name) && (!typeToFind || typeToFind === child.filetype)) {
-        found = child;
-      }
-    });
-    return filepath.length === 1 ? found : this.findFile(found, filepath.slice(1), filetype);
+    if (filepath.length === 1 || !found) return found;
+    return this.findFile(found, filepath.slice(1), filetype);
   }
 
   /**
@@ -284,12 +300,8 @@ export class Shell {
   }
 
   cd(shellCommand) {
-    if (shellCommand.args.length === 0) {
-      this.currentDir = this.fileStructure;
-      this.PS1Element.html(this.getPS1String());
-      return new ShellCommandResult();
-    }
-    const dir = this.findFile(this.currentDir, shellCommand.args[0].split('/'), 'dir');
+    const dir = shellCommand.args.length === 0 ? this.fileStructure :
+      this.findFile(this.currentDir, shellCommand.args[0].split('/'), 'dir');
     if (dir) {
       this.currentDir = dir;
       this.PS1Element.html(this.getPS1String());
