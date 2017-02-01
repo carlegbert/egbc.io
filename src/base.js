@@ -1,7 +1,7 @@
 /* eslint-env jquery, browser */
 
 import { TxtFile, DirFile } from './fileobject';
-import { Shell } from './shell';
+import Shell from './shell';
 
 const root = new DirFile('~', '~', 'dir', null, null);
 const aDir = new DirFile('a_dir', '~/a_dir', 'dir', root, null);

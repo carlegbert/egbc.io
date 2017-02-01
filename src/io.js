@@ -1,5 +1,13 @@
 /* eslint-env jquery */
 
+/**
+ * function for parsing keycode from keystroke event into a
+ * single character. necessary because of poor keystroke event
+ * support in Safari.
+ * @param {event} event Keystroke event
+ * @return {string} single-char string or null, or empty string
+ *  on failure.
+ */
 export function getChar(event) {
   const code = event.keyCode;
   if (code === 32) return ' '; // spacebar
@@ -58,6 +66,8 @@ export function getChar(event) {
 
 /**
  * print output to screen. format if necessary
+ * TODO: consider refactoring into seperate functions for
+ * single string and array.
  * @param {string or string[]} string or array of strings to print
  * target {HTMLElement} target HTML element to print to
  */

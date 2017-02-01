@@ -3,8 +3,9 @@
 import { getChar, print, printInline } from './io';
 import { TxtFile, DirFile } from './fileobject';
 import { ShellCommand, ShellCommandResult } from './shell-command';
+import Vi from './vi';
 
-export class Shell {
+export default class Shell {
   constructor(fileStructure) {
     this.fileStructure = fileStructure;
     this.currentDir = fileStructure;
@@ -16,6 +17,7 @@ export class Shell {
     this.inputPromptElement = $('#input');
     this.PS1Element = $('#PS1');
     this.outputElement = $('#terminal-output');
+    this.childProcess = null;
   }
 
   /**
@@ -27,6 +29,11 @@ export class Shell {
   }
 
   parseKeystroke(event) {
+    if (!this.childProcess) this.shellKeystroke(event);
+    else this.childProcess.parseKeystroke(event);
+  }
+
+  shellKeystroke(event) {
     if (event.which === 13) { // enter
       this.tabPressed = false;
       event.preventDefault();
@@ -245,6 +252,10 @@ export class Shell {
     return new ShellCommandResult(null, null, file);
   }
 
+  killChildProcess() {
+    this.childProcess = null;
+  }
+
   /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
    *                   shell commands                        *
    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -263,6 +274,7 @@ export class Shell {
       'touch',
       'mkdir',
       'echo',
+      'vi',
     ];
   }
 
@@ -281,6 +293,7 @@ export class Shell {
       clear: [],
       cat: ['txt'],
       '>': ['txt'],
+      vi: ['txt'],
     };
     return typeDict[cmdName] || ['dir', 'txt'];
   }
@@ -388,6 +401,14 @@ export class Shell {
   echo(shellCommand) {
     const output = shellCommand.args.join(' ');
     return new ShellCommandResult(output);
+  }
+
+  vi(shellCommand) {
+    const fPath = shellCommand.args[0].split('/');
+    const file = this.findFile(this.currentDir, fPath, 'txt');
+    this.childProcess = new Vi(this, fPath, file);
+    return new ShellCommandResult();
+
   }
 
 }
