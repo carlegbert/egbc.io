@@ -1,43 +1,51 @@
 /* eslint-env jquery */
+// TODO: reorganize functions in this file so that they are grouped together more logically
+// TODO: consider creating new 'buffer' class
+// TODO: refactor this class so that UI/data are more clearly delineated
 
 import { getChar } from './io';
 
 
 export default class Vi {
-  constructor(shellRef, filePath, file) {
+  /**
+   * object encapsulating data, functions, and HTML elements for Vi session.
+   * Each Vi session is tied to one filepath and zero or one files. TODO: change that
+   * @constructor
+   * @param {Object} shellRef reference to parent Shell object
+   * @param {string[]} filePath
+   * @param {Object} file reference to TxtFile to write to (optional)
+   */
+  constructor(shellRef, filePath, file = null) {
     this.shellRef = shellRef;
     this.filePath = filePath;
     this.file = file;
     this.mode = 'normal';
+    this.heldNum = '';
     this.commandText = '';
     this.cursorX = 0;
     this.cursorY = 0;
-    this.bufferText = this.file !== null ? this.file.contents : [''];
+    this.bufferText = this.file === null ? [''] : this.file.contents;
     this.editorElement = $('#editor');
     this.bufferElement = $('#editor-buffer');
     this.editorConsoleElement = $('#editor-console');
     this.termElement = $('#terminal');
-    this.renderBuffer();
-    this.currentLineElement = Vi.getLineElement(0);
-    this.cursorElement = $('#editor-buffer ed-y:nth-child(1) ed-x:nth-child(1)');
-    this.cursorElement.addClass('cursor');
     this.startSession();
-    this.heldNum = '';
   }
 
   /**
    * prepare HTML elements for vi session
    */
   startSession() {
+    this.renderBuffer();
+    this.editorConsoleElement.html('');
     this.termElement.toggle();
     this.editorElement.toggle();
-    this.editorConsoleElement.html('');
   }
 
   /**
    * shortcut function to get line from buffer
    * defaults to value of cursorY
-   * @param {int} y Y coordinate to retrieve
+   * @param {number} y Y coordinate to retrieve
    * @return {string} Line from buffer
    */
   getBufferLine(y = this.cursorY) {
@@ -45,11 +53,11 @@ export default class Vi {
   }
 
   /**
-   * get HTML element at specific y index
-   * @param {int} y Y index, 0-indexed
-   * @return {HTMLElement} <ed-y> HTML element
+   * get HTML element at specific y index. defaults to this.cursorY
+   * @param {number} y Y index, 0-indexed
+   * @return {Object} <ed-y> HTML element
    */
-  static getLineElement(y) {
+  getLineElement(y = this.cursorY) {
     return $(`#editor-buffer ed-y:nth-child(${y + 1})`);
   }
 
@@ -79,7 +87,7 @@ export default class Vi {
 
   /**
    * pass keystroke event to correct function depending on mode
-   * @param {event} event Keystroke event
+   * @param {Object} event Keystroke event object
    */
   parseKeystroke(event) {
     if (this.mode === 'normal') this.normalKeystroke(event);
@@ -89,7 +97,7 @@ export default class Vi {
 
   /**
    * handle normal mode keystroke
-   * @param {event} event Keystroke event
+   * @param {Object} event Keystroke event object
    */
   normalKeystroke(event) {
     if (event.which === 186 && event.shiftKey) { // :
@@ -98,21 +106,17 @@ export default class Vi {
     } else if (event.which === 73) { // i
       if (event.shiftKey) this.cursorX = 0;
       else if (this.getBufferLine().length === 0) this.cursorX += 1;
-      this.mode = 'insert';
-      this.editorConsoleElement.html('<strong>-- INSERT --</strong>');
+      this.setInsertMode();
     } else if (event.which === 65) { // a
-      if (event.shiftKey) this.cursorX = this.getBufferLine() + 1;
+      if (event.shiftKey) this.cursorX = this.getBufferLine().length + 1;
       else this.cursorX += 1;
-      this.mode = 'insert';
-      this.editorConsoleElement.html('<strong>-- INSERT --</strong>');
+      this.setInsertMode();
     } else if (event.which === 79) { // o
       if (!event.shiftKey) this.cursorY += 1;
       this.bufferText.splice(this.cursorY, 0, '');
       this.cursorX = 0;
       this.renderBuffer();
-      this.currentLineElement = Vi.getLineElement(this.cursorY);
-      this.mode = 'insert';
-      this.editorConsoleElement.html('<strong>-- INSERT --</strong>');
+      this.setInsertMode();
     } else if (event.which === 52 && event.shiftKey) { // $
       this.cursorX = this.getBufferLine().length;
     } else if (event.which === 48 && !event.shiftKey) { // 0
@@ -132,8 +136,19 @@ export default class Vi {
   }
 
   /**
+   * enter insert mode
+   */
+  setInsertMode() {
+    this.mode = 'insert';
+    this.editorConsoleElement.html('<strong>-- INSERT --</strong>');
+    if (this.getBufferLine().length === 0) {
+      this.cursorX += 1;
+    }
+  }
+
+  /**
    * repeatable normal-mode keystroke events
-   * @param {event} event Keystroke event
+   * @param {Object} event Keystroke event object
    */
   repeatableNormalKeystroke(event) {
     if (event.which === 72) { // h
@@ -144,12 +159,17 @@ export default class Vi {
       this.cursorY += 1;
     } else if (event.which === 75) { // k
       this.cursorY -= 1;
+    } else if (event.which === 13) { // enter
+      this.cursorY += 1;
+      this.cursorX = 0;
+    } else if (event.which === 88) { // x
+      this.deleteChar(this.cursorX, this.cursorY);
     }
   }
 
   /**
    * handle insert mode keystroke
-   * @param {event} event Keystroke event
+   * @param {Object} event Keystroke event object
    */
   insertKeystroke(event) {
     if (event.which === 27) { // escape
@@ -162,8 +182,6 @@ export default class Vi {
       this.cursorY += 1;
       this.bufferText.splice(this.cursorY, 0, '');
       this.renderBuffer();
-      this.currentLineElement = Vi.getLineElement(this.cursorY);
-      this.drawCursor();
     } else if (event.which === 8) { // backspace
       this.backspace(this.cursorX, this.cursorY);
     } else {
@@ -175,8 +193,8 @@ export default class Vi {
   }
 
   /** handle insert-mode backspace
-   * @param {int} x X coord
-   * @param {int} y Y coord
+   * @param {number} x X coord
+   * @param {number} y Y coord
    */
   backspace(x, y) {
     const line = this.getBufferLine(y);
@@ -187,18 +205,28 @@ export default class Vi {
       this.bufferText.splice(y, 1);
       this.renderBuffer();
     } else {
-      this.bufferText[y] = line.slice(0, x - 1) + line.slice(x);
-      this.drawLine(this.getBufferLine(), this.currentLineElement);
+      this.deleteChar(x - 1, y);
       this.cursorX -= 1;
     }
     this.drawCursor();
   }
 
+  /** delete buffer char at x/y
+   * @param {number} x X coord
+   * @param {number} y Y coord
+   */
+  deleteChar(x, y) {
+    const line = this.getBufferLine(y);
+    this.bufferText[y] = line.slice(0, x) + line.slice(x + 1);
+    this.drawLine(this.getBufferLine(y), this.currentLineElement);
+    // TODO: consider calling drawLine elsewhere
+  }
+
   /**
    * write char to buffer at specified x,y coords
    * @param {string} str String to write
-   * @param {int} x X coord
-   * @param {int} y Y coord
+   * @param {number} x X coord
+   * @param {number} y Y coord
    */
   writeChar(str, x, y) {
     const buffStr = this.bufferText[y];
@@ -208,7 +236,7 @@ export default class Vi {
 
   /**
    * handle command mode keystroke
-   * @param {event} event Keystroke event
+   * @param {Object} event Keystroke event object
    */
   commandKeystroke(event) {
     if (event.which === 27) { // escape
@@ -254,7 +282,7 @@ export default class Vi {
     if (this.mode === 'insert' || this.getBufferLine().length === 0) xMax += 1; // allow cursor at EOL in insert mode or if line is empty
     if (this.cursorX < 0) this.cursorX = 0;
     if (this.cursorX > xMax) this.cursorX = xMax;
-    this.cursorElement.removeClass('cursor');
+    if (this.cursorElement) this.cursorElement.removeClass('cursor');
     const jqStr = `#editor-buffer ed-y:nth-child(${this.cursorY + 1}) ed-x:nth-child(${this.cursorX + 1})`;
     this.cursorElement = $(jqStr);
     this.cursorElement.addClass('cursor');
@@ -284,7 +312,8 @@ export default class Vi {
 
   /**
    * rewrite string so that every character is enveloped by an <ed-x> tag,
-   * so that we can traverse it with nth-child selector
+   * so that we can traverse it with nth-child selector. space chars will
+   * be replaced with '&nbsp;'
    * @param {string} str Original string
    * @return {string} New string
    */
@@ -302,7 +331,8 @@ export default class Vi {
    * draw single line in editor buffer.
    * appended to end if no line element is provided.
    * @param {string} str String to print
-   * @param {HTMLElement} lineElement line element to print to (optional)
+   * @param {Object} lineElement HTML line element to print to (optional, appended at end of buffer
+   * if not provided)
    */
   drawLine(str, lineElement) {
     const fStr = Vi.edxString(str);
@@ -316,6 +346,8 @@ export default class Vi {
   renderBuffer() {
     this.bufferElement.html('');
     this.bufferText.forEach(str => this.drawLine(str));
+    this.currentLineElement = this.getLineElement();
+    this.drawCursor();
   }
 
 }
