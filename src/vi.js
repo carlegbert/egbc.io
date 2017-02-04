@@ -22,6 +22,7 @@ export default class Vi {
     this.cursorElement = $('#editor-buffer ed-y:nth-child(1) ed-x:nth-child(1)');
     this.cursorElement.addClass('cursor');
     this.startSession();
+    this.heldNum = '';
   }
 
   /**
@@ -95,14 +96,47 @@ export default class Vi {
       this.mode = 'command';
       this.editorConsoleElement.html(':');
     } else if (event.which === 73) { // i
-      if (this.getBufferLine().length === 0) this.cursorX += 1;
+      if (event.shiftKey) this.cursorX = 0;
+      else if (this.getBufferLine().length === 0) this.cursorX += 1;
       this.mode = 'insert';
       this.editorConsoleElement.html('<strong>-- INSERT --</strong>');
     } else if (event.which === 65) { // a
-      this.cursorX += 1;
+      if (event.shiftKey) this.cursorX = this.getBufferLine() + 1;
+      else this.cursorX += 1;
       this.mode = 'insert';
       this.editorConsoleElement.html('<strong>-- INSERT --</strong>');
-    } else if (event.which === 72) { // h
+    } else if (event.which === 79) { // o
+      if (!event.shiftKey) this.cursorY += 1;
+      this.bufferText.splice(this.cursorY, 0, '');
+      this.cursorX = 0;
+      this.renderBuffer();
+      this.currentLineElement = Vi.getLineElement(this.cursorY);
+      this.mode = 'insert';
+      this.editorConsoleElement.html('<strong>-- INSERT --</strong>');
+    } else if (event.which === 52 && event.shiftKey) { // $
+      this.cursorX = this.getBufferLine().length;
+    } else if (event.which === 48 && !event.shiftKey) { // 0
+      this.cursorX = 0;
+    } else if (this.heldNum) {
+      for (let i = 0; i < parseInt(this.heldNum, 10); i += 1) {
+        this.repeatableNormalKeystroke(event);
+      }
+    } else {
+      this.repeatableNormalKeystroke(event);
+    }
+    this.drawCursor();
+
+    const c = getChar(event);
+    if (parseInt(c, 10) && (c !== 0 || this.heldNum)) this.heldNum += c;
+    else this.heldNum = '';
+  }
+
+  /**
+   * repeatable normal-mode keystroke events
+   * @param {event} event Keystroke event
+   */
+  repeatableNormalKeystroke(event) {
+    if (event.which === 72) { // h
       this.cursorX -= 1;
     } else if (event.which === 76) { // l
       this.cursorX += 1;
@@ -111,7 +145,6 @@ export default class Vi {
     } else if (event.which === 75) { // k
       this.cursorY -= 1;
     }
-    this.drawCursor();
   }
 
   /**
