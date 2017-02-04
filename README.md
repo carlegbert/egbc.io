@@ -8,7 +8,7 @@
 * you will need nodejs/npm
 * you will need webpack (`npm install -g webpack`)
 * `npm install`
-* to run the dev server: `npm run dev`
+* to run the dev server: `npm run dev` (page served at localhost:8080)
 * for an optimized build: `npm run build`
 
 #### current working commands/features
@@ -26,12 +26,14 @@
 * redirect with >, >>
 * tab autocompletion
 
+### WIP:
+* vi
+
 #### TODO
 * autocompletion with >, >>
 * QA autocompletion
 * unit testing
 * help
-* vi
 * pipe with |
 * wire up to api [wwwterm-api](https://github.com/carlegbert/wwwterm-api)
 * results of ls are clickable & other user-friendliness

@@ -1,6 +1,6 @@
 /* eslint-env jquery */
 
-import { getChar, print } from './io';
+import { getChar } from './io';
 
 
 export default class Vi {
@@ -8,15 +8,19 @@ export default class Vi {
     this.shellRef = shellRef;
     this.filePath = filePath;
     this.file = file;
+    this.mode = 'normal';
+    this.commandText = '';
+    this.cursorX = 0;
+    this.cursorY = 0;
     this.bufferText = this.file !== null ? this.file.contents : [''];
     this.editorElement = $('#editor');
     this.bufferElement = $('#editor-buffer');
     this.editorConsoleElement = $('#editor-console');
     this.termElement = $('#terminal');
-    this.mode = 'normal';
-    this.commandText = '';
-    this.cursorX = 0;
-    this.cursorY = 0;
+    this.renderBuffer();
+    this.currentLineElement = Vi.getLineElement(0);
+    this.cursorElement = $('#editor-buffer ed-y:nth-child(1) ed-x:nth-child(1)');
+    this.cursorElement.addClass('cursor');
     this.startSession();
   }
 
@@ -26,8 +30,26 @@ export default class Vi {
   startSession() {
     this.termElement.toggle();
     this.editorElement.toggle();
-    print(this.bufferText, this.bufferElement);
     this.editorConsoleElement.html('');
+  }
+
+  /**
+   * shortcut function to get line from buffer
+   * defaults to value of cursorY
+   * @param {int} y Y coordinate to retrieve
+   * @return {string} Line from buffer
+   */
+  getBufferLine(y = this.cursorY) {
+    return this.bufferText[y];
+  }
+
+  /**
+   * get HTML element at specific y index
+   * @param {int} y Y index, 0-indexed
+   * @return {HTMLElement} <ed-y> HTML element
+   */
+  static getLineElement(y) {
+    return $(`#editor-buffer ed-y:nth-child(${y + 1})`);
   }
 
   /**
@@ -36,6 +58,8 @@ export default class Vi {
    */
   endSession(force) {
     if (force || (this.file && (this.file.contents === this.bufferText))) {
+      this.editorConsoleElement.html('');
+      this.bufferElement.html('');
       this.editorElement.toggle();
       this.termElement.toggle();
       this.shellRef.killChildProcess();
@@ -71,6 +95,11 @@ export default class Vi {
       this.mode = 'command';
       this.editorConsoleElement.html(':');
     } else if (event.which === 73) { // i
+      if (this.getBufferLine().length === 0) this.cursorX += 1;
+      this.mode = 'insert';
+      this.editorConsoleElement.html('<strong>-- INSERT --</strong>');
+    } else if (event.which === 65) { // a
+      this.cursorX += 1;
       this.mode = 'insert';
       this.editorConsoleElement.html('<strong>-- INSERT --</strong>');
     } else if (event.which === 72) { // h
@@ -82,7 +111,7 @@ export default class Vi {
     } else if (event.which === 75) { // k
       this.cursorY -= 1;
     }
-    this.normalizeCursor();
+    this.drawCursor();
   }
 
   /**
@@ -90,10 +119,58 @@ export default class Vi {
    * @param {event} event Keystroke event
    */
   insertKeystroke(event) {
-    if (event.which === 27) {
+    if (event.which === 27) { // escape
       this.mode = 'normal';
+      this.cursorX -= 1;
+      this.drawCursor();
       this.editorConsoleElement.html('');
+    } else if (event.which === 13) { // enter
+      this.cursorX = 0;
+      this.cursorY += 1;
+      this.bufferText.splice(this.cursorY, 0, '');
+      this.renderBuffer();
+      this.currentLineElement = Vi.getLineElement(this.cursorY);
+      this.drawCursor();
+    } else if (event.which === 8) { // backspace
+      this.backspace(this.cursorX, this.cursorY);
+    } else {
+      this.writeChar(getChar(event), this.cursorX, this.cursorY);
+      this.cursorX += 1;
+      this.drawLine(this.getBufferLine(), this.currentLineElement);
+      this.drawCursor();
     }
+  }
+
+  /** handle insert-mode backspace
+   * @param {int} x X coord
+   * @param {int} y Y coord
+   */
+  backspace(x, y) {
+    const line = this.getBufferLine(y);
+    if (x === 0 && y !== 0) {
+      this.cursorX = this.bufferText[y - 1].length;
+      this.cursorY -= 1;
+      this.bufferText[y - 1] += line;
+      this.bufferText.splice(y, 1);
+      this.renderBuffer();
+    } else {
+      this.bufferText[y] = line.slice(0, x - 1) + line.slice(x);
+      this.drawLine(this.getBufferLine(), this.currentLineElement);
+      this.cursorX -= 1;
+    }
+    this.drawCursor();
+  }
+
+  /**
+   * write char to buffer at specified x,y coords
+   * @param {string} str String to write
+   * @param {int} x X coord
+   * @param {int} y Y coord
+   */
+  writeChar(str, x, y) {
+    const buffStr = this.bufferText[y];
+    this.bufferText[y] = buffStr.slice(0, x) + str + buffStr.slice(x);
+    this.drawLine(buffStr, this.currentLineElement);
   }
 
   /**
@@ -133,15 +210,21 @@ export default class Vi {
   }
 
   /**
-   * reset cursor to within bounds of buffer text
+   * reset cursor indices to within bounds of buffer text;
+   * redraw cursor. allow cursor to be after last char in line if in insert mode.
    */
-  normalizeCursor() {
-    const xMax = this.bufferText[this.cursorY].length - 1;
+  drawCursor() {
     const yMax = this.bufferText.length - 1;
-    if (this.cursorX < 0) this.cursorX = 0;
     if (this.cursorY < 0) this.cursorY = 0;
-    if (this.cursorX > xMax) this.cursorX = xMax;
     if (this.cursorY > yMax) this.cursorY = yMax;
+    let xMax = this.getBufferLine().length - 1;
+    if (this.mode === 'insert' || this.getBufferLine().length === 0) xMax += 1; // allow cursor at EOL in insert mode or if line is empty
+    if (this.cursorX < 0) this.cursorX = 0;
+    if (this.cursorX > xMax) this.cursorX = xMax;
+    this.cursorElement.removeClass('cursor');
+    const jqStr = `#editor-buffer ed-y:nth-child(${this.cursorY + 1}) ed-x:nth-child(${this.cursorX + 1})`;
+    this.cursorElement = $(jqStr);
+    this.cursorElement.addClass('cursor');
   }
 
   /**
@@ -166,5 +249,40 @@ export default class Vi {
     return true;
   }
 
+  /**
+   * rewrite string so that every character is enveloped by an <ed-x> tag,
+   * so that we can traverse it with nth-child selector
+   * @param {string} str Original string
+   * @return {string} New string
+   */
+  static edxString(str) {
+    let fStr = '';
+    for (let i = 0; i < str.length; i += 1) {
+      const c = str[i] === ' ' ? '&nbsp;' : str[i];
+      fStr += `<ed-x>${c}</ed-x>`;
+    }
+    fStr += '<ed-x>&nbsp;</ed-x>';
+    return fStr;
+  }
+
+  /**
+   * draw single line in editor buffer.
+   * appended to end if no line element is provided.
+   * @param {string} str String to print
+   * @param {HTMLElement} lineElement line element to print to (optional)
+   */
+  drawLine(str, lineElement) {
+    const fStr = Vi.edxString(str);
+    if (lineElement) $(`#editor-buffer ed-y:nth-child(${this.cursorY + 1})`).html(fStr);
+    else this.bufferElement.append(`<ed-y>${fStr}</ed-y>`);
+  }
+
+  /**
+   * render entire contents of buffer
+   */
+  renderBuffer() {
+    this.bufferElement.html('');
+    this.bufferText.forEach(str => this.drawLine(str));
+  }
 
 }
