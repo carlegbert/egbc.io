@@ -32,7 +32,6 @@
 #### TODO
 * refactor shell commands from Shell class into ShellCommand class
 * autocompletion with >, >>
-* QA autocompletion
 * unit testing
 * help
 * pipe with |

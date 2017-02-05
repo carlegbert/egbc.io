@@ -6,6 +6,11 @@ import { ShellCommand, ShellCommandResult } from './shell-command';
 import Vi from './vi';
 
 export default class Shell {
+  /**
+   * Represents shell session. to be instantiated once upon browser load.
+   * @constructor
+   * @param {Object} fileStructure FileStructure object tied to shell session
+   */
   constructor(fileStructure) {
     this.fileStructure = fileStructure;
     this.currentDir = fileStructure;
@@ -28,11 +33,20 @@ export default class Shell {
       `<span class="path">${this.currentDir.fullPath}</span>$&nbsp;`;
   }
 
+  /**
+   * Direct keystroke to shell's keystroke handler or to child process
+   * if there is one active
+   * @param {Object} event Keystroke event
+   */
   parseKeystroke(event) {
     if (!this.childProcess) this.shellKeystroke(event);
     else this.childProcess.parseKeystroke(event);
   }
 
+  /**
+   * Process keystroke
+   * @param {Object} event Keystroke event
+   */
   shellKeystroke(event) {
     if (event.which === 13) { // enter
       this.tabPressed = false;
@@ -69,6 +83,9 @@ export default class Shell {
     this.inputPromptElement[0].scrollIntoView(false);
   }
 
+  /**
+   * process Enter keystroke
+   */
   handleEnter() {
     if (!this.inputString.match(/[^ ]/g)) { // regex for anything but space
       print(this.getPS1String(), this.outputElement);
@@ -83,6 +100,12 @@ export default class Shell {
     this.historyIndex = this.bashHistory.length;
   }
 
+  /**
+   * attempt to process inputstring into shell command
+   * @param {string} inputString String to process
+   * @return {Object} Result of eval(evalStr), which should always
+   * be a ShellCommandResult object
+   */
   executeCommand(inputString) {
     if (inputString.includes('>>')) return this.redirect(inputString, '>>');
     if (inputString.includes('>')) return this.redirect(inputString, '>');
@@ -99,7 +122,7 @@ export default class Shell {
    * redirect with >, >> operators
    * @param {string} inputString Input string containing redirect operator
    * @param {string} pattern Redirect operator (either > or >>)
-   * @return {ShellCommandResult} Object containing stderr to print to screen if necessary
+   * @return {Object} ShellCommandResult containing stderr to print to screen if necessary
    */
   redirect(inputString, pattern) {
     const i = inputString.indexOf(pattern);
@@ -115,10 +138,12 @@ export default class Shell {
     return new ShellCommandResult(null, res.stdErr);
   }
 
+  /**
+   * handle tab for autocompletion
+   */
   handleTab() {
     const spaceAtEnd = (this.inputString[this.inputString.length - 1] === ' ');
     const cmd = new ShellCommand(this.inputString);
-    let appendBackslash = false;
     let options;
     let partial;
     if (!cmd.command) {
@@ -130,16 +155,14 @@ export default class Shell {
     } else {
       partial = cmd.args[cmd.args.length - 1] || '';
       options = this.getAutocompleteFiles(partial, Shell.getValidTypes(cmd.command));
-      if (options.length === 0) {
-        options = this.getAutocompleteFiles(partial, ['dir']);
-        appendBackslash = true;
-      }
+      if (options.length === 0) options = this.getAutocompleteFiles(partial, ['dir']);
     }
-    if (options.length === 1) this.executeAutoComplete(partial, options[0], appendBackslash);
+    if (options.length === 1) this.executeAutoComplete(partial, options[0]);
     else if (options.length > 1) this.printAutoCompleteOptions(options);
   }
 
   /**
+   * filter array of strings into options that match up with partial argument
    * @param {string} partial String to be autocompleted
    * @param {string[]} options List of files or commands to check against partial
    * @return {string[]} Array of strings from options that match against partial
@@ -166,7 +189,13 @@ export default class Shell {
     const partialName = partialAsArray.slice(-1)[0];
     const dirPath = partialAsArray.slice(0, -1);
     const dir = this.findFile(this.currentDir, dirPath, 'dir');
-    const options = dir.getContentNamesByType(filetypes);
+    const fileOptions = dir.getContentsByTypes(filetypes);
+    const options = [];
+    fileOptions.forEach((f) => {
+      let optName = f.name;
+      if (f.filetype === 'dir') optName += '/';
+      options.push(optName);
+    });
     return Shell.filterAutoCompleteOptions(partialName, options);
   }
 
@@ -187,11 +216,12 @@ export default class Shell {
    * executes autocomplete. to be called only if there is one valid autocomplete option.
    * @param {string} partial Word to be completed
    * @param {string} complete Word to be autocompleted to
-   * @param {bool} appendBackSlash Flag to determine whether or not to add backslash
+   * @param {boolean} appendBackSlash Flag to determine whether or not to add backslash
    */
-  executeAutoComplete(partial, complete, appendBackslash) {
-    let completion = complete.slice(partial.length);
-    if (appendBackslash) completion += '/';
+  executeAutoComplete(partial, complete) {
+    const splitPartial = partial.split('/');
+    const wordPartial = splitPartial[splitPartial.length - 1];
+    const completion = complete.slice(wordPartial.length);
     this.inputString += completion;
     this.inputPromptElement.append(completion);
   }
@@ -206,7 +236,8 @@ export default class Shell {
    * @return {FileObject} Returns file object if found, null if not
    */
   findFile(dir, filepath, filetype) {
-    if ((filepath.length === 0) && filetype === 'dir') return dir;
+    if ((filepath.length === 0 || (filepath.length === 1 && filepath[0] === ''))
+        && filetype === 'dir') return dir;
     let found = null;
     const pathArg = filepath[0];
     const typeToFind = filepath.length === 1 ? filetype : 'dir';
