@@ -1,9 +1,58 @@
-/* eslint-env jquery */
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/vi.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/carlegbert/wwwterm" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~TxtFile.html">TxtFile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell.js~Shell.html">Shell</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/vi.js~Vi.html">Vi</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getChar">getChar</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-print">print</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-printInline">printInline</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/vi.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* eslint-env jquery */
 // TODO: reorganize functions in this file so that they are grouped together more logically
-// TODO: consider creating new 'buffer' class
+// TODO: consider creating new &apos;buffer&apos; class
 // TODO: refactor this class so that UI/data are more clearly delineated
 
-import { getChar } from './io';
+import { getChar } from &apos;./io&apos;;
 
   /*
    * object encapsulating data, functions, and HTML elements for Vi session.
@@ -33,15 +82,15 @@ export default class Vi {
     /**
      * @type {string}
      */
-    this.mode = 'normal';
+    this.mode = &apos;normal&apos;;
     /**
      * @type {string}
      */
-    this.heldNum = '';
+    this.heldNum = &apos;&apos;;
     /**
      * @type {string}
      */
-    this.commandText = '';
+    this.commandText = &apos;&apos;;
     /**
      * @type {number}
      */
@@ -53,23 +102,23 @@ export default class Vi {
     /**
      * @type {string[]}
      */
-    this.bufferText = this.file === null ? [''] : this.file.contents;
+    this.bufferText = this.file === null ? [&apos;&apos;] : this.file.contents;
     /**
      * @type {HTMLElement}
      */
-    this.editorElement = $('#editor');
+    this.editorElement = $(&apos;#editor&apos;);
     /**
      * @type {HTMLElement}
      */
-    this.bufferElement = $('#editor-buffer');
+    this.bufferElement = $(&apos;#editor-buffer&apos;);
     /**
      * @type {HTMLElement}
      */
-    this.editorConsoleElement = $('#editor-console');
+    this.editorConsoleElement = $(&apos;#editor-console&apos;);
     /**
      * @type {HTMLElement}
      */
-    this.termElement = $('#terminal');
+    this.termElement = $(&apos;#terminal&apos;);
 
     this.startSession();
   }
@@ -79,7 +128,7 @@ export default class Vi {
    */
   startSession() {
     this.renderBuffer();
-    this.editorConsoleElement.html('');
+    this.editorConsoleElement.html(&apos;&apos;);
     this.termElement.toggle();
     this.editorElement.toggle();
   }
@@ -97,7 +146,7 @@ export default class Vi {
   /**
    * get HTML element at specific y index. defaults to this.cursorY
    * @param {number} y Y index, 0-indexed
-   * @return {Object} <ed-y> HTML element
+   * @return {Object} &lt;ed-y&gt; HTML element
    */
   getLineElement(y = this.cursorY) {
     return $(`#editor-buffer ed-y:nth-child(${y + 1})`);
@@ -105,17 +154,17 @@ export default class Vi {
 
   /**
    * end vi session
-   * @param {boolean} force Don't require buffer to be saved if force is true
+   * @param {boolean} force Don&apos;t require buffer to be saved if force is true
    */
   endSession(force) {
-    if (force || (this.file && (this.file.contents === this.bufferText))) {
-      this.editorConsoleElement.html('');
-      this.bufferElement.html('');
+    if (force || (this.file &amp;&amp; (this.file.contents === this.bufferText))) {
+      this.editorConsoleElement.html(&apos;&apos;);
+      this.bufferElement.html(&apos;&apos;);
       this.editorElement.toggle();
       this.termElement.toggle();
       this.shellRef.killChildProcess();
     } else {
-      this.errorMessage('E37: No write since last change (add ! to override)');
+      this.errorMessage(&apos;E37: No write since last change (add ! to override)&apos;);
     }
   }
 
@@ -132,9 +181,9 @@ export default class Vi {
    * @param {Object} event Keystroke event object
    */
   parseKeystroke(event) {
-    if (this.mode === 'normal') this.normalKeystroke(event);
-    else if (this.mode === 'insert') this.insertKeystroke(event);
-    else if (this.mode === 'command') this.commandKeystroke(event);
+    if (this.mode === &apos;normal&apos;) this.normalKeystroke(event);
+    else if (this.mode === &apos;insert&apos;) this.insertKeystroke(event);
+    else if (this.mode === &apos;command&apos;) this.commandKeystroke(event);
   }
 
   /**
@@ -142,9 +191,9 @@ export default class Vi {
    * @param {Object} event Keystroke event object
    */
   normalKeystroke(event) {
-    if (event.which === 186 && event.shiftKey) { // :
-      this.mode = 'command';
-      this.editorConsoleElement.html(':');
+    if (event.which === 186 &amp;&amp; event.shiftKey) { // :
+      this.mode = &apos;command&apos;;
+      this.editorConsoleElement.html(&apos;:&apos;);
     } else if (event.which === 73) { // i
       if (event.shiftKey) this.cursorX = 0;
       else if (this.getBufferLine().length === 0) this.cursorX += 1;
@@ -155,16 +204,16 @@ export default class Vi {
       this.setInsertMode();
     } else if (event.which === 79) { // o
       if (!event.shiftKey) this.cursorY += 1;
-      this.bufferText.splice(this.cursorY, 0, '');
+      this.bufferText.splice(this.cursorY, 0, &apos;&apos;);
       this.cursorX = 0;
       this.renderBuffer();
       this.setInsertMode();
-    } else if (event.which === 52 && event.shiftKey) { // $
+    } else if (event.which === 52 &amp;&amp; event.shiftKey) { // $
       this.cursorX = this.getBufferLine().length;
-    } else if (event.which === 48 && !event.shiftKey) { // 0
+    } else if (event.which === 48 &amp;&amp; !event.shiftKey) { // 0
       this.cursorX = 0;
     } else if (this.heldNum) {
-      for (let i = 0; i < parseInt(this.heldNum, 10); i += 1) {
+      for (let i = 0; i &lt; parseInt(this.heldNum, 10); i += 1) {
         this.repeatableNormalKeystroke(event);
       }
     } else {
@@ -173,16 +222,16 @@ export default class Vi {
     this.drawCursor();
 
     const c = getChar(event);
-    if (parseInt(c, 10) && (c !== 0 || this.heldNum)) this.heldNum += c;
-    else this.heldNum = '';
+    if (parseInt(c, 10) &amp;&amp; (c !== 0 || this.heldNum)) this.heldNum += c;
+    else this.heldNum = &apos;&apos;;
   }
 
   /**
    * enter insert mode
    */
   setInsertMode() {
-    this.mode = 'insert';
-    this.editorConsoleElement.html('<strong>-- INSERT --</strong>');
+    this.mode = &apos;insert&apos;;
+    this.editorConsoleElement.html(&apos;&lt;strong&gt;-- INSERT --&lt;/strong&gt;&apos;);
     if (this.getBufferLine().length === 0) {
       this.cursorX += 1;
     }
@@ -215,14 +264,14 @@ export default class Vi {
    */
   insertKeystroke(event) {
     if (event.which === 27) { // escape
-      this.mode = 'normal';
+      this.mode = &apos;normal&apos;;
       this.cursorX -= 1;
       this.drawCursor();
-      this.editorConsoleElement.html('');
+      this.editorConsoleElement.html(&apos;&apos;);
     } else if (event.which === 13) { // enter
       this.cursorX = 0;
       this.cursorY += 1;
-      this.bufferText.splice(this.cursorY, 0, '');
+      this.bufferText.splice(this.cursorY, 0, &apos;&apos;);
       this.renderBuffer();
     } else if (event.which === 8) { // backspace
       this.backspace(this.cursorX, this.cursorY);
@@ -240,7 +289,7 @@ export default class Vi {
    */
   backspace(x, y) {
     const line = this.getBufferLine(y);
-    if (x === 0 && y !== 0) {
+    if (x === 0 &amp;&amp; y !== 0) {
       this.cursorX = this.bufferText[y - 1].length;
       this.cursorY -= 1;
       this.bufferText[y - 1] += line;
@@ -282,9 +331,9 @@ export default class Vi {
    */
   commandKeystroke(event) {
     if (event.which === 27) { // escape
-      this.mode = 'normal';
-      this.commandText = '';
-      this.editorConsoleElement.html('');
+      this.mode = &apos;normal&apos;;
+      this.commandText = &apos;&apos;;
+      this.editorConsoleElement.html(&apos;&apos;);
     } else if (event.which === 13) { // enter
       this.executeCommand();
     } else if (event.which === 8) { // backspace
@@ -301,15 +350,15 @@ export default class Vi {
    * execute command mode statement
    */
   executeCommand() {
-    if (this.commandText === 'w') this.saveBuffer();
-    else if (this.commandText === 'q') this.endSession(false);
-    else if (this.commandText === 'q!') this.endSession(true);
-    else if (this.commandText === 'wq') {
+    if (this.commandText === &apos;w&apos;) this.saveBuffer();
+    else if (this.commandText === &apos;q&apos;) this.endSession(false);
+    else if (this.commandText === &apos;q!&apos;) this.endSession(true);
+    else if (this.commandText === &apos;wq&apos;) {
       const saveResult = this.saveBuffer();
       if (saveResult) this.endSession(false);
     } else this.errorMessage(`E492: Not an editor command: ${this.commandText}`);
-    this.commandText = '';
-    this.mode = 'normal';
+    this.commandText = &apos;&apos;;
+    this.mode = &apos;normal&apos;;
   }
 
   /**
@@ -318,16 +367,16 @@ export default class Vi {
    */
   drawCursor() {
     const yMax = this.bufferText.length - 1;
-    if (this.cursorY < 0) this.cursorY = 0;
-    if (this.cursorY > yMax) this.cursorY = yMax;
+    if (this.cursorY &lt; 0) this.cursorY = 0;
+    if (this.cursorY &gt; yMax) this.cursorY = yMax;
     let xMax = this.getBufferLine().length - 1;
-    if (this.mode === 'insert' || this.getBufferLine().length === 0) xMax += 1; // allow cursor at EOL in insert mode or if line is empty
-    if (this.cursorX < 0) this.cursorX = 0;
-    if (this.cursorX > xMax) this.cursorX = xMax;
-    if (this.cursorElement) this.cursorElement.removeClass('cursor');
+    if (this.mode === &apos;insert&apos; || this.getBufferLine().length === 0) xMax += 1; // allow cursor at EOL in insert mode or if line is empty
+    if (this.cursorX &lt; 0) this.cursorX = 0;
+    if (this.cursorX &gt; xMax) this.cursorX = xMax;
+    if (this.cursorElement) this.cursorElement.removeClass(&apos;cursor&apos;);
     const jqStr = `#editor-buffer ed-y:nth-child(${this.cursorY + 1}) ed-x:nth-child(${this.cursorX + 1})`;
     this.cursorElement = $(jqStr);
-    this.cursorElement.addClass('cursor');
+    this.cursorElement.addClass(&apos;cursor&apos;);
   }
 
   /**
@@ -346,26 +395,26 @@ export default class Vi {
    * create new FileObject and assign it to Vi session
    */
   writeNewFile() {
-    const newFileResult = this.shellRef.newFile(this.filePath, 'txt');
+    const newFileResult = this.shellRef.newFile(this.filePath, &apos;txt&apos;);
     if (!newFileResult.data) return false;
     this.file = newFileResult.data;
     return true;
   }
 
   /**
-   * rewrite string so that every character is enveloped by an <ed-x> tag,
+   * rewrite string so that every character is enveloped by an &lt;ed-x&gt; tag,
    * so that we can traverse it with nth-child selector. space chars will
-   * be replaced with '&nbsp;'
+   * be replaced with &apos;&amp;nbsp;&apos;
    * @param {string} str Original string
    * @return {string} New string
    */
   static edxString(str) {
-    let fStr = '';
-    for (let i = 0; i < str.length; i += 1) {
-      const c = str[i] === ' ' ? '&nbsp;' : str[i];
-      fStr += `<ed-x>${c}</ed-x>`;
+    let fStr = &apos;&apos;;
+    for (let i = 0; i &lt; str.length; i += 1) {
+      const c = str[i] === &apos; &apos; ? &apos;&amp;nbsp;&apos; : str[i];
+      fStr += `&lt;ed-x&gt;${c}&lt;/ed-x&gt;`;
     }
-    fStr += '<ed-x>&nbsp;</ed-x>';
+    fStr += &apos;&lt;ed-x&gt;&amp;nbsp;&lt;/ed-x&gt;&apos;;
     return fStr;
   }
 
@@ -379,17 +428,34 @@ export default class Vi {
   drawLine(str, lineElement) {
     const fStr = Vi.edxString(str);
     if (lineElement) $(`#editor-buffer ed-y:nth-child(${this.cursorY + 1})`).html(fStr);
-    else this.bufferElement.append(`<ed-y>${fStr}</ed-y>`);
+    else this.bufferElement.append(`&lt;ed-y&gt;${fStr}&lt;/ed-y&gt;`);
   }
 
   /**
    * render entire contents of buffer
    */
   renderBuffer() {
-    this.bufferElement.html('');
-    this.bufferText.forEach(str => this.drawLine(str));
+    this.bufferElement.html(&apos;&apos;);
+    this.bufferText.forEach(str =&gt; this.drawLine(str));
     this.currentLineElement = this.getLineElement();
     this.drawCursor();
   }
 
 }
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

@@ -4,7 +4,7 @@
  * function for parsing keycode from keystroke event into a
  * single character. necessary because of poor keystroke event
  * support in Safari.
- * @param {event} event Keystroke event
+ * @param {Event} event Keystroke event
  * @return {string} single-char string or null, or empty string
  *  on failure.
  */
@@ -41,7 +41,7 @@ export function getChar(event) {
       default:
         break;
     }
-  // shift key not deperessed
+  // shift key not depressed
   } else if ((code <= 91 && code >= 65) || (code <= 57 && code >= 48)) {
     return String.fromCharCode(code).toLowerCase(); // lowercase & nums
   } else {
@@ -68,8 +68,8 @@ export function getChar(event) {
  * print output to screen. format if necessary
  * TODO: consider refactoring into seperate functions for
  * single string and array.
- * @param {string or string[]} string or array of strings to print
- * target {HTMLElement} target HTML element to print to
+ * @param {string|string[]} output String or array of strings to print
+ * @param {HTMLElement} target HTML element to print to
  */
 export function print(output, target) {
   if (typeof output === 'string') {
@@ -81,8 +81,8 @@ export function print(output, target) {
 
 /**
  * print output to screen without linebreaks
- * @param {string[]} array of strings to print
- * target {HTMLElement} target HTML element to print to
+ * @param {string[]} output Array of strings to print
+ * @param {HTMLElement} target HTML element to print to
  */
 export function printInline(output, target) {
   output.forEach((line) => {

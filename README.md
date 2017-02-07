@@ -3,13 +3,17 @@
 
 [wwwterm](https://github.com/carlegbert/wwwterm) rewritten in ES6. Transpiled to ES5 via babel/webpack.
 
-#### Instructions
+#### building the project
 
-* you will need nodejs/npm
 * you will need webpack (`npm install -g webpack`)
 * `npm install`
 * to run the dev server: `npm run dev` (page served at localhost:8080)
 * for an optimized build: `npm run build`
+
+#### building documentation page
+
+* `npm run doc`
+* docs will be in doc/
 
 #### current working commands/features
 

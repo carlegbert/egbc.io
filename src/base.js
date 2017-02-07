@@ -3,6 +3,7 @@
 import { TxtFile, DirFile } from './fileobject';
 import Shell from './shell';
 
+// dummy data - to be replaced with data from JSON API
 const root = new DirFile('~', '~', 'dir', null, null);
 const aDir = new DirFile('a_dir', '~/a_dir', 'dir', root, null);
 const aTextfile = new TxtFile('a_textfile', '~/a_textfile', 'txt', root, null, ['this is some text']);

@@ -1,9 +1,58 @@
-/* eslint-env jquery */
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/shell.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
 
-import { getChar, print, printInline } from './io';
-import { TxtFile, DirFile } from './fileobject';
-import { ShellCommand, ShellCommandResult } from './shell-command';
-import Vi from './vi';
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/carlegbert/wwwterm" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~TxtFile.html">TxtFile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell.js~Shell.html">Shell</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/vi.js~Vi.html">Vi</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getChar">getChar</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-print">print</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-printInline">printInline</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/shell.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* eslint-env jquery */
+
+import { getChar, print, printInline } from &apos;./io&apos;;
+import { TxtFile, DirFile } from &apos;./fileobject&apos;;
+import { ShellCommand, ShellCommandResult } from &apos;./shell-command&apos;;
+import Vi from &apos;./vi&apos;;
 
 /**
  * Object encapsulating shell session
@@ -27,11 +76,11 @@ export default class Shell {
     /**
      * @type {string}
      */
-    this.user = 'guest';
+    this.user = &apos;guest&apos;;
     /**
      * @type {string}
      */
-    this.inputString = '';
+    this.inputString = &apos;&apos;;
     /**
      * @type {string[]}
      */
@@ -47,15 +96,15 @@ export default class Shell {
     /**
      * @type {HTMLElement}
      */
-    this.inputPromptElement = $('#input');
+    this.inputPromptElement = $(&apos;#input&apos;);
     /**
      * @type {HTMLElement}
      */
-    this.PS1Element = $('#PS1');
+    this.PS1Element = $(&apos;#PS1&apos;);
     /**
      * @type {HTMLElement}
      */
-    this.outputElement = $('#terminal-output');
+    this.outputElement = $(&apos;#terminal-output&apos;);
     /**
      * @type {Object} - TODO: create base Process class
      */
@@ -66,12 +115,12 @@ export default class Shell {
    * @return {string} PS1 string
    */
   getPS1String() {
-    return `<span class="user">${this.user}@www.carlegbert.com:</span>` +
-      `<span class="path">${this.currentDir.fullPath}</span>$&nbsp;`;
+    return `&lt;span class=&quot;user&quot;&gt;${this.user}@www.carlegbert.com:&lt;/span&gt;` +
+      `&lt;span class=&quot;path&quot;&gt;${this.currentDir.fullPath}&lt;/span&gt;$&amp;nbsp;`;
   }
 
   /**
-   * Direct keystroke to shell's keystroke handler or to child process
+   * Direct keystroke to shell&apos;s keystroke handler or to child process
    * if there is one active
    * @param {Object} event Keystroke event
    */
@@ -93,18 +142,18 @@ export default class Shell {
       this.tabPressed = false;
       event.preventDefault();
       this.inputString = this.inputString.slice(0, (this.inputString.length - 1));
-      this.inputPromptElement.html(this.inputString.replace(/ /g, '&nbsp;'));
-    } else if (event.which === 38 && this.historyIndex > 0) { // up arrow
+      this.inputPromptElement.html(this.inputString.replace(/ /g, &apos;&amp;nbsp;&apos;));
+    } else if (event.which === 38 &amp;&amp; this.historyIndex &gt; 0) { // up arrow
       this.tabPressed = false;
       event.preventDefault();
       this.historyIndex -= 1;
       this.inputString = this.bashHistory[this.historyIndex];
       this.inputPromptElement.html(this.inputString);
-    } else if (event.which === 40 && this.historyIndex < this.bashHistory.length) { // down
+    } else if (event.which === 40 &amp;&amp; this.historyIndex &lt; this.bashHistory.length) { // down
       this.tabPressed = false;
       event.preventDefault();
       this.historyIndex += 1;
-      if (this.historyIndex === this.bashHistory.length) this.inputString = '';
+      if (this.historyIndex === this.bashHistory.length) this.inputString = &apos;&apos;;
       else this.inputString = this.bashHistory[this.historyIndex];
       this.inputPromptElement.html(this.inputString);
     } else if (event.which === 9) { // tab
@@ -114,7 +163,7 @@ export default class Shell {
       this.tabPressed = false;
       const k = getChar(event);
       this.inputString += k;
-      const kSpaceAdjusted = k === ' ' ? '&nbsp;' : k;
+      const kSpaceAdjusted = k === &apos; &apos; ? &apos;&amp;nbsp;&apos; : k;
       this.inputPromptElement.append(kSpaceAdjusted);
     }
     this.inputPromptElement[0].scrollIntoView(false);
@@ -127,13 +176,13 @@ export default class Shell {
     if (!this.inputString.match(/[^ ]/g)) { // regex for anything but space
       print(this.getPS1String(), this.outputElement);
     } else {
-      print(this.getPS1String() + this.inputString.replace(' ', '&nbsp;'), this.outputElement);
+      print(this.getPS1String() + this.inputString.replace(&apos; &apos;, &apos;&amp;nbsp;&apos;), this.outputElement);
       this.bashHistory.push(this.inputString);
       const res = this.executeCommand(this.inputString);
       print(res.getDefaultOutput(), this.outputElement);
     }
-    this.inputString = '';
-    this.inputPromptElement.html('');
+    this.inputString = &apos;&apos;;
+    this.inputPromptElement.html(&apos;&apos;);
     this.historyIndex = this.bashHistory.length;
   }
 
@@ -144,8 +193,8 @@ export default class Shell {
    * be a ShellCommandResult object
    */
   executeCommand(inputString) {
-    if (inputString.includes('>>')) return this.redirect(inputString, '>>');
-    if (inputString.includes('>')) return this.redirect(inputString, '>');
+    if (inputString.includes(&apos;&gt;&gt;&apos;)) return this.redirect(inputString, &apos;&gt;&gt;&apos;);
+    if (inputString.includes(&apos;&gt;&apos;)) return this.redirect(inputString, &apos;&gt;&apos;);
 
     const shellCommand = new ShellCommand(inputString);
     if (!Shell.validCommands().includes(shellCommand.command)) {
@@ -156,22 +205,22 @@ export default class Shell {
   }
 
   /**
-   * redirect with >, >> operators
+   * redirect with &gt;, &gt;&gt; operators
    * @param {string} inputString Input string containing redirect operator
-   * @param {string} pattern Redirect operator (either > or >>)
+   * @param {string} pattern Redirect operator (either &gt; or &gt;&gt;)
    * @return {Object} ShellCommandResult containing stderr to print to screen if necessary
    */
   redirect(inputString, pattern) {
     const i = inputString.indexOf(pattern);
-    const afterSymbol = inputString.slice(i + pattern.length).trim().split(' ');
-    if (!afterSymbol || afterSymbol.length === 0) return new ShellCommandResult([], 'Syntax error');
+    const afterSymbol = inputString.slice(i + pattern.length).trim().split(&apos; &apos;);
+    if (!afterSymbol || afterSymbol.length === 0) return new ShellCommandResult([], &apos;Syntax error&apos;);
     const otherArgs = afterSymbol.length === 1 ? [] : afterSymbol.slice(pattern.length);
-    const newInput = inputString.slice(0, i) + otherArgs.join(' ');
+    const newInput = inputString.slice(0, i) + otherArgs.join(&apos; &apos;);
     const res = this.executeCommand(newInput);
     const filepath = afterSymbol[0];
-    const file = this.findFile(this.currentDir, [filepath], 'txt') || this.newFile([filepath], 'txt').data;
+    const file = this.findFile(this.currentDir, [filepath], &apos;txt&apos;) || this.newFile([filepath], &apos;txt&apos;).data;
     if (!file) return new ShellCommandResult(null, `bash: ${filepath}: No such file or directory`);
-    file.contents = pattern === '>' ? res.stdOut : file.contents.concat(res.stdOut);
+    file.contents = pattern === &apos;&gt;&apos; ? res.stdOut : file.contents.concat(res.stdOut);
     return new ShellCommandResult(null, res.stdErr);
   }
 
@@ -179,23 +228,23 @@ export default class Shell {
    * handle tab for autocompletion
    */
   handleTab() {
-    const spaceAtEnd = (this.inputString[this.inputString.length - 1] === ' ');
+    const spaceAtEnd = (this.inputString[this.inputString.length - 1] === &apos; &apos;);
     const cmd = new ShellCommand(this.inputString);
     let options;
     let partial;
     if (!cmd.command) {
-      partial = '';
+      partial = &apos;&apos;;
       options = Shell.validCommands();
-    } else if (!spaceAtEnd && cmd.args.length === 0) {
+    } else if (!spaceAtEnd &amp;&amp; cmd.args.length === 0) {
       partial = cmd.command;
       options = Shell.filterAutoCompleteOptions(partial, Shell.validCommands());
     } else {
-      partial = cmd.args[cmd.args.length - 1] || '';
+      partial = cmd.args[cmd.args.length - 1] || &apos;&apos;;
       options = this.getAutocompleteFiles(partial, Shell.getValidTypes(cmd.command));
-      if (options.length === 0) options = this.getAutocompleteFiles(partial, ['dir']);
+      if (options.length === 0) options = this.getAutocompleteFiles(partial, [&apos;dir&apos;]);
     }
     if (options.length === 1) this.executeAutoComplete(partial, options[0]);
-    else if (options.length > 1) this.printAutoCompleteOptions(options);
+    else if (options.length &gt; 1) this.printAutoCompleteOptions(options);
   }
 
   /**
@@ -207,8 +256,8 @@ export default class Shell {
   static filterAutoCompleteOptions(partial, options) {
     const len = partial.length;
     const validOptions = [];
-    options.forEach((opt) => {
-      if (opt.length >= len && opt.slice(0, len) === partial) {
+    options.forEach((opt) =&gt; {
+      if (opt.length &gt;= len &amp;&amp; opt.slice(0, len) === partial) {
         validOptions.push(opt);
       }
     });
@@ -217,20 +266,20 @@ export default class Shell {
 
   /**
    * returns list of all files in a directory for autocompletion purposes.
-   * @param {string} partial Filepath to be completed, eg, 'path/to/fi' or 'pat'
+   * @param {string} partial Filepath to be completed, eg, &apos;path/to/fi&apos; or &apos;pat&apos;
    * @param {string[]} filetypes Optional filetypes to filter for
    * @return {string[]} array of filenames
    */
   getAutocompleteFiles(partial, filetypes) {
-    const partialAsArray = partial.split('/');
+    const partialAsArray = partial.split(&apos;/&apos;);
     const partialName = partialAsArray.slice(-1)[0];
     const dirPath = partialAsArray.slice(0, -1);
-    const dir = this.findFile(this.currentDir, dirPath, 'dir');
+    const dir = this.findFile(this.currentDir, dirPath, &apos;dir&apos;);
     const fileOptions = dir.getContentsByTypes(filetypes);
     const options = [];
-    fileOptions.forEach((f) => {
+    fileOptions.forEach((f) =&gt; {
       let optName = f.name;
-      if (f.filetype === 'dir') optName += '/';
+      if (f.filetype === &apos;dir&apos;) optName += &apos;/&apos;;
       options.push(optName);
     });
     return Shell.filterAutoCompleteOptions(partialName, options);
@@ -255,7 +304,7 @@ export default class Shell {
    * @param {string} complete Word to be autocompleted to
    */
   executeAutoComplete(partial, complete) {
-    const splitPartial = partial.split('/');
+    const splitPartial = partial.split(&apos;/&apos;);
     const wordPartial = splitPartial[splitPartial.length - 1];
     const completion = complete.slice(wordPartial.length);
     this.inputString += completion;
@@ -272,24 +321,24 @@ export default class Shell {
    * @return {FileObject} Returns file object if found, null if not
    */
   findFile(dir, filepath, filetype) {
-    if ((filepath.length === 0 || (filepath.length === 1 && filepath[0] === ''))
-        && filetype === 'dir') return dir;
+    if ((filepath.length === 0 || (filepath.length === 1 &amp;&amp; filepath[0] === &apos;&apos;))
+        &amp;&amp; filetype === &apos;dir&apos;) return dir;
     let found = null;
     const pathArg = filepath[0];
-    const typeToFind = filepath.length === 1 ? filetype : 'dir';
+    const typeToFind = filepath.length === 1 ? filetype : &apos;dir&apos;;
     switch (pathArg) {
-      case '.':
+      case &apos;.&apos;:
         found = dir;
         break;
-      case '..':
+      case &apos;..&apos;:
         found = dir.parentRef;
         break;
-      case '~':
+      case &apos;~&apos;:
         found = this.fileStructure;
         break;
       default:
-        dir.children.forEach((child) => {
-          if (pathArg === child.name && (!typeToFind || typeToFind === child.filetype)) {
+        dir.children.forEach((child) =&gt; {
+          if (pathArg === child.name &amp;&amp; (!typeToFind || typeToFind === child.filetype)) {
             found = child;
           }
         });
@@ -308,12 +357,12 @@ export default class Shell {
   newFile(filepath, filetype) {
     let dir;
     if (filepath.length === 1) dir = this.currentDir;
-    else dir = this.findFile(this.currentDir, filepath.slice(0, -1), 'dir');
-    if (!dir) return new ShellCommandResult(null, `${filepath.slice(0, -1).join('/')}: Directory not found`);
+    else dir = this.findFile(this.currentDir, filepath.slice(0, -1), &apos;dir&apos;);
+    if (!dir) return new ShellCommandResult(null, `${filepath.slice(0, -1).join(&apos;/&apos;)}: Directory not found`);
     const filename = filepath.slice(-1)[0];
     const pathStr = `${dir.fullPath}/${filename}`;
     let file;
-    if (filetype === 'dir') file = new DirFile(filename, pathStr, filetype, dir);
+    if (filetype === &apos;dir&apos;) file = new DirFile(filename, pathStr, filetype, dir);
     else file = new TxtFile(filename, pathStr, filetype, dir);
     dir.children.push(file);
     return new ShellCommandResult(null, null, file);
@@ -333,34 +382,34 @@ export default class Shell {
    */
   static validCommands() {
     return [
-      'clear',
-      'pwd',
-      'whoami',
-      'cd',
-      'ls',
-      'cat',
-      'touch',
-      'mkdir',
-      'echo',
-      'vi',
+      &apos;clear&apos;,
+      &apos;pwd&apos;,
+      &apos;whoami&apos;,
+      &apos;cd&apos;,
+      &apos;ls&apos;,
+      &apos;cat&apos;,
+      &apos;touch&apos;,
+      &apos;mkdir&apos;,
+      &apos;echo&apos;,
+      &apos;vi&apos;,
     ];
   }
 
   /**
    * Determine valid filetypes for command arguments
-   * @param {string} cmdName Command name, eg, 'ls', 'cat', etc
+   * @param {string} cmdName Command name, eg, &apos;ls&apos;, &apos;cat&apos;, etc
    * @return {string[]} array of valid filetypes
    */
   static getValidTypes(cmdName) {
     const typeDict = {
-      ls: ['dir'],
-      cd: ['dir'],
-      mkdir: ['dir'],
-      cat: ['txt'],
-      '>': ['txt'],
-      vi: ['txt'],
+      ls: [&apos;dir&apos;],
+      cd: [&apos;dir&apos;],
+      mkdir: [&apos;dir&apos;],
+      cat: [&apos;txt&apos;],
+      &apos;&gt;&apos;: [&apos;txt&apos;],
+      vi: [&apos;txt&apos;],
     };
-    return typeDict[cmdName] || ['dir', 'txt'];
+    return typeDict[cmdName] || [&apos;dir&apos;, &apos;txt&apos;];
   }
 
 
@@ -369,7 +418,7 @@ export default class Shell {
    * @return {ShellCommandResult}
    */
   clear() {
-    $('#terminal-output').html('');
+    $(&apos;#terminal-output&apos;).html(&apos;&apos;);
     return new ShellCommandResult();
   }
 
@@ -396,7 +445,7 @@ export default class Shell {
    */
   cd(shellCommand) {
     const dir = shellCommand.args.length === 0 ? this.fileStructure :
-      this.findFile(this.currentDir, shellCommand.args[0].split('/'), 'dir');
+      this.findFile(this.currentDir, shellCommand.args[0].split(&apos;/&apos;), &apos;dir&apos;);
     if (dir) {
       this.currentDir = dir;
       this.PS1Element.html(this.getPS1String());
@@ -415,13 +464,13 @@ export default class Shell {
     if (shellCommand.args.length === 0) {
       res.stdOut.push(this.currentDir.lsHelper());
     } else {
-      shellCommand.args.forEach((arg) => {
-        const dir = this.findFile(this.currentDir, arg.split('/'), 'dir');
+      shellCommand.args.forEach((arg) =&gt; {
+        const dir = this.findFile(this.currentDir, arg.split(&apos;/&apos;), &apos;dir&apos;);
         if (!dir) {
           res.stdErr.push(`ls: cannot access ${arg}: no such file or directory`);
         } else {
-          let str = '';
-          if (shellCommand.args.length > 1) str += `${arg}:`;
+          let str = &apos;&apos;;
+          if (shellCommand.args.length &gt; 1) str += `${arg}:`;
           str += dir.lsHelper();
           res.stdOut.push(str);
         }
@@ -439,10 +488,10 @@ export default class Shell {
   cat(shellCommand) {
     const res = new ShellCommandResult();
     if (shellCommand.args.length === 0) return res;
-    shellCommand.args.forEach((arg) => {
-      const path = arg.split('/');
+    shellCommand.args.forEach((arg) =&gt; {
+      const path = arg.split(&apos;/&apos;);
       const file = this.findFile(this.currentDir, path);
-      if (file && file.filetype === 'dir') {
+      if (file &amp;&amp; file.filetype === &apos;dir&apos;) {
         res.stdErr.push(`cat: ${file.name}: Is a directory`);
       } else if (file) {
         res.stdOut = res.stdOut.concat(file.contents);
@@ -454,19 +503,19 @@ export default class Shell {
   }
 
   /**
-   * Mark file or directory as modified. Create new file if one doesn't exist at path.
+   * Mark file or directory as modified. Create new file if one doesn&apos;t exist at path.
    * @param {ShellCommand} shellCommand
    * @return {ShellCommandResult}
    */
   touch(shellCommand) {
     const res = new ShellCommandResult();
     if (shellCommand.args.length === 0) return res;
-    shellCommand.args.forEach((arg) => {
-      const path = arg.split('/');
-      const file = this.findFile(this.currentDir, path, 'txt');
+    shellCommand.args.forEach((arg) =&gt; {
+      const path = arg.split(&apos;/&apos;);
+      const file = this.findFile(this.currentDir, path, &apos;txt&apos;);
       if (file) file.lastModified = new Date();
       else {
-        const newFileRes = this.newFile(path, 'txt');
+        const newFileRes = this.newFile(path, &apos;txt&apos;);
         res.combine(newFileRes);
       }
     });
@@ -481,11 +530,11 @@ export default class Shell {
   mkdir(shellCommand) {
     const res = new ShellCommandResult();
     if (shellCommand.args.length === 0) return res;
-    shellCommand.args.forEach((arg) => {
-      const path = arg.split('/');
-      const file = this.findFile(this.currentDir, path, 'dir');
+    shellCommand.args.forEach((arg) =&gt; {
+      const path = arg.split(&apos;/&apos;);
+      const file = this.findFile(this.currentDir, path, &apos;dir&apos;);
       if (!file) {
-        const newFileRes = this.newFile(path, 'dir');
+        const newFileRes = this.newFile(path, &apos;dir&apos;);
         res.combine(newFileRes);
       }
     });
@@ -498,7 +547,7 @@ export default class Shell {
    * @return {ShellCommandResult}
    */
   echo(shellCommand) {
-    const output = shellCommand.args.join(' ');
+    const output = shellCommand.args.join(&apos; &apos;);
     return new ShellCommandResult(output);
   }
 
@@ -508,10 +557,27 @@ export default class Shell {
    * @return {ShellCommandResult}
    */
   vi(shellCommand) {
-    const fPath = shellCommand.args[0].split('/');
-    const file = this.findFile(this.currentDir, fPath, 'txt');
+    const fPath = shellCommand.args[0].split(&apos;/&apos;);
+    const file = this.findFile(this.currentDir, fPath, &apos;txt&apos;);
     this.childProcess = new Vi(this, fPath, file);
     return new ShellCommandResult();
   }
 
 }
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

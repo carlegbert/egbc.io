@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/fileobject.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/carlegbert/wwwterm" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~TxtFile.html">TxtFile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell.js~Shell.html">Shell</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/vi.js~Vi.html">Vi</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getChar">getChar</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-print">print</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-printInline">printInline</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/fileobject.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * Base File class
+ * @class
+ */
+export class FileObject {
+  /**
+   * @constructor
+   * @param {string} name
+   * @param {string} fullPath
+   * @param {FileObject} parentRef
+   * @param {Date} lastModified
+   */
+  constructor(name, fullPath, filetype, parentRef, lastModified) {
+    /**
+     * @type {string}
+     */
+    this.name = name;
+    /**
+     * @type {string}
+     */
+    this.fullPath = fullPath;
+    /**
+     * @type {string}
+     */
+    this.filetype = filetype;
+    /**
+     * @type {DirFile}
+     */
+    this.parentRef = parentRef;
+    /**
+     * @type {Date}
+     */
+    this.lastModified = lastModified || new Date();
+  }
+
+  /**
+   * @param {Object} json
+   */
+  static jsonToFile(json) {
+    const newFile = new FileObject(json.name, json.fullPath, json.filetype,
+        json.parentRef, json.lastModified);
+    if (newFile.filetype === &apos;dir&apos;) {
+      newFile.children = [];
+      json.children.forEach((child) =&gt; {
+        const childFile = this.jsonToFile(child);
+        childFile.parentRef = newFile;
+        newFile.children.push(childFile);
+      });
+    }
+    return newFile;
+  }
+
+  /**
+   * Returns HTML-formatted filename
+   * @return {string}
+   */
+  getLsEntry() {
+    return `&lt;span class=&quot;dir ${this.filetype}&quot; id=&quot;${this.fullPath}&quot;&gt;${this.name}&lt;/span&gt;`;
+  }
+
+}
+
+/**
+ * @extends {FileObject}
+ */
+export class DirFile extends FileObject {
+  /**
+   * @constructor
+   * @param {string} name
+   * @param {string} fullPath
+   * @param {FileObject} parentRef
+   * @param {Date} lastModified
+   * @param {FileObject[]} children
+   */
+  constructor(name, fullPath, filetype, parentRef, lastModified, children) {
+    super(name, fullPath, filetype, parentRef, lastModified);
+    /**
+     * @type {FileObject[]}
+     */
+    this.children = children || [];
+  }
+
+  /**
+   * @param {string[]} types Types to filter by
+   * @return {FileObject[]} array of FileObjects contained in directory
+   */
+  getContentsByTypes(types) {
+    const files = [];
+    this.children.forEach((child) =&gt; {
+      if (types.includes(child.filetype)) {
+        files.push(child);
+      }
+    });
+    return files;
+  }
+
+  /**
+   * @param {string[]} types Types to filter by
+   * @return {string[]} array of names of FileObjects contained in directory
+   */
+  getContentNamesByType(types) {
+    const filenames = [];
+    this.children.forEach((child) =&gt; {
+      if (types.includes(child.filetype)) {
+        filenames.push(child.name);
+      }
+    });
+    return filenames;
+  }
+
+  /**
+   * Helper method for ls
+   * @return {string}
+   */
+  lsHelper() {
+    let res = &apos;&lt;div&gt;&apos;;
+    this.children.forEach((child) =&gt; {
+      res += `&lt;li class=&quot;inline ${child.filetype}&quot;&gt;${child.name}&lt;/li&gt;`;
+    });
+    res += &apos;&lt;/div&gt;&apos;;
+    return res;
+  }
+
+}
+
+/**
+ * @extends {FileObject}
+ */
+export class TxtFile extends FileObject {
+  /**
+   * @constructor
+   * @param {string} name
+   * @param {string} fullPath
+   * @param {FileObject} parentRef
+   * @param {Date} lastModified
+   * @param {string[]} contents
+   */
+  constructor(name, fullPath, filetype, parentRef, lastModified, contents) {
+    super(name, fullPath, filetype, parentRef, lastModified);
+    /**
+     * @type {string[]}
+     */
+    this.contents = contents || [];
+  }
+
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
