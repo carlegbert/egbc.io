@@ -36,6 +36,7 @@
 * vi
 
 #### TODO
+* line wrapping for vi
 * 'localstorage' dir
 * refactor shell commands from Shell class into ShellCommand class?
 * autocompletion with >, >>

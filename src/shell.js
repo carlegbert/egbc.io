@@ -287,6 +287,7 @@ export default class Shell {
       'mkdir',
       'echo',
       'vi',
+      'help',
     ];
   }
 
@@ -305,6 +306,18 @@ export default class Shell {
       vi: ['txt'],
     };
     return typeDict[cmdName] || ['dir', 'txt'];
+  }
+
+  /**
+   * List available commands
+   * @return {ShellCommandResult}
+   */
+  help() {
+    const data = ['Available commands:']
+      .concat(Shell.validCommands())
+      .concat(['History navigation with &uarr;&darr;', 'tab autocompletion', 'redirection with >, >>']);
+    const res = new ShellCommandResult(data);
+    return res;
   }
 
 

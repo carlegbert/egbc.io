@@ -8,6 +8,11 @@ body {
   padding: 0;
 }
 
+#terminal, #editor-buffer {
+  margin-top: 30px;
+  margin-left: 30px;
+}
+
 li {
   list-style-type: none;
   margin-left: 0px;

@@ -56,7 +56,7 @@ export class FileObject {
    * @return {string}
    */
   getLsEntry() {
-    return `<span class="dir ${this.filetype}" id="${this.fullPath}">${this.name}</span>`;
+    return `<span class="inline ${this.filetype}" id="${this.fullPath}">${this.name}</span>`;
   }
 
 }
@@ -83,6 +83,37 @@ export class TxtFile extends FileObject {
   }
 
 }
+
+/**
+ * @extends {TxtFile}
+ */
+export class LinkFile extends TxtFile {
+  /**
+   * @constructor
+   * @param {string} name
+   * @param {string} fullPath
+   * @param {DirFile} parentRef
+   * @param {Date} lastModified
+   * @param {string} url
+   */
+  constructor(name, fullPath, parentRef, lastModified, url) {
+    super(name, fullPath, 'txt', parentRef, lastModified);
+    /**
+     * @type {string}
+     */
+    this.url = url;
+  }
+
+  /**
+   * Returns HTML-formatted filename
+   * @return {string}
+   */
+  getLsEntry() {
+    return `<span class="inline link"><a href="${this.url}" target="_blank">${this.name}<a></span>`;
+  }
+
+}
+
 /**
  * @extends {FileObject}
  */
@@ -138,7 +169,7 @@ export class DirFile extends FileObject {
   lsHelper() {
     let res = '<div>';
     this.children.forEach((child) => {
-      res += `<li class="inline ${child.filetype}">${child.name}</li>`;
+      res += child.getLsEntry();
     });
     res += '</div>';
     return res;
