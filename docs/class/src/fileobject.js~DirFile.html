@@ -47,13 +47,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {DirFile} from &apos;<span><a href="file/src/fileobject.js.html#lineNumber66">wwwterm/src/fileobject.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {DirFile} from &apos;<span><a href="file/src/fileobject.js.html#lineNumber91">wwwterm/src/fileobject.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/src/fileobject.js.html#lineNumber66">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/fileobject.js.html#lineNumber91">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -172,6 +172,92 @@
         <p>
           
           
+          <span data-ice="name"><span><a href="class/src/fileobject.js~DirFile.html#instance-method-createChild">createChild</a></span></span><span data-ice="signature">(filepath: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span>, filetype: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Attempt to find correct parent directory and create new file as its
+child.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/src/fileobject.js~DirFile.html#instance-method-findFile">findFile</a></span></span><span data-ice="signature">(filepath: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span>, filetype: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Function to find file in a directory.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          <span data-ice="name"><span><a href="class/src/fileobject.js~DirFile.html#instance-method-findTopParent">findTopParent</a></span></span><span data-ice="signature">(): <span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Recursively traverses up through parentRefs to find base DirFile
+representing the entire file structure.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
           <span data-ice="name"><span><a href="class/src/fileobject.js~DirFile.html#instance-method-getContentNamesByType">getContentNamesByType</a></span></span><span data-ice="signature">(types: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span>): <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></span>
         </p>
       </div>
@@ -262,7 +348,7 @@
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/fileobject.js~FileObject.html#static-method-jsonToFile">jsonToFile</a></span></span><span data-ice="signature">(json: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span>*</span></span>
+          <span data-ice="name"><span><a href="class/src/fileobject.js~FileObject.html#static-method-jsonToFile">jsonToFile</a></span></span><span data-ice="signature">(json: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>, parentRef: <span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span>): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -459,7 +545,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber75">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber100">source</a></span></span>
     </span>
   </h3>
 
@@ -545,7 +631,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber80">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber105">source</a></span></span>
     </span>
   </h3>
 
@@ -580,6 +666,227 @@
 <div data-ice="methodDetails"><h2 data-ice="title">Public Methods</h2>
 
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-createChild">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">createChild</span><span data-ice="signature">(filepath: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span>, filetype: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber202">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Attempt to find correct parent directory and create new file as its
+child.</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">filepath</td>
+      <td data-ice="type"><span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Path to file from working directory, including name of new file</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">filetype</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Type of file (dir, txt)</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>Newly created FileObject, or null on failure</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-findFile">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">findFile</span><span data-ice="signature">(filepath: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span>, filetype: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber166">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Function to find file in a directory. Returns null if unsuccesful; it is the responsibility
+of the calling function to otherwise deal with failure.</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">filepath</td>
+      <td data-ice="type"><span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Path to file to be found</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">filetype</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Type of file to find (optional)</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>Returns file object if found, null if not</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-findTopParent">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span data-ice="name">findTopParent</span><span data-ice="signature">(): <span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber154">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Recursively traverses up through parentRefs to find base DirFile
+representing the entire file structure.</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type" data-ice="returnType"><span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span></td>
+          
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-method-getContentNamesByType">
     <span class="access" data-ice="access">public</span>
     
@@ -591,7 +898,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber101">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber126">source</a></span></span>
     </span>
   </h3>
 
@@ -664,7 +971,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber87">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber112">source</a></span></span>
     </span>
   </h3>
 
@@ -737,7 +1044,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber115">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber140">source</a></span></span>
     </span>
   </h3>
 

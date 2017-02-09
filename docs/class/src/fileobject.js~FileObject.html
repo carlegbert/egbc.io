@@ -47,13 +47,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {FileObject} from &apos;<span><a href="file/src/fileobject.js.html#lineNumber5">wwwterm/src/fileobject.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {FileObject} from &apos;<span><a href="file/src/fileobject.js.html#lineNumber7">wwwterm/src/fileobject.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/src/fileobject.js.html#lineNumber5">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/fileobject.js.html#lineNumber7">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -104,7 +104,7 @@
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/fileobject.js~FileObject.html#static-method-jsonToFile">jsonToFile</a></span></span><span data-ice="signature">(json: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span>*</span></span>
+          <span data-ice="name"><span><a href="class/src/fileobject.js~FileObject.html#static-method-jsonToFile">jsonToFile</a></span></span><span data-ice="signature">(json: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>, parentRef: <span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span>): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -138,7 +138,7 @@
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/fileobject.js~FileObject.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, fullPath: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, parentRef: <span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span>, lastModified: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date">Date</a></span>)</span>
+          <span data-ice="name"><span><a href="class/src/fileobject.js~FileObject.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, fullPath: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, filetype: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, parentRef: <span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span>, lastModified: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date">Date</a></span>)</span>
         </p>
       </div>
       <div>
@@ -346,11 +346,11 @@
     
     
     
-    <span data-ice="name">jsonToFile</span><span data-ice="signature">(json: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span>*</span></span>
+    <span data-ice="name">jsonToFile</span><span data-ice="signature">(json: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>, parentRef: <span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span>): <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber39">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber43">source</a></span></span>
     </span>
   </h3>
 
@@ -374,6 +374,13 @@
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">parentRef</td>
+      <td data-ice="type"><span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>optional ParentRef argument</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -420,11 +427,11 @@
     
     
     
-    <span data-ice="name">constructor</span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, fullPath: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, parentRef: <span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span>, lastModified: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date">Date</a></span>)</span>
+    <span data-ice="name">constructor</span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, fullPath: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, filetype: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, parentRef: <span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span>, lastModified: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date">Date</a></span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber13">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber16">source</a></span></span>
     </span>
   </h3>
 
@@ -456,8 +463,14 @@
       <td data-ice="description"></td>
     </tr>
 <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">filetype</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">parentRef</td>
-      <td data-ice="type"><span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span></td>
+      <td data-ice="type"><span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
@@ -504,7 +517,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber25">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber28">source</a></span></span>
     </span>
   </h3>
 
@@ -547,7 +560,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber21">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber24">source</a></span></span>
     </span>
   </h3>
 
@@ -590,7 +603,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber33">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber36">source</a></span></span>
     </span>
   </h3>
 
@@ -633,7 +646,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber17">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber20">source</a></span></span>
     </span>
   </h3>
 
@@ -676,7 +689,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber29">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber32">source</a></span></span>
     </span>
   </h3>
 
@@ -722,7 +735,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber57">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/fileobject.js.html#lineNumber60">source</a></span></span>
     </span>
   </h3>
 

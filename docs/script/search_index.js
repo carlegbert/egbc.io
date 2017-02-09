@@ -414,6 +414,24 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/fileobject.js~dirfile#createchild",
+    "class/src/fileobject.js~DirFile.html#instance-method-createChild",
+    "src/fileobject.js~DirFile#createChild",
+    "method"
+  ],
+  [
+    "src/fileobject.js~dirfile#findfile",
+    "class/src/fileobject.js~DirFile.html#instance-method-findFile",
+    "src/fileobject.js~DirFile#findFile",
+    "method"
+  ],
+  [
+    "src/fileobject.js~dirfile#findtopparent",
+    "class/src/fileobject.js~DirFile.html#instance-method-findTopParent",
+    "src/fileobject.js~DirFile#findTopParent",
+    "method"
+  ],
+  [
     "src/fileobject.js~dirfile#getcontentnamesbytype",
     "class/src/fileobject.js~DirFile.html#instance-method-getContentNamesByType",
     "src/fileobject.js~DirFile#getContentNamesByType",
@@ -660,12 +678,6 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/shell.js~shell#findfile",
-    "class/src/shell.js~Shell.html#instance-method-findFile",
-    "src/shell.js~Shell#findFile",
-    "method"
-  ],
-  [
     "src/shell.js~shell#getautocompletefiles",
     "class/src/shell.js~Shell.html#instance-method-getAutocompleteFiles",
     "src/shell.js~Shell#getAutocompleteFiles",
@@ -723,12 +735,6 @@ window.esdocSearchIndex = [
     "src/shell.js~shell#mkdir",
     "class/src/shell.js~Shell.html#instance-method-mkdir",
     "src/shell.js~Shell#mkdir",
-    "method"
-  ],
-  [
-    "src/shell.js~shell#newfile",
-    "class/src/shell.js~Shell.html#instance-method-newFile",
-    "src/shell.js~Shell#newFile",
     "method"
   ],
   [

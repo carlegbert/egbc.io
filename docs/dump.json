@@ -118,7 +118,7 @@
     "__docId__": 5,
     "kind": "file",
     "name": "src/fileobject.js",
-    "content": "/**\n * Base File class\n * @class\n */\nexport class FileObject {\n  /**\n   * @constructor\n   * @param {string} name\n   * @param {string} fullPath\n   * @param {FileObject} parentRef\n   * @param {Date} lastModified\n   */\n  constructor(name, fullPath, filetype, parentRef, lastModified) {\n    /**\n     * @type {string}\n     */\n    this.name = name;\n    /**\n     * @type {string}\n     */\n    this.fullPath = fullPath;\n    /**\n     * @type {string}\n     */\n    this.filetype = filetype;\n    /**\n     * @type {DirFile}\n     */\n    this.parentRef = parentRef;\n    /**\n     * @type {Date}\n     */\n    this.lastModified = lastModified || new Date();\n  }\n\n  /**\n   * @param {Object} json\n   */\n  static jsonToFile(json) {\n    const newFile = new FileObject(json.name, json.fullPath, json.filetype,\n        json.parentRef, json.lastModified);\n    if (newFile.filetype === 'dir') {\n      newFile.children = [];\n      json.children.forEach((child) => {\n        const childFile = this.jsonToFile(child);\n        childFile.parentRef = newFile;\n        newFile.children.push(childFile);\n      });\n    }\n    return newFile;\n  }\n\n  /**\n   * Returns HTML-formatted filename\n   * @return {string}\n   */\n  getLsEntry() {\n    return `<span class=\"dir ${this.filetype}\" id=\"${this.fullPath}\">${this.name}</span>`;\n  }\n\n}\n\n/**\n * @extends {FileObject}\n */\nexport class DirFile extends FileObject {\n  /**\n   * @constructor\n   * @param {string} name\n   * @param {string} fullPath\n   * @param {FileObject} parentRef\n   * @param {Date} lastModified\n   * @param {FileObject[]} children\n   */\n  constructor(name, fullPath, filetype, parentRef, lastModified, children) {\n    super(name, fullPath, filetype, parentRef, lastModified);\n    /**\n     * @type {FileObject[]}\n     */\n    this.children = children || [];\n  }\n\n  /**\n   * @param {string[]} types Types to filter by\n   * @return {FileObject[]} array of FileObjects contained in directory\n   */\n  getContentsByTypes(types) {\n    const files = [];\n    this.children.forEach((child) => {\n      if (types.includes(child.filetype)) {\n        files.push(child);\n      }\n    });\n    return files;\n  }\n\n  /**\n   * @param {string[]} types Types to filter by\n   * @return {string[]} array of names of FileObjects contained in directory\n   */\n  getContentNamesByType(types) {\n    const filenames = [];\n    this.children.forEach((child) => {\n      if (types.includes(child.filetype)) {\n        filenames.push(child.name);\n      }\n    });\n    return filenames;\n  }\n\n  /**\n   * Helper method for ls\n   * @return {string}\n   */\n  lsHelper() {\n    let res = '<div>';\n    this.children.forEach((child) => {\n      res += `<li class=\"inline ${child.filetype}\">${child.name}</li>`;\n    });\n    res += '</div>';\n    return res;\n  }\n\n}\n\n/**\n * @extends {FileObject}\n */\nexport class TxtFile extends FileObject {\n  /**\n   * @constructor\n   * @param {string} name\n   * @param {string} fullPath\n   * @param {FileObject} parentRef\n   * @param {Date} lastModified\n   * @param {string[]} contents\n   */\n  constructor(name, fullPath, filetype, parentRef, lastModified, contents) {\n    super(name, fullPath, filetype, parentRef, lastModified);\n    /**\n     * @type {string[]}\n     */\n    this.contents = contents || [];\n  }\n\n}\n",
+    "content": "/* eslint-env browser */\n\n/**\n * Base File class\n * @class\n */\nexport class FileObject {\n  /**\n   * @constructor\n   * @param {string} name\n   * @param {string} fullPath\n   * @param {string} filetype\n   * @param {DirFile} parentRef\n   * @param {Date} lastModified\n   */\n  constructor(name, fullPath, filetype, parentRef, lastModified) {\n    /**\n     * @type {string}\n     */\n    this.name = name;\n    /**\n     * @type {string}\n     */\n    this.fullPath = fullPath;\n    /**\n     * @type {string}\n     */\n    this.filetype = filetype;\n    /**\n     * @type {DirFile}\n     */\n    this.parentRef = parentRef;\n    /**\n     * @type {Date}\n     */\n    this.lastModified = lastModified || new Date();\n  }\n\n  /**\n   * @param {Object} json\n   * @param {DirFile} parentRef - optional ParentRef argument\n   */\n  static jsonToFile(json, parentRef = null) {\n    const newFile = new FileObject(json.name, json.fullPath, json.filetype,\n        parentRef, json.lastModified);\n    if (newFile.filetype === 'dir') {\n      newFile.children = [];\n      json.children.forEach((child) => {\n        const childFile = this.jsonToFile(child, newFile);\n        newFile.children.push(childFile);\n      });\n    }\n    return newFile;\n  }\n\n  /**\n   * Returns HTML-formatted filename\n   * @return {string}\n   */\n  getLsEntry() {\n    return `<span class=\"dir ${this.filetype}\" id=\"${this.fullPath}\">${this.name}</span>`;\n  }\n\n}\n\n\n/**\n * @extends {FileObject}\n */\nexport class TxtFile extends FileObject {\n  /**\n   * @constructor\n   * @param {string} name\n   * @param {string} fullPath\n   * @param {DirFile} parentRef\n   * @param {Date} lastModified\n   * @param {string[]} contents\n   */\n  constructor(name, fullPath, parentRef, lastModified, contents) {\n    super(name, fullPath, 'txt', parentRef, lastModified);\n    /**\n     * @type {string[]}\n     */\n    this.contents = contents || [];\n  }\n\n}\n/**\n * @extends {FileObject}\n */\nexport class DirFile extends FileObject {\n  /**\n   * @constructor\n   * @param {string} name\n   * @param {string} fullPath\n   * @param {FileObject} parentRef\n   * @param {Date} lastModified\n   * @param {FileObject[]} children\n   */\n  constructor(name, fullPath, parentRef, lastModified, children) {\n    super(name, fullPath, 'dir', parentRef, lastModified);\n    /**\n     * @type {FileObject[]}\n     */\n    this.children = children || [];\n  }\n\n  /**\n   * @param {string[]} types Types to filter by\n   * @return {FileObject[]} array of FileObjects contained in directory\n   */\n  getContentsByTypes(types) {\n    const files = [];\n    this.children.forEach((child) => {\n      if (types.includes(child.filetype)) {\n        files.push(child);\n      }\n    });\n    return files;\n  }\n\n  /**\n   * @param {string[]} types Types to filter by\n   * @return {string[]} array of names of FileObjects contained in directory\n   */\n  getContentNamesByType(types) {\n    const filenames = [];\n    this.children.forEach((child) => {\n      if (types.includes(child.filetype)) {\n        filenames.push(child.name);\n      }\n    });\n    return filenames;\n  }\n\n  /**\n   * Helper method for ls\n   * @return {string}\n   */\n  lsHelper() {\n    let res = '<div>';\n    this.children.forEach((child) => {\n      res += `<li class=\"inline ${child.filetype}\">${child.name}</li>`;\n    });\n    res += '</div>';\n    return res;\n  }\n\n  /**\n   * Recursively traverses up through parentRefs to find base DirFile\n   * representing the entire file structure.\n   * @return {DirFile}\n   */\n  findTopParent() {\n    if (!this.parentRef) return this;\n    return this.parentRef.findTopParent();\n  }\n\n  /**\n   * Function to find file in a directory. Returns null if unsuccesful; it is the responsibility\n   * of the calling function to otherwise deal with failure.\n   * @param {string[]} filepath Path to file to be found\n   * @param {string} filetype Type of file to find (optional)\n   * @return {FileObject} Returns file object if found, null if not\n   */\n  findFile(filepath, filetype) {\n    if (filepath.length > 1 && filepath[filepath.length - 1] === '' &&\n        filetype === 'dir') filepath.splice(-1, 1);\n    if (filepath.length === 0 && filetype === 'dir') return this;\n    let found = null;\n    const pathArg = filepath[0];\n    const typeToFind = filepath.length === 1 ? filetype : 'dir';\n    switch (pathArg) {\n      case '.':\n        found = this;\n        break;\n      case '..':\n        found = this.parentRef;\n        break;\n      case '~':\n        found = this.findTopParent();\n        break;\n      default:\n        this.children.forEach((child) => {\n          if (pathArg === child.name && (!typeToFind || typeToFind === child.filetype)) {\n            found = child;\n          }\n        });\n    }\n\n    if (filepath.length === 1 || !found) return found;\n    return found.findFile(filepath.slice(1), filetype);\n  }\n\n  /**\n   * Attempt to find correct parent directory and create new file as its\n   * child.\n   * @param {string[]} filepath Path to file from working directory, including name of new file\n   * @param {string} filetype Type of file (dir, txt)\n   * @return {FileObject} Newly created FileObject, or null on failure\n   */\n  createChild(filepath, filetype) {\n    if (filepath.length === 0) return null;\n    const filename = filepath.slice(-1)[0];\n    if (filepath.length > 1) {\n      const dir = this.findFile(filepath.slice(0, -1), 'dir');\n      if (!dir) return null;\n      return dir.createChild([filename], filetype);\n    }\n    const pathStr = `${this.fullPath}/${filename}`;\n    let file;\n    if (filetype === 'dir') file = new DirFile(filename, pathStr, this);\n    else file = new TxtFile(filename, pathStr, this);\n    this.children.push(file);\n    return file;\n  }\n\n}\n\n",
     "static": true,
     "longname": "src/fileobject.js",
     "access": null,
@@ -137,7 +137,7 @@
     "importPath": "wwwterm/src/fileobject.js",
     "importStyle": "{FileObject}",
     "description": "Base File class",
-    "lineNumber": 5,
+    "lineNumber": 7,
     "unknown": [
       {
         "tagName": "@class",
@@ -157,7 +157,7 @@
     "longname": "src/fileobject.js~FileObject#constructor",
     "access": null,
     "description": "",
-    "lineNumber": 13,
+    "lineNumber": 16,
     "unknown": [
       {
         "tagName": "@constructor",
@@ -188,7 +188,17 @@
       {
         "nullable": null,
         "types": [
-          "FileObject"
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "filetype",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "DirFile"
         ],
         "spread": false,
         "optional": false,
@@ -216,7 +226,7 @@
     "longname": "src/fileobject.js~FileObject#name",
     "access": null,
     "description": "",
-    "lineNumber": 17,
+    "lineNumber": 20,
     "type": {
       "nullable": null,
       "types": [
@@ -235,7 +245,7 @@
     "longname": "src/fileobject.js~FileObject#fullPath",
     "access": null,
     "description": "",
-    "lineNumber": 21,
+    "lineNumber": 24,
     "type": {
       "nullable": null,
       "types": [
@@ -254,7 +264,7 @@
     "longname": "src/fileobject.js~FileObject#filetype",
     "access": null,
     "description": "",
-    "lineNumber": 25,
+    "lineNumber": 28,
     "type": {
       "nullable": null,
       "types": [
@@ -273,7 +283,7 @@
     "longname": "src/fileobject.js~FileObject#parentRef",
     "access": null,
     "description": "",
-    "lineNumber": 29,
+    "lineNumber": 32,
     "type": {
       "nullable": null,
       "types": [
@@ -292,7 +302,7 @@
     "longname": "src/fileobject.js~FileObject#lastModified",
     "access": null,
     "description": "",
-    "lineNumber": 33,
+    "lineNumber": 36,
     "type": {
       "nullable": null,
       "types": [
@@ -313,7 +323,7 @@
     "longname": "src/fileobject.js~FileObject.jsonToFile",
     "access": null,
     "description": "",
-    "lineNumber": 39,
+    "lineNumber": 43,
     "params": [
       {
         "nullable": null,
@@ -324,6 +334,16 @@
         "optional": false,
         "name": "json",
         "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "DirFile"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "parentRef",
+        "description": "optional ParentRef argument"
       }
     ],
     "return": {
@@ -343,7 +363,7 @@
     "longname": "src/fileobject.js~FileObject#getLsEntry",
     "access": null,
     "description": "Returns HTML-formatted filename",
-    "lineNumber": 57,
+    "lineNumber": 60,
     "params": [],
     "return": {
       "nullable": null,
@@ -357,16 +377,16 @@
   {
     "__docId__": 15,
     "kind": "class",
-    "name": "DirFile",
+    "name": "TxtFile",
     "memberof": "src/fileobject.js",
     "static": true,
-    "longname": "src/fileobject.js~DirFile",
+    "longname": "src/fileobject.js~TxtFile",
     "access": null,
     "export": true,
     "importPath": "wwwterm/src/fileobject.js",
-    "importStyle": "{DirFile}",
+    "importStyle": "{TxtFile}",
     "description": "",
-    "lineNumber": 66,
+    "lineNumber": 70,
     "interface": false,
     "extends": [
       "FileObject"
@@ -376,6 +396,114 @@
     "__docId__": 16,
     "kind": "constructor",
     "name": "constructor",
+    "memberof": "src/fileobject.js~TxtFile",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/fileobject.js~TxtFile#constructor",
+    "access": null,
+    "description": "",
+    "lineNumber": 79,
+    "unknown": [
+      {
+        "tagName": "@constructor",
+        "tagValue": ""
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "name",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "fullPath",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "DirFile"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "parentRef",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Date"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "lastModified",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string[]"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "contents",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "__docId__": 17,
+    "kind": "member",
+    "name": "contents",
+    "memberof": "src/fileobject.js~TxtFile",
+    "static": false,
+    "longname": "src/fileobject.js~TxtFile#contents",
+    "access": null,
+    "description": "",
+    "lineNumber": 84,
+    "type": {
+      "nullable": null,
+      "types": [
+        "string[]"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 18,
+    "kind": "class",
+    "name": "DirFile",
+    "memberof": "src/fileobject.js",
+    "static": true,
+    "longname": "src/fileobject.js~DirFile",
+    "access": null,
+    "export": true,
+    "importPath": "wwwterm/src/fileobject.js",
+    "importStyle": "{DirFile}",
+    "description": "",
+    "lineNumber": 91,
+    "interface": false,
+    "extends": [
+      "FileObject"
+    ]
+  },
+  {
+    "__docId__": 19,
+    "kind": "constructor",
+    "name": "constructor",
     "memberof": "src/fileobject.js~DirFile",
     "generator": false,
     "async": false,
@@ -383,7 +511,7 @@
     "longname": "src/fileobject.js~DirFile#constructor",
     "access": null,
     "description": "",
-    "lineNumber": 75,
+    "lineNumber": 100,
     "unknown": [
       {
         "tagName": "@constructor",
@@ -444,7 +572,7 @@
     ]
   },
   {
-    "__docId__": 17,
+    "__docId__": 20,
     "kind": "member",
     "name": "children",
     "memberof": "src/fileobject.js~DirFile",
@@ -452,7 +580,7 @@
     "longname": "src/fileobject.js~DirFile#children",
     "access": null,
     "description": "",
-    "lineNumber": 80,
+    "lineNumber": 105,
     "type": {
       "nullable": null,
       "types": [
@@ -463,7 +591,7 @@
     }
   },
   {
-    "__docId__": 18,
+    "__docId__": 21,
     "kind": "method",
     "name": "getContentsByTypes",
     "memberof": "src/fileobject.js~DirFile",
@@ -473,7 +601,7 @@
     "longname": "src/fileobject.js~DirFile#getContentsByTypes",
     "access": null,
     "description": "",
-    "lineNumber": 87,
+    "lineNumber": 112,
     "params": [
       {
         "nullable": null,
@@ -496,7 +624,7 @@
     }
   },
   {
-    "__docId__": 19,
+    "__docId__": 22,
     "kind": "method",
     "name": "getContentNamesByType",
     "memberof": "src/fileobject.js~DirFile",
@@ -506,7 +634,7 @@
     "longname": "src/fileobject.js~DirFile#getContentNamesByType",
     "access": null,
     "description": "",
-    "lineNumber": 101,
+    "lineNumber": 126,
     "params": [
       {
         "nullable": null,
@@ -529,7 +657,7 @@
     }
   },
   {
-    "__docId__": 20,
+    "__docId__": 23,
     "kind": "method",
     "name": "lsHelper",
     "memberof": "src/fileobject.js~DirFile",
@@ -539,7 +667,7 @@
     "longname": "src/fileobject.js~DirFile#lsHelper",
     "access": null,
     "description": "Helper method for ls",
-    "lineNumber": 115,
+    "lineNumber": 140,
     "params": [],
     "return": {
       "nullable": null,
@@ -551,82 +679,40 @@
     }
   },
   {
-    "__docId__": 21,
-    "kind": "class",
-    "name": "TxtFile",
-    "memberof": "src/fileobject.js",
-    "static": true,
-    "longname": "src/fileobject.js~TxtFile",
-    "access": null,
-    "export": true,
-    "importPath": "wwwterm/src/fileobject.js",
-    "importStyle": "{TxtFile}",
-    "description": "",
-    "lineNumber": 129,
-    "interface": false,
-    "extends": [
-      "FileObject"
-    ]
-  },
-  {
-    "__docId__": 22,
-    "kind": "constructor",
-    "name": "constructor",
-    "memberof": "src/fileobject.js~TxtFile",
+    "__docId__": 24,
+    "kind": "method",
+    "name": "findTopParent",
+    "memberof": "src/fileobject.js~DirFile",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "src/fileobject.js~TxtFile#constructor",
+    "longname": "src/fileobject.js~DirFile#findTopParent",
     "access": null,
-    "description": "",
-    "lineNumber": 138,
-    "unknown": [
-      {
-        "tagName": "@constructor",
-        "tagValue": ""
-      }
-    ],
+    "description": "Recursively traverses up through parentRefs to find base DirFile\nrepresenting the entire file structure.",
+    "lineNumber": 154,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "DirFile"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 25,
+    "kind": "method",
+    "name": "findFile",
+    "memberof": "src/fileobject.js~DirFile",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/fileobject.js~DirFile#findFile",
+    "access": null,
+    "description": "Function to find file in a directory. Returns null if unsuccesful; it is the responsibility\nof the calling function to otherwise deal with failure.",
+    "lineNumber": 166,
     "params": [
-      {
-        "nullable": null,
-        "types": [
-          "string"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "name",
-        "description": ""
-      },
-      {
-        "nullable": null,
-        "types": [
-          "string"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "fullPath",
-        "description": ""
-      },
-      {
-        "nullable": null,
-        "types": [
-          "FileObject"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "parentRef",
-        "description": ""
-      },
-      {
-        "nullable": null,
-        "types": [
-          "Date"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "lastModified",
-        "description": ""
-      },
       {
         "nullable": null,
         "types": [
@@ -634,32 +720,74 @@
         ],
         "spread": false,
         "optional": false,
-        "name": "contents",
-        "description": ""
+        "name": "filepath",
+        "description": "Path to file to be found"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "filetype",
+        "description": "Type of file to find (optional)"
       }
-    ]
-  },
-  {
-    "__docId__": 23,
-    "kind": "member",
-    "name": "contents",
-    "memberof": "src/fileobject.js~TxtFile",
-    "static": false,
-    "longname": "src/fileobject.js~TxtFile#contents",
-    "access": null,
-    "description": "",
-    "lineNumber": 143,
-    "type": {
+    ],
+    "return": {
       "nullable": null,
       "types": [
-        "string[]"
+        "FileObject"
       ],
       "spread": false,
-      "description": null
+      "description": "Returns file object if found, null if not"
     }
   },
   {
-    "__docId__": 24,
+    "__docId__": 26,
+    "kind": "method",
+    "name": "createChild",
+    "memberof": "src/fileobject.js~DirFile",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/fileobject.js~DirFile#createChild",
+    "access": null,
+    "description": "Attempt to find correct parent directory and create new file as its\nchild.",
+    "lineNumber": 202,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string[]"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "filepath",
+        "description": "Path to file from working directory, including name of new file"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "filetype",
+        "description": "Type of file (dir, txt)"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "FileObject"
+      ],
+      "spread": false,
+      "description": "Newly created FileObject, or null on failure"
+    }
+  },
+  {
+    "__docId__": 27,
     "kind": "file",
     "name": "src/index.js",
     "content": "require('./base.js');\nrequire('./fileobject.js');\nrequire('./io.js');\nrequire('./shell.js');\nrequire('./shell-command.js');\nrequire('./vi.js');\n\nrequire('./styles.css');\n",
@@ -670,7 +798,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 25,
+    "__docId__": 28,
     "kind": "file",
     "name": "src/io.js",
     "content": "/* eslint-env jquery */\n\n/**\n * function for parsing keycode from keystroke event into a\n * single character. necessary because of poor keystroke event\n * support in Safari.\n * @param {Event} event Keystroke event\n * @return {string} single-char string or null, or empty string\n *  on failure.\n */\nexport function getChar(event) {\n  const code = event.keyCode;\n  if (code === 32) return ' '; // spacebar\n  if (event.shiftKey) { // if shift key depressed\n    if (code <= 91 && code >= 65) { // capital letters\n      return String.fromCharCode(code);\n    }\n\n    switch (code) {\n      case 49: return '!';\n      case 50: return '@';\n      case 51: return '#';\n      case 52: return '$';\n      case 53: return '%';\n      case 54: return '^';\n      case 55: return '&';\n      case 56: return '*';\n      case 57: return '(';\n      case 58: return ')';\n      case 189: return '_';\n      case 187: return '+';\n      case 219: return '{';\n      case 221: return '}';\n      case 220: return '|';\n      case 186: return ':';\n      case 222: return '\"';\n      case 191: return '?';\n      case 190: return '>';\n      case 188: return '<';\n      case 192: return '~';\n      default:\n        break;\n    }\n  // shift key not depressed\n  } else if ((code <= 91 && code >= 65) || (code <= 57 && code >= 48)) {\n    return String.fromCharCode(code).toLowerCase(); // lowercase & nums\n  } else {\n    switch (code) {\n      case 189: return '-';\n      case 187: return '=';\n      case 219: return '[';\n      case 221: return ']';\n      case 220: return '\\\\';\n      case 186: return ';';\n      case 222: return \"'\";\n      case 191: return '/';\n      case 190: return '.';\n      case 188: return ',';\n      case 192: return '`';\n      default:\n        break;\n    }\n  }\n  return '';\n}\n\n/**\n * print output to screen. format if necessary\n * TODO: consider refactoring into seperate functions for\n * single string and array.\n * @param {string|string[]} output String or array of strings to print\n * @param {HTMLElement} target HTML element to print to\n */\nexport function print(output, target) {\n  if (typeof output === 'string') {\n    target.append(`<li>${output}</li>`);\n  } else if (typeof output === 'object') {\n    output.forEach(line => print(line, target));\n  }\n}\n\n/**\n * print output to screen without linebreaks\n * @param {string[]} output Array of strings to print\n * @param {HTMLElement} target HTML element to print to\n */\nexport function printInline(output, target) {\n  output.forEach((line) => {\n    target.append(`<li class='inline'>${line}</li>`);\n  });\n}\n",
@@ -681,7 +809,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 26,
+    "__docId__": 29,
     "kind": "function",
     "name": "getChar",
     "memberof": "src/io.js",
@@ -717,7 +845,7 @@
     }
   },
   {
-    "__docId__": 27,
+    "__docId__": 30,
     "kind": "function",
     "name": "print",
     "memberof": "src/io.js",
@@ -756,7 +884,7 @@
     ]
   },
   {
-    "__docId__": 28,
+    "__docId__": 31,
     "kind": "function",
     "name": "printInline",
     "memberof": "src/io.js",
@@ -794,7 +922,7 @@
     ]
   },
   {
-    "__docId__": 29,
+    "__docId__": 32,
     "kind": "file",
     "name": "src/shell-command.js",
     "content": "/**\n * Object encapsulating information to be passed to a shell command\n * @class\n */\nexport class ShellCommand {\n  /**\n   * @constructor\n   * @param {string} input User-inputted statement from terminal\n   */\n  constructor(input) {\n    /**\n     * @type {string}\n     */\n    this.originalInput = input;\n    /**\n     * @type string[]\n     */\n    this.args = [];\n    /**\n     * @type string[]\n     */\n    this.flags = [];\n    /**\n     * @type string\n     */\n    this.command = '';\n\n    this.parseInput();\n  }\n\n  /**\n   * Parse input string into flags & args\n   */\n  parseInput() {\n    const splitInput = this.originalInput.split(' ');\n    this.command = splitInput[0];\n    if (splitInput.length > 1) {\n      splitInput.slice(1).forEach((word) => {\n        if (word.length > 0 && word[0] === '-') {\n          this.flags.push(word);\n        } else if (word.length > 0 && word !== ' ') {\n          this.args.push(word);\n        }\n      });\n    }\n  }\n}\n\n/**\n * Object containing results of shell action\n * @class\n */\nexport class ShellCommandResult {\n  /**\n   * @constructor\n   * @param {string[]} stdOut Results of succesful action\n   * @param {string[]} stdErr Results of unsuccesful action\n   * @param {*} data Wildcard data that the command may need to pass back (for example,\n   * a newly created file)\n   */\n  constructor(stdOut, stdErr, data) {\n    /**\n     * @type {string[]}\n     */\n    this.stdOut = stdOut || [];\n    /**\n     * @type {string[]}\n     */\n    this.stdErr = stdErr || [];\n    /**\n     * @type {*}\n     */\n    this.data = data;\n  }\n\n  /**\n   * return stdErr if it is not undefined, stdOut if it isn't,\n   * and an empty array if neither are.\n   * @return {string[]}\n   */\n  getDefaultOutput() {\n    return this.stdOut.concat(this.stdErr);\n  }\n\n  /**\n   * combine two shellCommandResults into one for use in\n   * recursive or chained functions\n   * @param {ShellCommandResult} otherResult\n   * @return {ShellCommandResult}\n   */\n  combine(otherResult) {\n    this.stdErr += otherResult.stdErr;\n    this.stdOut += otherResult.stdOut;\n    this.data += otherResult.data;\n  }\n\n}\n",
@@ -805,7 +933,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 30,
+    "__docId__": 33,
     "kind": "class",
     "name": "ShellCommand",
     "memberof": "src/shell-command.js",
@@ -826,7 +954,7 @@
     "interface": false
   },
   {
-    "__docId__": 31,
+    "__docId__": 34,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/shell-command.js~ShellCommand",
@@ -857,7 +985,7 @@
     ]
   },
   {
-    "__docId__": 32,
+    "__docId__": 35,
     "kind": "member",
     "name": "originalInput",
     "memberof": "src/shell-command.js~ShellCommand",
@@ -876,7 +1004,7 @@
     }
   },
   {
-    "__docId__": 33,
+    "__docId__": 36,
     "kind": "member",
     "name": "args",
     "memberof": "src/shell-command.js~ShellCommand",
@@ -895,7 +1023,7 @@
     }
   },
   {
-    "__docId__": 34,
+    "__docId__": 37,
     "kind": "member",
     "name": "flags",
     "memberof": "src/shell-command.js~ShellCommand",
@@ -914,7 +1042,7 @@
     }
   },
   {
-    "__docId__": 35,
+    "__docId__": 38,
     "kind": "member",
     "name": "command",
     "memberof": "src/shell-command.js~ShellCommand",
@@ -933,7 +1061,7 @@
     }
   },
   {
-    "__docId__": 36,
+    "__docId__": 39,
     "kind": "method",
     "name": "parseInput",
     "memberof": "src/shell-command.js~ShellCommand",
@@ -947,7 +1075,7 @@
     "params": []
   },
   {
-    "__docId__": 37,
+    "__docId__": 40,
     "kind": "member",
     "name": "command",
     "memberof": "src/shell-command.js~ShellCommand",
@@ -970,7 +1098,7 @@
     }
   },
   {
-    "__docId__": 38,
+    "__docId__": 41,
     "kind": "class",
     "name": "ShellCommandResult",
     "memberof": "src/shell-command.js",
@@ -991,7 +1119,7 @@
     "interface": false
   },
   {
-    "__docId__": 39,
+    "__docId__": 42,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/shell-command.js~ShellCommandResult",
@@ -1042,7 +1170,7 @@
     ]
   },
   {
-    "__docId__": 40,
+    "__docId__": 43,
     "kind": "member",
     "name": "stdOut",
     "memberof": "src/shell-command.js~ShellCommandResult",
@@ -1061,7 +1189,7 @@
     }
   },
   {
-    "__docId__": 41,
+    "__docId__": 44,
     "kind": "member",
     "name": "stdErr",
     "memberof": "src/shell-command.js~ShellCommandResult",
@@ -1080,7 +1208,7 @@
     }
   },
   {
-    "__docId__": 42,
+    "__docId__": 45,
     "kind": "member",
     "name": "data",
     "memberof": "src/shell-command.js~ShellCommandResult",
@@ -1099,7 +1227,7 @@
     }
   },
   {
-    "__docId__": 43,
+    "__docId__": 46,
     "kind": "method",
     "name": "getDefaultOutput",
     "memberof": "src/shell-command.js~ShellCommandResult",
@@ -1121,7 +1249,7 @@
     }
   },
   {
-    "__docId__": 44,
+    "__docId__": 47,
     "kind": "method",
     "name": "combine",
     "memberof": "src/shell-command.js~ShellCommandResult",
@@ -1154,7 +1282,7 @@
     }
   },
   {
-    "__docId__": 45,
+    "__docId__": 48,
     "kind": "member",
     "name": "stdErr",
     "memberof": "src/shell-command.js~ShellCommandResult",
@@ -1177,7 +1305,7 @@
     }
   },
   {
-    "__docId__": 46,
+    "__docId__": 49,
     "kind": "member",
     "name": "stdOut",
     "memberof": "src/shell-command.js~ShellCommandResult",
@@ -1200,7 +1328,7 @@
     }
   },
   {
-    "__docId__": 47,
+    "__docId__": 50,
     "kind": "member",
     "name": "data",
     "memberof": "src/shell-command.js~ShellCommandResult",
@@ -1223,10 +1351,10 @@
     }
   },
   {
-    "__docId__": 48,
+    "__docId__": 51,
     "kind": "file",
     "name": "src/shell.js",
-    "content": "/* eslint-env jquery */\n\nimport { getChar, print, printInline } from './io';\nimport { TxtFile, DirFile } from './fileobject';\nimport { ShellCommand, ShellCommandResult } from './shell-command';\nimport Vi from './vi';\n\n/**\n * Object encapsulating shell session\n * @class\n */\nexport default class Shell {\n  /**\n   * Represents shell session. to be instantiated once upon browser load.\n   * @constructor\n   * @param {DirFile} fileStructure base dir tied to shell session\n   */\n  constructor(fileStructure) {\n    /**\n     * @type {DirFile}\n     */\n    this.fileStructure = fileStructure;\n    /**\n     * @type {DirFile}\n     */\n    this.currentDir = fileStructure;\n    /**\n     * @type {string}\n     */\n    this.user = 'guest';\n    /**\n     * @type {string}\n     */\n    this.inputString = '';\n    /**\n     * @type {string[]}\n     */\n    this.bashHistory = [];\n    /**\n     * @type {number}\n     */\n    this.historyIndex = 0;\n    /**\n     * @type {boolean}\n     */\n    this.tabPressed = false;\n    /**\n     * @type {HTMLElement}\n     */\n    this.inputPromptElement = $('#input');\n    /**\n     * @type {HTMLElement}\n     */\n    this.PS1Element = $('#PS1');\n    /**\n     * @type {HTMLElement}\n     */\n    this.outputElement = $('#terminal-output');\n    /**\n     * @type {Object} - TODO: create base Process class\n     */\n    this.childProcess = null;\n  }\n\n  /**\n   * @return {string} PS1 string\n   */\n  getPS1String() {\n    return `<span class=\"user\">${this.user}@www.carlegbert.com:</span>` +\n      `<span class=\"path\">${this.currentDir.fullPath}</span>$&nbsp;`;\n  }\n\n  /**\n   * Direct keystroke to shell's keystroke handler or to child process\n   * if there is one active\n   * @param {Object} event Keystroke event\n   */\n  parseKeystroke(event) {\n    if (!this.childProcess) this.shellKeystroke(event);\n    else this.childProcess.parseKeystroke(event);\n  }\n\n  /**\n   * Process keystroke\n   * @param {Object} event Keystroke event\n   */\n  shellKeystroke(event) {\n    if (event.which === 13) { // enter\n      this.tabPressed = false;\n      event.preventDefault();\n      this.handleEnter();\n    } else if (event.which === 8) { // backspace\n      this.tabPressed = false;\n      event.preventDefault();\n      this.inputString = this.inputString.slice(0, (this.inputString.length - 1));\n      this.inputPromptElement.html(this.inputString.replace(/ /g, '&nbsp;'));\n    } else if (event.which === 38 && this.historyIndex > 0) { // up arrow\n      this.tabPressed = false;\n      event.preventDefault();\n      this.historyIndex -= 1;\n      this.inputString = this.bashHistory[this.historyIndex];\n      this.inputPromptElement.html(this.inputString);\n    } else if (event.which === 40 && this.historyIndex < this.bashHistory.length) { // down\n      this.tabPressed = false;\n      event.preventDefault();\n      this.historyIndex += 1;\n      if (this.historyIndex === this.bashHistory.length) this.inputString = '';\n      else this.inputString = this.bashHistory[this.historyIndex];\n      this.inputPromptElement.html(this.inputString);\n    } else if (event.which === 9) { // tab\n      event.preventDefault();\n      this.handleTab();\n    } else {\n      this.tabPressed = false;\n      const k = getChar(event);\n      this.inputString += k;\n      const kSpaceAdjusted = k === ' ' ? '&nbsp;' : k;\n      this.inputPromptElement.append(kSpaceAdjusted);\n    }\n    this.inputPromptElement[0].scrollIntoView(false);\n  }\n\n  /**\n   * process Enter keystroke\n   */\n  handleEnter() {\n    if (!this.inputString.match(/[^ ]/g)) { // regex for anything but space\n      print(this.getPS1String(), this.outputElement);\n    } else {\n      print(this.getPS1String() + this.inputString.replace(' ', '&nbsp;'), this.outputElement);\n      this.bashHistory.push(this.inputString);\n      const res = this.executeCommand(this.inputString);\n      print(res.getDefaultOutput(), this.outputElement);\n    }\n    this.inputString = '';\n    this.inputPromptElement.html('');\n    this.historyIndex = this.bashHistory.length;\n  }\n\n  /**\n   * attempt to process inputstring into shell command\n   * @param {string} inputString String to process\n   * @return {Object} Result of eval(evalStr), which should always\n   * be a ShellCommandResult object\n   */\n  executeCommand(inputString) {\n    if (inputString.includes('>>')) return this.redirect(inputString, '>>');\n    if (inputString.includes('>')) return this.redirect(inputString, '>');\n\n    const shellCommand = new ShellCommand(inputString);\n    if (!Shell.validCommands().includes(shellCommand.command)) {\n      return new ShellCommandResult([], `${shellCommand.command}: command not found`);\n    }\n    const evalStr = `this.${shellCommand.command}(shellCommand)`;\n    return eval(evalStr);\n  }\n\n  /**\n   * redirect with >, >> operators\n   * @param {string} inputString Input string containing redirect operator\n   * @param {string} pattern Redirect operator (either > or >>)\n   * @return {Object} ShellCommandResult containing stderr to print to screen if necessary\n   */\n  redirect(inputString, pattern) {\n    const i = inputString.indexOf(pattern);\n    const afterSymbol = inputString.slice(i + pattern.length).trim().split(' ');\n    if (!afterSymbol || afterSymbol.length === 0) return new ShellCommandResult([], 'Syntax error');\n    const otherArgs = afterSymbol.length === 1 ? [] : afterSymbol.slice(pattern.length);\n    const newInput = inputString.slice(0, i) + otherArgs.join(' ');\n    const res = this.executeCommand(newInput);\n    const filepath = afterSymbol[0];\n    const file = this.findFile(this.currentDir, [filepath], 'txt') || this.newFile([filepath], 'txt').data;\n    if (!file) return new ShellCommandResult(null, `bash: ${filepath}: No such file or directory`);\n    file.contents = pattern === '>' ? res.stdOut : file.contents.concat(res.stdOut);\n    return new ShellCommandResult(null, res.stdErr);\n  }\n\n  /**\n   * handle tab for autocompletion\n   */\n  handleTab() {\n    const spaceAtEnd = (this.inputString[this.inputString.length - 1] === ' ');\n    const cmd = new ShellCommand(this.inputString);\n    let options;\n    let partial;\n    if (!cmd.command) {\n      partial = '';\n      options = Shell.validCommands();\n    } else if (!spaceAtEnd && cmd.args.length === 0) {\n      partial = cmd.command;\n      options = Shell.filterAutoCompleteOptions(partial, Shell.validCommands());\n    } else {\n      partial = cmd.args[cmd.args.length - 1] || '';\n      options = this.getAutocompleteFiles(partial, Shell.getValidTypes(cmd.command));\n      if (options.length === 0) options = this.getAutocompleteFiles(partial, ['dir']);\n    }\n    if (options.length === 1) this.executeAutoComplete(partial, options[0]);\n    else if (options.length > 1) this.printAutoCompleteOptions(options);\n  }\n\n  /**\n   * filter array of strings into options that match up with partial argument\n   * @param {string} partial String to be autocompleted\n   * @param {string[]} options List of files or commands to check against partial\n   * @return {string[]} Array of strings from options that match against partial\n   */\n  static filterAutoCompleteOptions(partial, options) {\n    const len = partial.length;\n    const validOptions = [];\n    options.forEach((opt) => {\n      if (opt.length >= len && opt.slice(0, len) === partial) {\n        validOptions.push(opt);\n      }\n    });\n    return validOptions;\n  }\n\n  /**\n   * returns list of all files in a directory for autocompletion purposes.\n   * @param {string} partial Filepath to be completed, eg, 'path/to/fi' or 'pat'\n   * @param {string[]} filetypes Optional filetypes to filter for\n   * @return {string[]} array of filenames\n   */\n  getAutocompleteFiles(partial, filetypes) {\n    const partialAsArray = partial.split('/');\n    const partialName = partialAsArray.slice(-1)[0];\n    const dirPath = partialAsArray.slice(0, -1);\n    const dir = this.findFile(this.currentDir, dirPath, 'dir');\n    const fileOptions = dir.getContentsByTypes(filetypes);\n    const options = [];\n    fileOptions.forEach((f) => {\n      let optName = f.name;\n      if (f.filetype === 'dir') optName += '/';\n      options.push(optName);\n    });\n    return Shell.filterAutoCompleteOptions(partialName, options);\n  }\n\n  /**\n   * prints valid autocomplete options. to be called only if there are multiple options.\n   * @param {string[]} options Options to print\n   */\n  printAutoCompleteOptions(options) {\n    if (this.tabPressed) {\n      print(this.getPS1String() + this.inputString, this.outputElement);\n      printInline(options, this.outputElement);\n    } else {\n      this.tabPressed = true;\n    }\n  }\n\n  /**\n   * executes autocomplete. to be called only if there is one valid autocomplete option.\n   * @param {string} partial Word to be completed\n   * @param {string} complete Word to be autocompleted to\n   */\n  executeAutoComplete(partial, complete) {\n    const splitPartial = partial.split('/');\n    const wordPartial = splitPartial[splitPartial.length - 1];\n    const completion = complete.slice(wordPartial.length);\n    this.inputString += completion;\n    this.inputPromptElement.append(completion);\n  }\n\n  /**\n   * Function to find file in a directory. Returns null if unsuccesful; it is the responsibility\n   * of the calling function to otherwise deal with failure.\n   *\n   * @param {DirFile} dir Directory to find file in\n   * @param {string[]} filepath Path to file to be found\n   * @param {string} filetype Type of file to find (optional)\n   * @return {FileObject} Returns file object if found, null if not\n   */\n  findFile(dir, filepath, filetype) {\n    if ((filepath.length === 0 || (filepath.length === 1 && filepath[0] === ''))\n        && filetype === 'dir') return dir;\n    let found = null;\n    const pathArg = filepath[0];\n    const typeToFind = filepath.length === 1 ? filetype : 'dir';\n    switch (pathArg) {\n      case '.':\n        found = dir;\n        break;\n      case '..':\n        found = dir.parentRef;\n        break;\n      case '~':\n        found = this.fileStructure;\n        break;\n      default:\n        dir.children.forEach((child) => {\n          if (pathArg === child.name && (!typeToFind || typeToFind === child.filetype)) {\n            found = child;\n          }\n        });\n    }\n\n    if (filepath.length === 1 || !found) return found;\n    return this.findFile(found, filepath.slice(1), filetype);\n  }\n\n  /**\n   * create new file\n   * @param {string} filepath Path to file from working directory, including name of new file\n   * @param {string} filetype Type of file (dir, txt)\n   * @return {ShellCommandResult} ShellCommandResult object with ref to file or stderr string\n   */\n  newFile(filepath, filetype) {\n    let dir;\n    if (filepath.length === 1) dir = this.currentDir;\n    else dir = this.findFile(this.currentDir, filepath.slice(0, -1), 'dir');\n    if (!dir) return new ShellCommandResult(null, `${filepath.slice(0, -1).join('/')}: Directory not found`);\n    const filename = filepath.slice(-1)[0];\n    const pathStr = `${dir.fullPath}/${filename}`;\n    let file;\n    if (filetype === 'dir') file = new DirFile(filename, pathStr, filetype, dir);\n    else file = new TxtFile(filename, pathStr, filetype, dir);\n    dir.children.push(file);\n    return new ShellCommandResult(null, null, file);\n  }\n\n  killChildProcess() {\n    this.childProcess = null;\n  }\n\n  // Shell Commands\n  // TODO: should these be moved to seperate class, or to ShellCommand class?\n\n  /**\n   * List of all valid commands, used for autocompletion and to validate ShellCommand\n   * objects before using eval\n   * @return {string[]} List of valid commands that can be executed\n   */\n  static validCommands() {\n    return [\n      'clear',\n      'pwd',\n      'whoami',\n      'cd',\n      'ls',\n      'cat',\n      'touch',\n      'mkdir',\n      'echo',\n      'vi',\n    ];\n  }\n\n  /**\n   * Determine valid filetypes for command arguments\n   * @param {string} cmdName Command name, eg, 'ls', 'cat', etc\n   * @return {string[]} array of valid filetypes\n   */\n  static getValidTypes(cmdName) {\n    const typeDict = {\n      ls: ['dir'],\n      cd: ['dir'],\n      mkdir: ['dir'],\n      cat: ['txt'],\n      '>': ['txt'],\n      vi: ['txt'],\n    };\n    return typeDict[cmdName] || ['dir', 'txt'];\n  }\n\n\n  /**\n   * Clear #terminal-output. Removes elemnts from DOM rather than just scrolling.\n   * @return {ShellCommandResult}\n   */\n  clear() {\n    $('#terminal-output').html('');\n    return new ShellCommandResult();\n  }\n\n  /**\n   * Get current directory\n   * @return {ShellCommandResult}\n   */\n  pwd() {\n    return new ShellCommandResult(this.currentDir.fullPath);\n  }\n\n  /**\n   * Get current user\n   * @return {ShellCommandResult}\n   */\n  whoami() {\n    return new ShellCommandResult(this.user);\n  }\n\n  /**\n   * Change directory\n   * @param {ShellCommand} shellCommand\n   * @return {ShellCommandResult}\n   */\n  cd(shellCommand) {\n    const dir = shellCommand.args.length === 0 ? this.fileStructure :\n      this.findFile(this.currentDir, shellCommand.args[0].split('/'), 'dir');\n    if (dir) {\n      this.currentDir = dir;\n      this.PS1Element.html(this.getPS1String());\n      return new ShellCommandResult();\n    }\n    return new ShellCommandResult(null, `${shellCommand.args[0]}: directory not found`);\n  }\n\n  /**\n   * List contents of directory/directories\n   * @param {ShellCommand} shellCommand\n   * @return {ShellCommandResult}\n   */\n  ls(shellCommand) {\n    const res = new ShellCommandResult([]);\n    if (shellCommand.args.length === 0) {\n      res.stdOut.push(this.currentDir.lsHelper());\n    } else {\n      shellCommand.args.forEach((arg) => {\n        const dir = this.findFile(this.currentDir, arg.split('/'), 'dir');\n        if (!dir) {\n          res.stdErr.push(`ls: cannot access ${arg}: no such file or directory`);\n        } else {\n          let str = '';\n          if (shellCommand.args.length > 1) str += `${arg}:`;\n          str += dir.lsHelper();\n          res.stdOut.push(str);\n        }\n      });\n    }\n    return res;\n  }\n\n\n  /**\n   * List contents of text file(s)\n   * @param {ShellCommand} shellCommand\n   * @return {ShellCommandResult}\n   */\n  cat(shellCommand) {\n    const res = new ShellCommandResult();\n    if (shellCommand.args.length === 0) return res;\n    shellCommand.args.forEach((arg) => {\n      const path = arg.split('/');\n      const file = this.findFile(this.currentDir, path);\n      if (file && file.filetype === 'dir') {\n        res.stdErr.push(`cat: ${file.name}: Is a directory`);\n      } else if (file) {\n        res.stdOut = res.stdOut.concat(file.contents);\n      } else {\n        res.stdErr.push(`cat: ${arg}: No such file or directory`);\n      }\n    });\n    return res;\n  }\n\n  /**\n   * Mark file or directory as modified. Create new file if one doesn't exist at path.\n   * @param {ShellCommand} shellCommand\n   * @return {ShellCommandResult}\n   */\n  touch(shellCommand) {\n    const res = new ShellCommandResult();\n    if (shellCommand.args.length === 0) return res;\n    shellCommand.args.forEach((arg) => {\n      const path = arg.split('/');\n      const file = this.findFile(this.currentDir, path, 'txt');\n      if (file) file.lastModified = new Date();\n      else {\n        const newFileRes = this.newFile(path, 'txt');\n        res.combine(newFileRes);\n      }\n    });\n    return res;\n  }\n\n  /**\n   * Create new directory\n   * @param {ShellCommand} shellCommand\n   * @return {ShellCommandResult}\n   */\n  mkdir(shellCommand) {\n    const res = new ShellCommandResult();\n    if (shellCommand.args.length === 0) return res;\n    shellCommand.args.forEach((arg) => {\n      const path = arg.split('/');\n      const file = this.findFile(this.currentDir, path, 'dir');\n      if (!file) {\n        const newFileRes = this.newFile(path, 'dir');\n        res.combine(newFileRes);\n      }\n    });\n    return res;\n  }\n\n  /**\n   * Print text\n   * @param {ShellCommand} shellCommand\n   * @return {ShellCommandResult}\n   */\n  echo(shellCommand) {\n    const output = shellCommand.args.join(' ');\n    return new ShellCommandResult(output);\n  }\n\n  /**\n   * Start new vi session\n   * @param {ShellCommand} shellCommand\n   * @return {ShellCommandResult}\n   */\n  vi(shellCommand) {\n    const fPath = shellCommand.args[0].split('/');\n    const file = this.findFile(this.currentDir, fPath, 'txt');\n    this.childProcess = new Vi(this, fPath, file);\n    return new ShellCommandResult();\n  }\n\n}\n",
+    "content": "/* eslint-env jquery */\n\nimport { getChar, print, printInline } from './io';\nimport { TxtFile, DirFile } from './fileobject';\nimport { ShellCommand, ShellCommandResult } from './shell-command';\nimport Vi from './vi';\n\n/**\n * Object encapsulating shell session\n * @class\n */\nexport default class Shell {\n  /**\n   * Represents shell session. to be instantiated once upon browser load.\n   * @constructor\n   * @param {DirFile} fileStructure base dir tied to shell session\n   */\n  constructor(fileStructure) {\n    /**\n     * @type {DirFile}\n     */\n    this.fileStructure = fileStructure;\n    /**\n     * @type {DirFile}\n     */\n    this.currentDir = fileStructure;\n    /**\n     * @type {string}\n     */\n    this.user = 'guest';\n    /**\n     * @type {string}\n     */\n    this.inputString = '';\n    /**\n     * @type {string[]}\n     */\n    this.bashHistory = [];\n    /**\n     * @type {number}\n     */\n    this.historyIndex = 0;\n    /**\n     * @type {boolean}\n     */\n    this.tabPressed = false;\n    /**\n     * @type {HTMLElement}\n     */\n    this.inputPromptElement = $('#input');\n    /**\n     * @type {HTMLElement}\n     */\n    this.PS1Element = $('#PS1');\n    /**\n     * @type {HTMLElement}\n     */\n    this.outputElement = $('#terminal-output');\n    /**\n     * @type {Object} - TODO: create base Process class\n     */\n    this.childProcess = null;\n  }\n\n  /**\n   * @return {string} PS1 string\n   */\n  getPS1String() {\n    return `<span class=\"user\">${this.user}@www.carlegbert.com:</span>` +\n      `<span class=\"path\">${this.currentDir.fullPath}</span>$&nbsp;`;\n  }\n\n  /**\n   * Direct keystroke to shell's keystroke handler or to child process\n   * if there is one active\n   * @param {Object} event Keystroke event\n   */\n  parseKeystroke(event) {\n    if (!this.childProcess) this.shellKeystroke(event);\n    else this.childProcess.parseKeystroke(event);\n  }\n\n  /**\n   * Process keystroke\n   * @param {Object} event Keystroke event\n   */\n  shellKeystroke(event) {\n    if (event.which === 13) { // enter\n      this.tabPressed = false;\n      event.preventDefault();\n      this.handleEnter();\n    } else if (event.which === 8) { // backspace\n      this.tabPressed = false;\n      event.preventDefault();\n      this.inputString = this.inputString.slice(0, (this.inputString.length - 1));\n      this.inputPromptElement.html(this.inputString.replace(/ /g, '&nbsp;'));\n    } else if (event.which === 38 && this.historyIndex > 0) { // up arrow\n      this.tabPressed = false;\n      event.preventDefault();\n      this.historyIndex -= 1;\n      this.inputString = this.bashHistory[this.historyIndex];\n      this.inputPromptElement.html(this.inputString);\n    } else if (event.which === 40 && this.historyIndex < this.bashHistory.length) { // down\n      this.tabPressed = false;\n      event.preventDefault();\n      this.historyIndex += 1;\n      if (this.historyIndex === this.bashHistory.length) this.inputString = '';\n      else this.inputString = this.bashHistory[this.historyIndex];\n      this.inputPromptElement.html(this.inputString);\n    } else if (event.which === 9) { // tab\n      event.preventDefault();\n      this.handleTab();\n    } else {\n      this.tabPressed = false;\n      const k = getChar(event);\n      this.inputString += k;\n      const kSpaceAdjusted = k === ' ' ? '&nbsp;' : k;\n      this.inputPromptElement.append(kSpaceAdjusted);\n    }\n    this.inputPromptElement[0].scrollIntoView(false);\n  }\n\n  /**\n   * process Enter keystroke\n   */\n  handleEnter() {\n    if (!this.inputString.match(/[^ ]/g)) { // regex for anything but space\n      print(this.getPS1String(), this.outputElement);\n    } else {\n      print(this.getPS1String() + this.inputString.replace(' ', '&nbsp;'), this.outputElement);\n      this.bashHistory.push(this.inputString);\n      const res = this.executeCommand(this.inputString);\n      print(res.getDefaultOutput(), this.outputElement);\n    }\n    this.inputString = '';\n    this.inputPromptElement.html('');\n    this.historyIndex = this.bashHistory.length;\n  }\n\n  /**\n   * attempt to process inputstring into shell command\n   * @param {string} inputString String to process\n   * @return {Object} Result of eval(evalStr), which should always\n   * be a ShellCommandResult object\n   */\n  executeCommand(inputString) {\n    if (inputString.includes('>>')) return this.redirect(inputString, '>>');\n    if (inputString.includes('>')) return this.redirect(inputString, '>');\n\n    const shellCommand = new ShellCommand(inputString);\n    if (!Shell.validCommands().includes(shellCommand.command)) {\n      return new ShellCommandResult([], `${shellCommand.command}: command not found`);\n    }\n    const evalStr = `this.${shellCommand.command}(shellCommand)`;\n    return eval(evalStr);\n  }\n\n  /**\n   * redirect with >, >> operators\n   * @param {string} inputString Input string containing redirect operator\n   * @param {string} pattern Redirect operator (either > or >>)\n   * @return {Object} ShellCommandResult containing stderr to print to screen if necessary\n   */\n  redirect(inputString, pattern) {\n    const i = inputString.indexOf(pattern);\n    const afterSymbol = inputString.slice(i + pattern.length).trim().split(' ');\n    if (!afterSymbol || afterSymbol.length === 0) return new ShellCommandResult([], 'Syntax error');\n    const otherArgs = afterSymbol.length === 1 ? [] : afterSymbol.slice(pattern.length);\n    const newInput = inputString.slice(0, i) + otherArgs.join(' ');\n    const res = this.executeCommand(newInput);\n    const filepath = afterSymbol[0];\n    const file = this.currentDir.findFile([filepath], 'txt') || this.currentDir.createChild([filepath], 'txt');\n    if (!file) return new ShellCommandResult(null, `bash: ${filepath}: No such file or directory`);\n    file.contents = pattern === '>' ? res.stdOut : file.contents.concat(res.stdOut);\n    return new ShellCommandResult(null, res.stdErr);\n  }\n\n  /**\n   * handle tab for autocompletion\n   */\n  handleTab() {\n    const spaceAtEnd = (this.inputString[this.inputString.length - 1] === ' ');\n    const cmd = new ShellCommand(this.inputString);\n    let options;\n    let partial;\n    if (!cmd.command) {\n      partial = '';\n      options = Shell.validCommands();\n    } else if (!spaceAtEnd && cmd.args.length === 0) {\n      partial = cmd.command;\n      options = Shell.filterAutoCompleteOptions(partial, Shell.validCommands());\n    } else {\n      partial = cmd.args[cmd.args.length - 1] || '';\n      options = this.getAutocompleteFiles(partial, Shell.getValidTypes(cmd.command));\n      if (options.length === 0) options = this.getAutocompleteFiles(partial, ['dir']);\n    }\n    if (options.length === 1) this.executeAutoComplete(partial, options[0]);\n    else if (options.length > 1) this.printAutoCompleteOptions(options);\n  }\n\n  /**\n   * filter array of strings into options that match up with partial argument\n   * @param {string} partial String to be autocompleted\n   * @param {string[]} options List of files or commands to check against partial\n   * @return {string[]} Array of strings from options that match against partial\n   */\n  static filterAutoCompleteOptions(partial, options) {\n    const len = partial.length;\n    const validOptions = [];\n    options.forEach((opt) => {\n      if (opt.length >= len && opt.slice(0, len) === partial) {\n        validOptions.push(opt);\n      }\n    });\n    return validOptions;\n  }\n\n  /**\n   * returns list of all files in a directory for autocompletion purposes.\n   * @param {string} partial Filepath to be completed, eg, 'path/to/fi' or 'pat'\n   * @param {string[]} filetypes Optional filetypes to filter for\n   * @return {string[]} array of filenames\n   */\n  getAutocompleteFiles(partial, filetypes) {\n    const partialAsArray = partial.split('/');\n    const partialName = partialAsArray.slice(-1)[0];\n    const dirPath = partialAsArray.slice(0, -1);\n    const dir = this.currentDir.findFile(dirPath, 'dir');\n    const fileOptions = dir.getContentsByTypes(filetypes);\n    const options = [];\n    fileOptions.forEach((f) => {\n      let optName = f.name;\n      if (f.filetype === 'dir') optName += '/';\n      options.push(optName);\n    });\n    return Shell.filterAutoCompleteOptions(partialName, options);\n  }\n\n  /**\n   * prints valid autocomplete options. to be called only if there are multiple options.\n   * @param {string[]} options Options to print\n   */\n  printAutoCompleteOptions(options) {\n    if (this.tabPressed) {\n      print(this.getPS1String() + this.inputString, this.outputElement);\n      printInline(options, this.outputElement);\n    } else {\n      this.tabPressed = true;\n    }\n  }\n\n  /**\n   * executes autocomplete. to be called only if there is one valid autocomplete option.\n   * @param {string} partial Word to be completed\n   * @param {string} complete Word to be autocompleted to\n   */\n  executeAutoComplete(partial, complete) {\n    const splitPartial = partial.split('/');\n    const wordPartial = splitPartial[splitPartial.length - 1];\n    const completion = complete.slice(wordPartial.length);\n    this.inputString += completion;\n    this.inputPromptElement.append(completion);\n  }\n\n\n  killChildProcess() {\n    this.childProcess = null;\n  }\n\n  // Shell Commands\n  // TODO: should these be moved to seperate class, or to ShellCommand class?\n\n  /**\n   * List of all valid commands, used for autocompletion and to validate ShellCommand\n   * objects before using eval\n   * @return {string[]} List of valid commands that can be executed\n   */\n  static validCommands() {\n    return [\n      'clear',\n      'pwd',\n      'whoami',\n      'cd',\n      'ls',\n      'cat',\n      'touch',\n      'mkdir',\n      'echo',\n      'vi',\n    ];\n  }\n\n  /**\n   * Determine valid filetypes for command arguments\n   * @param {string} cmdName Command name, eg, 'ls', 'cat', etc\n   * @return {string[]} array of valid filetypes\n   */\n  static getValidTypes(cmdName) {\n    const typeDict = {\n      ls: ['dir'],\n      cd: ['dir'],\n      mkdir: ['dir'],\n      cat: ['txt'],\n      '>': ['txt'],\n      vi: ['txt'],\n    };\n    return typeDict[cmdName] || ['dir', 'txt'];\n  }\n\n\n  /**\n   * Clear #terminal-output. Removes elemnts from DOM rather than just scrolling.\n   * @return {ShellCommandResult}\n   */\n  clear() {\n    $('#terminal-output').html('');\n    return new ShellCommandResult();\n  }\n\n  /**\n   * Get current directory\n   * @return {ShellCommandResult}\n   */\n  pwd() {\n    return new ShellCommandResult(this.currentDir.fullPath);\n  }\n\n  /**\n   * Get current user\n   * @return {ShellCommandResult}\n   */\n  whoami() {\n    return new ShellCommandResult(this.user);\n  }\n\n  /**\n   * Change directory\n   * @param {ShellCommand} shellCommand\n   * @return {ShellCommandResult}\n   */\n  cd(shellCommand) {\n    const dir = shellCommand.args.length === 0 ? this.fileStructure :\n      this.currentDir.findFile(shellCommand.args[0].split('/'), 'dir');\n    if (dir) {\n      this.currentDir = dir;\n      this.PS1Element.html(this.getPS1String());\n      return new ShellCommandResult();\n    }\n    return new ShellCommandResult(null, `${shellCommand.args[0]}: directory not found`);\n  }\n\n  /**\n   * List contents of directory/directories\n   * @param {ShellCommand} shellCommand\n   * @return {ShellCommandResult}\n   */\n  ls(shellCommand) {\n    const res = new ShellCommandResult([]);\n    if (shellCommand.args.length === 0) {\n      res.stdOut.push(this.currentDir.lsHelper());\n    } else {\n      shellCommand.args.forEach((arg) => {\n        const dir = this.currentDir.findFile(arg.split('/'), 'dir');\n        if (!dir) {\n          res.stdErr.push(`ls: cannot access ${arg}: no such file or directory`);\n        } else {\n          let str = '';\n          if (shellCommand.args.length > 1) str += `${arg}:`;\n          str += dir.lsHelper();\n          res.stdOut.push(str);\n        }\n      });\n    }\n    return res;\n  }\n\n\n  /**\n   * List contents of text file(s)\n   * @param {ShellCommand} shellCommand\n   * @return {ShellCommandResult}\n   */\n  cat(shellCommand) {\n    const res = new ShellCommandResult();\n    if (shellCommand.args.length === 0) return res;\n    shellCommand.args.forEach((arg) => {\n      const path = arg.split('/');\n      const file = this.currentDir.findFile(path);\n      if (file && file.filetype === 'dir') {\n        res.stdErr.push(`cat: ${file.name}: Is a directory`);\n      } else if (file) {\n        res.stdOut = res.stdOut.concat(file.contents);\n      } else {\n        res.stdErr.push(`cat: ${arg}: No such file or directory`);\n      }\n    });\n    return res;\n  }\n\n  /**\n   * Mark file or directory as modified. Create new file if one doesn't exist at path.\n   * @param {ShellCommand} shellCommand\n   * @return {ShellCommandResult}\n   */\n  touch(shellCommand) {\n    const res = new ShellCommandResult();\n    if (shellCommand.args.length === 0) return res;\n    shellCommand.args.forEach((arg) => {\n      const path = arg.split('/');\n      const file = this.currentDir.findFile(path, 'txt');\n      if (file) file.lastModified = new Date();\n      else {\n        const newFileRes = this.currentDir.createChild(path, 'txt');\n        if (!newFileRes) res.stdErr.push(`touch: cannout touch ${path}: No such file or directory`);\n      }\n    });\n    return res;\n  }\n\n  /**\n   * Create new directory\n   * @param {ShellCommand} shellCommand\n   * @return {ShellCommandResult}\n   */\n  mkdir(shellCommand) {\n    const res = new ShellCommandResult();\n    if (shellCommand.args.length === 0) return res;\n    shellCommand.args.forEach((arg) => {\n      const path = arg.split('/');\n      const file = this.currentDir.findFile(path, 'dir');\n      if (!file) {\n        const newFileRes = this.currentDir.createChild(path, 'dir');\n        if (!newFileRes) res.stdErr.push(`touch: cannout touch ${path}: No such file or directory`);\n      }\n    });\n    return res;\n  }\n\n  /**\n   * Print text\n   * @param {ShellCommand} shellCommand\n   * @return {ShellCommandResult}\n   */\n  echo(shellCommand) {\n    const output = shellCommand.args.join(' ');\n    return new ShellCommandResult(output);\n  }\n\n  /**\n   * Start new vi session\n   * @param {ShellCommand} shellCommand\n   * @return {ShellCommandResult}\n   */\n  vi(shellCommand) {\n    const fPath = shellCommand.args[0].split('/');\n    const file = this.currentDir.findFile(fPath, 'txt');\n    this.childProcess = new Vi(this, fPath, file);\n    return new ShellCommandResult();\n  }\n\n}\n",
     "static": true,
     "longname": "src/shell.js",
     "access": null,
@@ -1234,7 +1362,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 49,
+    "__docId__": 52,
     "kind": "class",
     "name": "Shell",
     "memberof": "src/shell.js",
@@ -1255,7 +1383,7 @@
     "interface": false
   },
   {
-    "__docId__": 50,
+    "__docId__": 53,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/shell.js~Shell",
@@ -1286,7 +1414,7 @@
     ]
   },
   {
-    "__docId__": 51,
+    "__docId__": 54,
     "kind": "member",
     "name": "fileStructure",
     "memberof": "src/shell.js~Shell",
@@ -1305,7 +1433,7 @@
     }
   },
   {
-    "__docId__": 52,
+    "__docId__": 55,
     "kind": "member",
     "name": "currentDir",
     "memberof": "src/shell.js~Shell",
@@ -1324,7 +1452,7 @@
     }
   },
   {
-    "__docId__": 53,
+    "__docId__": 56,
     "kind": "member",
     "name": "user",
     "memberof": "src/shell.js~Shell",
@@ -1343,7 +1471,7 @@
     }
   },
   {
-    "__docId__": 54,
+    "__docId__": 57,
     "kind": "member",
     "name": "inputString",
     "memberof": "src/shell.js~Shell",
@@ -1362,7 +1490,7 @@
     }
   },
   {
-    "__docId__": 55,
+    "__docId__": 58,
     "kind": "member",
     "name": "bashHistory",
     "memberof": "src/shell.js~Shell",
@@ -1381,7 +1509,7 @@
     }
   },
   {
-    "__docId__": 56,
+    "__docId__": 59,
     "kind": "member",
     "name": "historyIndex",
     "memberof": "src/shell.js~Shell",
@@ -1400,7 +1528,7 @@
     }
   },
   {
-    "__docId__": 57,
+    "__docId__": 60,
     "kind": "member",
     "name": "tabPressed",
     "memberof": "src/shell.js~Shell",
@@ -1419,7 +1547,7 @@
     }
   },
   {
-    "__docId__": 58,
+    "__docId__": 61,
     "kind": "member",
     "name": "inputPromptElement",
     "memberof": "src/shell.js~Shell",
@@ -1438,7 +1566,7 @@
     }
   },
   {
-    "__docId__": 59,
+    "__docId__": 62,
     "kind": "member",
     "name": "PS1Element",
     "memberof": "src/shell.js~Shell",
@@ -1457,7 +1585,7 @@
     }
   },
   {
-    "__docId__": 60,
+    "__docId__": 63,
     "kind": "member",
     "name": "outputElement",
     "memberof": "src/shell.js~Shell",
@@ -1476,7 +1604,7 @@
     }
   },
   {
-    "__docId__": 61,
+    "__docId__": 64,
     "kind": "member",
     "name": "childProcess",
     "memberof": "src/shell.js~Shell",
@@ -1495,7 +1623,7 @@
     }
   },
   {
-    "__docId__": 62,
+    "__docId__": 65,
     "kind": "method",
     "name": "getPS1String",
     "memberof": "src/shell.js~Shell",
@@ -1517,7 +1645,7 @@
     }
   },
   {
-    "__docId__": 63,
+    "__docId__": 66,
     "kind": "method",
     "name": "parseKeystroke",
     "memberof": "src/shell.js~Shell",
@@ -1542,7 +1670,7 @@
     ]
   },
   {
-    "__docId__": 64,
+    "__docId__": 67,
     "kind": "method",
     "name": "shellKeystroke",
     "memberof": "src/shell.js~Shell",
@@ -1567,7 +1695,7 @@
     ]
   },
   {
-    "__docId__": 65,
+    "__docId__": 68,
     "kind": "member",
     "name": "tabPressed",
     "memberof": "src/shell.js~Shell",
@@ -1590,7 +1718,7 @@
     }
   },
   {
-    "__docId__": 66,
+    "__docId__": 69,
     "kind": "member",
     "name": "tabPressed",
     "memberof": "src/shell.js~Shell",
@@ -1613,7 +1741,7 @@
     }
   },
   {
-    "__docId__": 67,
+    "__docId__": 70,
     "kind": "member",
     "name": "inputString",
     "memberof": "src/shell.js~Shell",
@@ -1636,7 +1764,7 @@
     }
   },
   {
-    "__docId__": 68,
+    "__docId__": 71,
     "kind": "member",
     "name": "tabPressed",
     "memberof": "src/shell.js~Shell",
@@ -1659,7 +1787,7 @@
     }
   },
   {
-    "__docId__": 69,
+    "__docId__": 72,
     "kind": "member",
     "name": "historyIndex",
     "memberof": "src/shell.js~Shell",
@@ -1682,7 +1810,7 @@
     }
   },
   {
-    "__docId__": 70,
+    "__docId__": 73,
     "kind": "member",
     "name": "inputString",
     "memberof": "src/shell.js~Shell",
@@ -1705,7 +1833,7 @@
     }
   },
   {
-    "__docId__": 71,
+    "__docId__": 74,
     "kind": "member",
     "name": "tabPressed",
     "memberof": "src/shell.js~Shell",
@@ -1728,7 +1856,7 @@
     }
   },
   {
-    "__docId__": 72,
+    "__docId__": 75,
     "kind": "member",
     "name": "historyIndex",
     "memberof": "src/shell.js~Shell",
@@ -1751,7 +1879,7 @@
     }
   },
   {
-    "__docId__": 73,
+    "__docId__": 76,
     "kind": "member",
     "name": "inputString",
     "memberof": "src/shell.js~Shell",
@@ -1774,7 +1902,7 @@
     }
   },
   {
-    "__docId__": 74,
+    "__docId__": 77,
     "kind": "member",
     "name": "inputString",
     "memberof": "src/shell.js~Shell",
@@ -1797,7 +1925,7 @@
     }
   },
   {
-    "__docId__": 75,
+    "__docId__": 78,
     "kind": "member",
     "name": "tabPressed",
     "memberof": "src/shell.js~Shell",
@@ -1820,7 +1948,7 @@
     }
   },
   {
-    "__docId__": 76,
+    "__docId__": 79,
     "kind": "member",
     "name": "inputString",
     "memberof": "src/shell.js~Shell",
@@ -1843,7 +1971,7 @@
     }
   },
   {
-    "__docId__": 77,
+    "__docId__": 80,
     "kind": "method",
     "name": "handleEnter",
     "memberof": "src/shell.js~Shell",
@@ -1857,7 +1985,7 @@
     "params": []
   },
   {
-    "__docId__": 78,
+    "__docId__": 81,
     "kind": "member",
     "name": "inputString",
     "memberof": "src/shell.js~Shell",
@@ -1880,7 +2008,7 @@
     }
   },
   {
-    "__docId__": 79,
+    "__docId__": 82,
     "kind": "member",
     "name": "historyIndex",
     "memberof": "src/shell.js~Shell",
@@ -1903,7 +2031,7 @@
     }
   },
   {
-    "__docId__": 80,
+    "__docId__": 83,
     "kind": "method",
     "name": "executeCommand",
     "memberof": "src/shell.js~Shell",
@@ -1936,7 +2064,7 @@
     }
   },
   {
-    "__docId__": 81,
+    "__docId__": 84,
     "kind": "method",
     "name": "redirect",
     "memberof": "src/shell.js~Shell",
@@ -1979,7 +2107,7 @@
     }
   },
   {
-    "__docId__": 82,
+    "__docId__": 85,
     "kind": "method",
     "name": "handleTab",
     "memberof": "src/shell.js~Shell",
@@ -1993,7 +2121,7 @@
     "params": []
   },
   {
-    "__docId__": 83,
+    "__docId__": 86,
     "kind": "method",
     "name": "filterAutoCompleteOptions",
     "memberof": "src/shell.js~Shell",
@@ -2036,7 +2164,7 @@
     }
   },
   {
-    "__docId__": 84,
+    "__docId__": 87,
     "kind": "method",
     "name": "getAutocompleteFiles",
     "memberof": "src/shell.js~Shell",
@@ -2079,7 +2207,7 @@
     }
   },
   {
-    "__docId__": 85,
+    "__docId__": 88,
     "kind": "method",
     "name": "printAutoCompleteOptions",
     "memberof": "src/shell.js~Shell",
@@ -2104,7 +2232,7 @@
     ]
   },
   {
-    "__docId__": 86,
+    "__docId__": 89,
     "kind": "member",
     "name": "tabPressed",
     "memberof": "src/shell.js~Shell",
@@ -2127,7 +2255,7 @@
     }
   },
   {
-    "__docId__": 87,
+    "__docId__": 90,
     "kind": "method",
     "name": "executeAutoComplete",
     "memberof": "src/shell.js~Shell",
@@ -2162,7 +2290,7 @@
     ]
   },
   {
-    "__docId__": 88,
+    "__docId__": 91,
     "kind": "member",
     "name": "inputString",
     "memberof": "src/shell.js~Shell",
@@ -2185,103 +2313,7 @@
     }
   },
   {
-    "__docId__": 89,
-    "kind": "method",
-    "name": "findFile",
-    "memberof": "src/shell.js~Shell",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/shell.js~Shell#findFile",
-    "access": null,
-    "description": "Function to find file in a directory. Returns null if unsuccesful; it is the responsibility\nof the calling function to otherwise deal with failure.",
-    "lineNumber": 274,
-    "params": [
-      {
-        "nullable": null,
-        "types": [
-          "DirFile"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "dir",
-        "description": "Directory to find file in"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "string[]"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "filepath",
-        "description": "Path to file to be found"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "string"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "filetype",
-        "description": "Type of file to find (optional)"
-      }
-    ],
-    "return": {
-      "nullable": null,
-      "types": [
-        "FileObject"
-      ],
-      "spread": false,
-      "description": "Returns file object if found, null if not"
-    }
-  },
-  {
-    "__docId__": 90,
-    "kind": "method",
-    "name": "newFile",
-    "memberof": "src/shell.js~Shell",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/shell.js~Shell#newFile",
-    "access": null,
-    "description": "create new file",
-    "lineNumber": 308,
-    "params": [
-      {
-        "nullable": null,
-        "types": [
-          "string"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "filepath",
-        "description": "Path to file from working directory, including name of new file"
-      },
-      {
-        "nullable": null,
-        "types": [
-          "string"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "filetype",
-        "description": "Type of file (dir, txt)"
-      }
-    ],
-    "return": {
-      "nullable": null,
-      "types": [
-        "ShellCommandResult"
-      ],
-      "spread": false,
-      "description": "ShellCommandResult object with ref to file or stderr string"
-    }
-  },
-  {
-    "__docId__": 91,
+    "__docId__": 92,
     "kind": "method",
     "name": "killChildProcess",
     "memberof": "src/shell.js~Shell",
@@ -2291,7 +2323,7 @@
     "longname": "src/shell.js~Shell#killChildProcess",
     "access": null,
     "description": null,
-    "lineNumber": 322,
+    "lineNumber": 266,
     "undocument": true,
     "unknown": [
       {
@@ -2302,7 +2334,7 @@
     "params": []
   },
   {
-    "__docId__": 92,
+    "__docId__": 93,
     "kind": "member",
     "name": "childProcess",
     "memberof": "src/shell.js~Shell",
@@ -2310,7 +2342,7 @@
     "longname": "src/shell.js~Shell#childProcess",
     "access": null,
     "description": null,
-    "lineNumber": 323,
+    "lineNumber": 267,
     "undocument": true,
     "unknown": [
       {
@@ -2325,7 +2357,7 @@
     }
   },
   {
-    "__docId__": 93,
+    "__docId__": 94,
     "kind": "method",
     "name": "validCommands",
     "memberof": "src/shell.js~Shell",
@@ -2335,7 +2367,7 @@
     "longname": "src/shell.js~Shell.validCommands",
     "access": null,
     "description": "List of all valid commands, used for autocompletion and to validate ShellCommand\nobjects before using eval",
-    "lineNumber": 334,
+    "lineNumber": 278,
     "params": [],
     "return": {
       "nullable": null,
@@ -2347,7 +2379,7 @@
     }
   },
   {
-    "__docId__": 94,
+    "__docId__": 95,
     "kind": "method",
     "name": "getValidTypes",
     "memberof": "src/shell.js~Shell",
@@ -2357,7 +2389,7 @@
     "longname": "src/shell.js~Shell.getValidTypes",
     "access": null,
     "description": "Determine valid filetypes for command arguments",
-    "lineNumber": 354,
+    "lineNumber": 298,
     "params": [
       {
         "nullable": null,
@@ -2380,7 +2412,7 @@
     }
   },
   {
-    "__docId__": 95,
+    "__docId__": 96,
     "kind": "method",
     "name": "clear",
     "memberof": "src/shell.js~Shell",
@@ -2390,29 +2422,7 @@
     "longname": "src/shell.js~Shell#clear",
     "access": null,
     "description": "Clear #terminal-output. Removes elemnts from DOM rather than just scrolling.",
-    "lineNumber": 371,
-    "params": [],
-    "return": {
-      "nullable": null,
-      "types": [
-        "ShellCommandResult"
-      ],
-      "spread": false,
-      "description": ""
-    }
-  },
-  {
-    "__docId__": 96,
-    "kind": "method",
-    "name": "pwd",
-    "memberof": "src/shell.js~Shell",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/shell.js~Shell#pwd",
-    "access": null,
-    "description": "Get current directory",
-    "lineNumber": 380,
+    "lineNumber": 315,
     "params": [],
     "return": {
       "nullable": null,
@@ -2426,15 +2436,15 @@
   {
     "__docId__": 97,
     "kind": "method",
-    "name": "whoami",
+    "name": "pwd",
     "memberof": "src/shell.js~Shell",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "src/shell.js~Shell#whoami",
+    "longname": "src/shell.js~Shell#pwd",
     "access": null,
-    "description": "Get current user",
-    "lineNumber": 388,
+    "description": "Get current directory",
+    "lineNumber": 324,
     "params": [],
     "return": {
       "nullable": null,
@@ -2448,6 +2458,28 @@
   {
     "__docId__": 98,
     "kind": "method",
+    "name": "whoami",
+    "memberof": "src/shell.js~Shell",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/shell.js~Shell#whoami",
+    "access": null,
+    "description": "Get current user",
+    "lineNumber": 332,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "ShellCommandResult"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 99,
+    "kind": "method",
     "name": "cd",
     "memberof": "src/shell.js~Shell",
     "generator": false,
@@ -2456,7 +2488,7 @@
     "longname": "src/shell.js~Shell#cd",
     "access": null,
     "description": "Change directory",
-    "lineNumber": 397,
+    "lineNumber": 341,
     "params": [
       {
         "nullable": null,
@@ -2479,7 +2511,7 @@
     }
   },
   {
-    "__docId__": 99,
+    "__docId__": 100,
     "kind": "member",
     "name": "currentDir",
     "memberof": "src/shell.js~Shell",
@@ -2487,7 +2519,7 @@
     "longname": "src/shell.js~Shell#currentDir",
     "access": null,
     "description": null,
-    "lineNumber": 401,
+    "lineNumber": 345,
     "undocument": true,
     "unknown": [
       {
@@ -2502,7 +2534,7 @@
     }
   },
   {
-    "__docId__": 100,
+    "__docId__": 101,
     "kind": "method",
     "name": "ls",
     "memberof": "src/shell.js~Shell",
@@ -2512,40 +2544,7 @@
     "longname": "src/shell.js~Shell#ls",
     "access": null,
     "description": "List contents of directory/directories",
-    "lineNumber": 413,
-    "params": [
-      {
-        "nullable": null,
-        "types": [
-          "ShellCommand"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "shellCommand",
-        "description": ""
-      }
-    ],
-    "return": {
-      "nullable": null,
-      "types": [
-        "ShellCommandResult"
-      ],
-      "spread": false,
-      "description": ""
-    }
-  },
-  {
-    "__docId__": 101,
-    "kind": "method",
-    "name": "cat",
-    "memberof": "src/shell.js~Shell",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/shell.js~Shell#cat",
-    "access": null,
-    "description": "List contents of text file(s)",
-    "lineNumber": 439,
+    "lineNumber": 357,
     "params": [
       {
         "nullable": null,
@@ -2570,15 +2569,15 @@
   {
     "__docId__": 102,
     "kind": "method",
-    "name": "touch",
+    "name": "cat",
     "memberof": "src/shell.js~Shell",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "src/shell.js~Shell#touch",
+    "longname": "src/shell.js~Shell#cat",
     "access": null,
-    "description": "Mark file or directory as modified. Create new file if one doesn't exist at path.",
-    "lineNumber": 461,
+    "description": "List contents of text file(s)",
+    "lineNumber": 383,
     "params": [
       {
         "nullable": null,
@@ -2603,15 +2602,15 @@
   {
     "__docId__": 103,
     "kind": "method",
-    "name": "mkdir",
+    "name": "touch",
     "memberof": "src/shell.js~Shell",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "src/shell.js~Shell#mkdir",
+    "longname": "src/shell.js~Shell#touch",
     "access": null,
-    "description": "Create new directory",
-    "lineNumber": 481,
+    "description": "Mark file or directory as modified. Create new file if one doesn't exist at path.",
+    "lineNumber": 405,
     "params": [
       {
         "nullable": null,
@@ -2636,15 +2635,15 @@
   {
     "__docId__": 104,
     "kind": "method",
-    "name": "echo",
+    "name": "mkdir",
     "memberof": "src/shell.js~Shell",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "src/shell.js~Shell#echo",
+    "longname": "src/shell.js~Shell#mkdir",
     "access": null,
-    "description": "Print text",
-    "lineNumber": 500,
+    "description": "Create new directory",
+    "lineNumber": 425,
     "params": [
       {
         "nullable": null,
@@ -2669,15 +2668,15 @@
   {
     "__docId__": 105,
     "kind": "method",
-    "name": "vi",
+    "name": "echo",
     "memberof": "src/shell.js~Shell",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "src/shell.js~Shell#vi",
+    "longname": "src/shell.js~Shell#echo",
     "access": null,
-    "description": "Start new vi session",
-    "lineNumber": 510,
+    "description": "Print text",
+    "lineNumber": 444,
     "params": [
       {
         "nullable": null,
@@ -2701,6 +2700,39 @@
   },
   {
     "__docId__": 106,
+    "kind": "method",
+    "name": "vi",
+    "memberof": "src/shell.js~Shell",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/shell.js~Shell#vi",
+    "access": null,
+    "description": "Start new vi session",
+    "lineNumber": 454,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "ShellCommand"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "shellCommand",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "ShellCommandResult"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 107,
     "kind": "member",
     "name": "childProcess",
     "memberof": "src/shell.js~Shell",
@@ -2708,7 +2740,7 @@
     "longname": "src/shell.js~Shell#childProcess",
     "access": null,
     "description": null,
-    "lineNumber": 513,
+    "lineNumber": 457,
     "undocument": true,
     "unknown": [
       {
@@ -2723,10 +2755,10 @@
     }
   },
   {
-    "__docId__": 107,
+    "__docId__": 108,
     "kind": "file",
     "name": "src/vi.js",
-    "content": "/* eslint-env jquery */\n// TODO: reorganize functions in this file so that they are grouped together more logically\n// TODO: consider creating new 'buffer' class\n// TODO: refactor this class so that UI/data are more clearly delineated\n\nimport { getChar } from './io';\n\n  /*\n   * object encapsulating data, functions, and HTML elements for Vi session.\n   * Each Vi session is tied to one filepath and zero or one files. TODO: change that\n   * @class\n   */\nexport default class Vi {\n  /**\n   * @constructor\n   * @param {Object} shellRef reference to parent Shell object\n   * @param {string[]} filePath\n   * @param {Object} file reference to TxtFile to write to (optional)\n   */\n  constructor(shellRef, filePath, file = null) {\n    /**\n     * @type {Shell}\n     */\n    this.shellRef = shellRef;\n    /**\n     * @type {string[]}\n     */\n    this.filePath = filePath;\n    /**\n     * @type {TxtFile}\n     */\n    this.file = file;\n    /**\n     * @type {string}\n     */\n    this.mode = 'normal';\n    /**\n     * @type {string}\n     */\n    this.heldNum = '';\n    /**\n     * @type {string}\n     */\n    this.commandText = '';\n    /**\n     * @type {number}\n     */\n    this.cursorX = 0;\n    /**\n     * @type {number}\n     */\n    this.cursorY = 0;\n    /**\n     * @type {string[]}\n     */\n    this.bufferText = this.file === null ? [''] : this.file.contents;\n    /**\n     * @type {HTMLElement}\n     */\n    this.editorElement = $('#editor');\n    /**\n     * @type {HTMLElement}\n     */\n    this.bufferElement = $('#editor-buffer');\n    /**\n     * @type {HTMLElement}\n     */\n    this.editorConsoleElement = $('#editor-console');\n    /**\n     * @type {HTMLElement}\n     */\n    this.termElement = $('#terminal');\n\n    this.startSession();\n  }\n\n  /**\n   * prepare HTML elements for vi session\n   */\n  startSession() {\n    this.renderBuffer();\n    this.editorConsoleElement.html('');\n    this.termElement.toggle();\n    this.editorElement.toggle();\n  }\n\n  /**\n   * shortcut function to get line from buffer\n   * defaults to value of cursorY\n   * @param {number} y Y coordinate to retrieve\n   * @return {string} Line from buffer\n   */\n  getBufferLine(y = this.cursorY) {\n    return this.bufferText[y];\n  }\n\n  /**\n   * get HTML element at specific y index. defaults to this.cursorY\n   * @param {number} y Y index, 0-indexed\n   * @return {Object} <ed-y> HTML element\n   */\n  getLineElement(y = this.cursorY) {\n    return $(`#editor-buffer ed-y:nth-child(${y + 1})`);\n  }\n\n  /**\n   * end vi session\n   * @param {boolean} force Don't require buffer to be saved if force is true\n   */\n  endSession(force) {\n    if (force || (this.file && (this.file.contents === this.bufferText))) {\n      this.editorConsoleElement.html('');\n      this.bufferElement.html('');\n      this.editorElement.toggle();\n      this.termElement.toggle();\n      this.shellRef.killChildProcess();\n    } else {\n      this.errorMessage('E37: No write since last change (add ! to override)');\n    }\n  }\n\n  /**\n   * write error text to vi console\n   * @param {string} errText\n   */\n  errorMessage(errText) {\n    this.editorConsoleElement.html(errText);\n  }\n\n  /**\n   * pass keystroke event to correct function depending on mode\n   * @param {Object} event Keystroke event object\n   */\n  parseKeystroke(event) {\n    if (this.mode === 'normal') this.normalKeystroke(event);\n    else if (this.mode === 'insert') this.insertKeystroke(event);\n    else if (this.mode === 'command') this.commandKeystroke(event);\n  }\n\n  /**\n   * handle normal mode keystroke\n   * @param {Object} event Keystroke event object\n   */\n  normalKeystroke(event) {\n    if (event.which === 186 && event.shiftKey) { // :\n      this.mode = 'command';\n      this.editorConsoleElement.html(':');\n    } else if (event.which === 73) { // i\n      if (event.shiftKey) this.cursorX = 0;\n      else if (this.getBufferLine().length === 0) this.cursorX += 1;\n      this.setInsertMode();\n    } else if (event.which === 65) { // a\n      if (event.shiftKey) this.cursorX = this.getBufferLine().length + 1;\n      else this.cursorX += 1;\n      this.setInsertMode();\n    } else if (event.which === 79) { // o\n      if (!event.shiftKey) this.cursorY += 1;\n      this.bufferText.splice(this.cursorY, 0, '');\n      this.cursorX = 0;\n      this.renderBuffer();\n      this.setInsertMode();\n    } else if (event.which === 52 && event.shiftKey) { // $\n      this.cursorX = this.getBufferLine().length;\n    } else if (event.which === 48 && !event.shiftKey) { // 0\n      this.cursorX = 0;\n    } else if (this.heldNum) {\n      for (let i = 0; i < parseInt(this.heldNum, 10); i += 1) {\n        this.repeatableNormalKeystroke(event);\n      }\n    } else {\n      this.repeatableNormalKeystroke(event);\n    }\n    this.drawCursor();\n\n    const c = getChar(event);\n    if (parseInt(c, 10) && (c !== 0 || this.heldNum)) this.heldNum += c;\n    else this.heldNum = '';\n  }\n\n  /**\n   * enter insert mode\n   */\n  setInsertMode() {\n    this.mode = 'insert';\n    this.editorConsoleElement.html('<strong>-- INSERT --</strong>');\n    if (this.getBufferLine().length === 0) {\n      this.cursorX += 1;\n    }\n  }\n\n  /**\n   * repeatable normal-mode keystroke events\n   * @param {Object} event Keystroke event object\n   */\n  repeatableNormalKeystroke(event) {\n    if (event.which === 72) { // h\n      this.cursorX -= 1;\n    } else if (event.which === 76) { // l\n      this.cursorX += 1;\n    } else if (event.which === 74) { // j\n      this.cursorY += 1;\n    } else if (event.which === 75) { // k\n      this.cursorY -= 1;\n    } else if (event.which === 13) { // enter\n      this.cursorY += 1;\n      this.cursorX = 0;\n    } else if (event.which === 88) { // x\n      this.deleteChar(this.cursorX, this.cursorY);\n    }\n  }\n\n  /**\n   * handle insert mode keystroke\n   * @param {Object} event Keystroke event object\n   */\n  insertKeystroke(event) {\n    if (event.which === 27) { // escape\n      this.mode = 'normal';\n      this.cursorX -= 1;\n      this.drawCursor();\n      this.editorConsoleElement.html('');\n    } else if (event.which === 13) { // enter\n      this.cursorX = 0;\n      this.cursorY += 1;\n      this.bufferText.splice(this.cursorY, 0, '');\n      this.renderBuffer();\n    } else if (event.which === 8) { // backspace\n      this.backspace(this.cursorX, this.cursorY);\n    } else {\n      this.writeChar(getChar(event), this.cursorX, this.cursorY);\n      this.cursorX += 1;\n      this.drawLine(this.getBufferLine(), this.currentLineElement);\n      this.drawCursor();\n    }\n  }\n\n  /** handle insert-mode backspace\n   * @param {number} x X coord\n   * @param {number} y Y coord\n   */\n  backspace(x, y) {\n    const line = this.getBufferLine(y);\n    if (x === 0 && y !== 0) {\n      this.cursorX = this.bufferText[y - 1].length;\n      this.cursorY -= 1;\n      this.bufferText[y - 1] += line;\n      this.bufferText.splice(y, 1);\n      this.renderBuffer();\n    } else {\n      this.deleteChar(x - 1, y);\n      this.cursorX -= 1;\n    }\n    this.drawCursor();\n  }\n\n  /** delete buffer char at x/y\n   * @param {number} x X coord\n   * @param {number} y Y coord\n   */\n  deleteChar(x, y) {\n    const line = this.getBufferLine(y);\n    this.bufferText[y] = line.slice(0, x) + line.slice(x + 1);\n    this.drawLine(this.getBufferLine(y), this.currentLineElement);\n    // TODO: consider calling drawLine elsewhere\n  }\n\n  /**\n   * write char to buffer at specified x,y coords\n   * @param {string} str String to write\n   * @param {number} x X coord\n   * @param {number} y Y coord\n   */\n  writeChar(str, x, y) {\n    const buffStr = this.bufferText[y];\n    this.bufferText[y] = buffStr.slice(0, x) + str + buffStr.slice(x);\n    this.drawLine(buffStr, this.currentLineElement);\n  }\n\n  /**\n   * handle command mode keystroke\n   * @param {Object} event Keystroke event object\n   */\n  commandKeystroke(event) {\n    if (event.which === 27) { // escape\n      this.mode = 'normal';\n      this.commandText = '';\n      this.editorConsoleElement.html('');\n    } else if (event.which === 13) { // enter\n      this.executeCommand();\n    } else if (event.which === 8) { // backspace\n      this.commandText = this.commandText.slice(0, -1);\n      this.editorConsoleElement.html(`:${this.commandText}`);\n    } else {\n      const c = getChar(event);\n      this.commandText += c;\n      this.editorConsoleElement.append(c);\n    }\n  }\n\n  /**\n   * execute command mode statement\n   */\n  executeCommand() {\n    if (this.commandText === 'w') this.saveBuffer();\n    else if (this.commandText === 'q') this.endSession(false);\n    else if (this.commandText === 'q!') this.endSession(true);\n    else if (this.commandText === 'wq') {\n      const saveResult = this.saveBuffer();\n      if (saveResult) this.endSession(false);\n    } else this.errorMessage(`E492: Not an editor command: ${this.commandText}`);\n    this.commandText = '';\n    this.mode = 'normal';\n  }\n\n  /**\n   * reset cursor indices to within bounds of buffer text;\n   * redraw cursor. allow cursor to be after last char in line if in insert mode.\n   */\n  drawCursor() {\n    const yMax = this.bufferText.length - 1;\n    if (this.cursorY < 0) this.cursorY = 0;\n    if (this.cursorY > yMax) this.cursorY = yMax;\n    let xMax = this.getBufferLine().length - 1;\n    if (this.mode === 'insert' || this.getBufferLine().length === 0) xMax += 1; // allow cursor at EOL in insert mode or if line is empty\n    if (this.cursorX < 0) this.cursorX = 0;\n    if (this.cursorX > xMax) this.cursorX = xMax;\n    if (this.cursorElement) this.cursorElement.removeClass('cursor');\n    const jqStr = `#editor-buffer ed-y:nth-child(${this.cursorY + 1}) ed-x:nth-child(${this.cursorX + 1})`;\n    this.cursorElement = $(jqStr);\n    this.cursorElement.addClass('cursor');\n  }\n\n  /**\n   * save buffer text to FileObject. attempt to write new file if none exists.\n   * @return {boolean} returns true on success, false on failure\n   */\n  saveBuffer() {\n    if (!this.file) this.writeNewFile();\n    if (!this.file) return false;\n    this.file.contents = this.bufferText;\n    this.editorConsoleElement.html(`${this.file.fullPath}: File written`);\n    return true;\n  }\n\n  /**\n   * create new FileObject and assign it to Vi session\n   */\n  writeNewFile() {\n    const newFileResult = this.shellRef.newFile(this.filePath, 'txt');\n    if (!newFileResult.data) return false;\n    this.file = newFileResult.data;\n    return true;\n  }\n\n  /**\n   * rewrite string so that every character is enveloped by an <ed-x> tag,\n   * so that we can traverse it with nth-child selector. space chars will\n   * be replaced with '&nbsp;'\n   * @param {string} str Original string\n   * @return {string} New string\n   */\n  static edxString(str) {\n    let fStr = '';\n    for (let i = 0; i < str.length; i += 1) {\n      const c = str[i] === ' ' ? '&nbsp;' : str[i];\n      fStr += `<ed-x>${c}</ed-x>`;\n    }\n    fStr += '<ed-x>&nbsp;</ed-x>';\n    return fStr;\n  }\n\n  /**\n   * draw single line in editor buffer.\n   * appended to end if no line element is provided.\n   * @param {string} str String to print\n   * @param {Object} lineElement HTML line element to print to (optional, appended at end of buffer\n   * if not provided)\n   */\n  drawLine(str, lineElement) {\n    const fStr = Vi.edxString(str);\n    if (lineElement) $(`#editor-buffer ed-y:nth-child(${this.cursorY + 1})`).html(fStr);\n    else this.bufferElement.append(`<ed-y>${fStr}</ed-y>`);\n  }\n\n  /**\n   * render entire contents of buffer\n   */\n  renderBuffer() {\n    this.bufferElement.html('');\n    this.bufferText.forEach(str => this.drawLine(str));\n    this.currentLineElement = this.getLineElement();\n    this.drawCursor();\n  }\n\n}\n",
+    "content": "/* eslint-env jquery */\n// TODO: reorganize functions in this file so that they are grouped together more logically\n// TODO: consider creating new 'buffer' class\n// TODO: refactor this class so that UI/data are more clearly delineated\n\nimport { getChar } from './io';\n\n  /*\n   * object encapsulating data, functions, and HTML elements for Vi session.\n   * Each Vi session is tied to one filepath and zero or one files. TODO: change that\n   * @class\n   */\nexport default class Vi {\n  /**\n   * @constructor\n   * @param {Object} shellRef reference to parent Shell object\n   * @param {string[]} filePath\n   * @param {Object} file reference to TxtFile to write to (optional)\n   */\n  constructor(shellRef, filePath, file = null) {\n    /**\n     * @type {Shell}\n     */\n    this.shellRef = shellRef;\n    /**\n     * @type {string[]}\n     */\n    this.filePath = filePath;\n    /**\n     * @type {TxtFile}\n     */\n    this.file = file;\n    /**\n     * @type {string}\n     */\n    this.mode = 'normal';\n    /**\n     * @type {string}\n     */\n    this.heldNum = '';\n    /**\n     * @type {string}\n     */\n    this.commandText = '';\n    /**\n     * @type {number}\n     */\n    this.cursorX = 0;\n    /**\n     * @type {number}\n     */\n    this.cursorY = 0;\n    /**\n     * @type {string[]}\n     */\n    this.bufferText = this.file === null ? [''] : this.file.contents;\n    /**\n     * @type {HTMLElement}\n     */\n    this.editorElement = $('#editor');\n    /**\n     * @type {HTMLElement}\n     */\n    this.bufferElement = $('#editor-buffer');\n    /**\n     * @type {HTMLElement}\n     */\n    this.editorConsoleElement = $('#editor-console');\n    /**\n     * @type {HTMLElement}\n     */\n    this.termElement = $('#terminal');\n\n    this.startSession();\n  }\n\n  /**\n   * prepare HTML elements for vi session\n   */\n  startSession() {\n    this.renderBuffer();\n    this.editorConsoleElement.html('');\n    this.termElement.toggle();\n    this.editorElement.toggle();\n  }\n\n  /**\n   * shortcut function to get line from buffer\n   * defaults to value of cursorY\n   * @param {number} y Y coordinate to retrieve\n   * @return {string} Line from buffer\n   */\n  getBufferLine(y = this.cursorY) {\n    return this.bufferText[y];\n  }\n\n  /**\n   * get HTML element at specific y index. defaults to this.cursorY\n   * @param {number} y Y index, 0-indexed\n   * @return {Object} <ed-y> HTML element\n   */\n  getLineElement(y = this.cursorY) {\n    return $(`#editor-buffer ed-y:nth-child(${y + 1})`);\n  }\n\n  /**\n   * end vi session\n   * @param {boolean} force Don't require buffer to be saved if force is true\n   */\n  endSession(force) {\n    if (force || (this.file && (this.file.contents === this.bufferText))) {\n      this.editorConsoleElement.html('');\n      this.bufferElement.html('');\n      this.editorElement.toggle();\n      this.termElement.toggle();\n      this.shellRef.killChildProcess();\n    } else {\n      this.errorMessage('E37: No write since last change (add ! to override)');\n    }\n  }\n\n  /**\n   * write error text to vi console\n   * @param {string} errText\n   */\n  errorMessage(errText) {\n    this.editorConsoleElement.html(errText);\n  }\n\n  /**\n   * pass keystroke event to correct function depending on mode\n   * @param {Object} event Keystroke event object\n   */\n  parseKeystroke(event) {\n    if (this.mode === 'normal') this.normalKeystroke(event);\n    else if (this.mode === 'insert') this.insertKeystroke(event);\n    else if (this.mode === 'command') this.commandKeystroke(event);\n  }\n\n  /**\n   * handle normal mode keystroke\n   * @param {Object} event Keystroke event object\n   */\n  normalKeystroke(event) {\n    if (event.which === 186 && event.shiftKey) { // :\n      this.mode = 'command';\n      this.editorConsoleElement.html(':');\n    } else if (event.which === 73) { // i\n      if (event.shiftKey) this.cursorX = 0;\n      else if (this.getBufferLine().length === 0) this.cursorX += 1;\n      this.setInsertMode();\n    } else if (event.which === 65) { // a\n      if (event.shiftKey) this.cursorX = this.getBufferLine().length + 1;\n      else this.cursorX += 1;\n      this.setInsertMode();\n    } else if (event.which === 79) { // o\n      if (!event.shiftKey) this.cursorY += 1;\n      this.bufferText.splice(this.cursorY, 0, '');\n      this.cursorX = 0;\n      this.renderBuffer();\n      this.setInsertMode();\n    } else if (event.which === 52 && event.shiftKey) { // $\n      this.cursorX = this.getBufferLine().length;\n    } else if (event.which === 48 && !event.shiftKey) { // 0\n      this.cursorX = 0;\n    } else if (this.heldNum) {\n      for (let i = 0; i < parseInt(this.heldNum, 10); i += 1) {\n        this.repeatableNormalKeystroke(event);\n      }\n    } else {\n      this.repeatableNormalKeystroke(event);\n    }\n    this.drawCursor();\n\n    const c = getChar(event);\n    if (parseInt(c, 10) && (c !== 0 || this.heldNum)) this.heldNum += c;\n    else this.heldNum = '';\n  }\n\n  /**\n   * enter insert mode\n   */\n  setInsertMode() {\n    this.mode = 'insert';\n    this.editorConsoleElement.html('<strong>-- INSERT --</strong>');\n    if (this.getBufferLine().length === 0) {\n      this.cursorX += 1;\n    }\n  }\n\n  /**\n   * repeatable normal-mode keystroke events\n   * @param {Object} event Keystroke event object\n   */\n  repeatableNormalKeystroke(event) {\n    if (event.which === 72) { // h\n      this.cursorX -= 1;\n    } else if (event.which === 76) { // l\n      this.cursorX += 1;\n    } else if (event.which === 74) { // j\n      this.cursorY += 1;\n    } else if (event.which === 75) { // k\n      this.cursorY -= 1;\n    } else if (event.which === 13) { // enter\n      this.cursorY += 1;\n      this.cursorX = 0;\n    } else if (event.which === 88) { // x\n      this.deleteChar(this.cursorX, this.cursorY);\n    }\n  }\n\n  /**\n   * handle insert mode keystroke\n   * @param {Object} event Keystroke event object\n   */\n  insertKeystroke(event) {\n    if (event.which === 27) { // escape\n      this.mode = 'normal';\n      this.cursorX -= 1;\n      this.drawCursor();\n      this.editorConsoleElement.html('');\n    } else if (event.which === 13) { // enter\n      this.cursorX = 0;\n      this.cursorY += 1;\n      this.bufferText.splice(this.cursorY, 0, '');\n      this.renderBuffer();\n    } else if (event.which === 8) { // backspace\n      this.backspace(this.cursorX, this.cursorY);\n    } else {\n      this.writeChar(getChar(event), this.cursorX, this.cursorY);\n      this.cursorX += 1;\n      this.drawLine(this.getBufferLine(), this.currentLineElement);\n      this.drawCursor();\n    }\n  }\n\n  /** handle insert-mode backspace\n   * @param {number} x X coord\n   * @param {number} y Y coord\n   */\n  backspace(x, y) {\n    const line = this.getBufferLine(y);\n    if (x === 0 && y !== 0) {\n      this.cursorX = this.bufferText[y - 1].length;\n      this.cursorY -= 1;\n      this.bufferText[y - 1] += line;\n      this.bufferText.splice(y, 1);\n      this.renderBuffer();\n    } else {\n      this.deleteChar(x - 1, y);\n      this.cursorX -= 1;\n    }\n    this.drawCursor();\n  }\n\n  /** delete buffer char at x/y\n   * @param {number} x X coord\n   * @param {number} y Y coord\n   */\n  deleteChar(x, y) {\n    const line = this.getBufferLine(y);\n    this.bufferText[y] = line.slice(0, x) + line.slice(x + 1);\n    this.drawLine(this.getBufferLine(y), this.currentLineElement);\n    // TODO: consider calling drawLine elsewhere\n  }\n\n  /**\n   * write char to buffer at specified x,y coords\n   * @param {string} str String to write\n   * @param {number} x X coord\n   * @param {number} y Y coord\n   */\n  writeChar(str, x, y) {\n    const buffStr = this.bufferText[y];\n    this.bufferText[y] = buffStr.slice(0, x) + str + buffStr.slice(x);\n    this.drawLine(buffStr, this.currentLineElement);\n  }\n\n  /**\n   * handle command mode keystroke\n   * @param {Object} event Keystroke event object\n   */\n  commandKeystroke(event) {\n    if (event.which === 27) { // escape\n      this.mode = 'normal';\n      this.commandText = '';\n      this.editorConsoleElement.html('');\n    } else if (event.which === 13) { // enter\n      this.executeCommand();\n    } else if (event.which === 8) { // backspace\n      this.commandText = this.commandText.slice(0, -1);\n      this.editorConsoleElement.html(`:${this.commandText}`);\n    } else {\n      const c = getChar(event);\n      this.commandText += c;\n      this.editorConsoleElement.append(c);\n    }\n  }\n\n  /**\n   * execute command mode statement\n   */\n  executeCommand() {\n    if (this.commandText === 'w') this.saveBuffer();\n    else if (this.commandText === 'q') this.endSession(false);\n    else if (this.commandText === 'q!') this.endSession(true);\n    else if (this.commandText === 'wq') {\n      const saveResult = this.saveBuffer();\n      if (saveResult) this.endSession(false);\n    } else this.errorMessage(`E492: Not an editor command: ${this.commandText}`);\n    this.commandText = '';\n    this.mode = 'normal';\n  }\n\n  /**\n   * reset cursor indices to within bounds of buffer text;\n   * redraw cursor. allow cursor to be after last char in line if in insert mode.\n   */\n  drawCursor() {\n    const yMax = this.bufferText.length - 1;\n    if (this.cursorY < 0) this.cursorY = 0;\n    if (this.cursorY > yMax) this.cursorY = yMax;\n    let xMax = this.getBufferLine().length - 1;\n    if (this.mode === 'insert' || this.getBufferLine().length === 0) xMax += 1; // allow cursor at EOL in insert mode or if line is empty\n    if (this.cursorX < 0) this.cursorX = 0;\n    if (this.cursorX > xMax) this.cursorX = xMax;\n    if (this.cursorElement) this.cursorElement.removeClass('cursor');\n    const jqStr = `#editor-buffer ed-y:nth-child(${this.cursorY + 1}) ed-x:nth-child(${this.cursorX + 1})`;\n    this.cursorElement = $(jqStr);\n    this.cursorElement.addClass('cursor');\n  }\n\n  /**\n   * save buffer text to FileObject. attempt to write new file if none exists.\n   * @return {boolean} returns true on success, false on failure\n   */\n  saveBuffer() {\n    if (!this.file) this.writeNewFile();\n    if (!this.file) return false;\n    this.file.contents = this.bufferText;\n    this.editorConsoleElement.html(`${this.file.fullPath}: File written`);\n    return true;\n  }\n\n  /**\n   * create new FileObject and assign it to Vi session\n   */\n  writeNewFile() {\n    this.file = this.shellRef.currentDir.createChild(this.filePath, 'txt');\n    if (!this.file) return false;\n    return true;\n  }\n\n  /**\n   * rewrite string so that every character is enveloped by an <ed-x> tag,\n   * so that we can traverse it with nth-child selector. space chars will\n   * be replaced with '&nbsp;'\n   * @param {string} str Original string\n   * @return {string} New string\n   */\n  static edxString(str) {\n    let fStr = '';\n    for (let i = 0; i < str.length; i += 1) {\n      const c = str[i] === ' ' ? '&nbsp;' : str[i];\n      fStr += `<ed-x>${c}</ed-x>`;\n    }\n    fStr += '<ed-x>&nbsp;</ed-x>';\n    return fStr;\n  }\n\n  /**\n   * draw single line in editor buffer.\n   * appended to end if no line element is provided.\n   * @param {string} str String to print\n   * @param {Object} lineElement HTML line element to print to (optional, appended at end of buffer\n   * if not provided)\n   */\n  drawLine(str, lineElement) {\n    const fStr = Vi.edxString(str);\n    if (lineElement) $(`#editor-buffer ed-y:nth-child(${this.cursorY + 1})`).html(fStr);\n    else this.bufferElement.append(`<ed-y>${fStr}</ed-y>`);\n  }\n\n  /**\n   * render entire contents of buffer\n   */\n  renderBuffer() {\n    this.bufferElement.html('');\n    this.bufferText.forEach(str => this.drawLine(str));\n    this.currentLineElement = this.getLineElement();\n    this.drawCursor();\n  }\n\n}\n",
     "static": true,
     "longname": "src/vi.js",
     "access": null,
@@ -2734,7 +2766,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 108,
+    "__docId__": 109,
     "kind": "class",
     "name": "Vi",
     "memberof": "src/vi.js",
@@ -2756,7 +2788,7 @@
     "interface": false
   },
   {
-    "__docId__": 109,
+    "__docId__": 110,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/vi.js~Vi",
@@ -2807,7 +2839,7 @@
     ]
   },
   {
-    "__docId__": 110,
+    "__docId__": 111,
     "kind": "member",
     "name": "shellRef",
     "memberof": "src/vi.js~Vi",
@@ -2826,7 +2858,7 @@
     }
   },
   {
-    "__docId__": 111,
+    "__docId__": 112,
     "kind": "member",
     "name": "filePath",
     "memberof": "src/vi.js~Vi",
@@ -2845,7 +2877,7 @@
     }
   },
   {
-    "__docId__": 112,
+    "__docId__": 113,
     "kind": "member",
     "name": "file",
     "memberof": "src/vi.js~Vi",
@@ -2864,7 +2896,7 @@
     }
   },
   {
-    "__docId__": 113,
+    "__docId__": 114,
     "kind": "member",
     "name": "mode",
     "memberof": "src/vi.js~Vi",
@@ -2883,7 +2915,7 @@
     }
   },
   {
-    "__docId__": 114,
+    "__docId__": 115,
     "kind": "member",
     "name": "heldNum",
     "memberof": "src/vi.js~Vi",
@@ -2902,7 +2934,7 @@
     }
   },
   {
-    "__docId__": 115,
+    "__docId__": 116,
     "kind": "member",
     "name": "commandText",
     "memberof": "src/vi.js~Vi",
@@ -2921,7 +2953,7 @@
     }
   },
   {
-    "__docId__": 116,
+    "__docId__": 117,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -2940,7 +2972,7 @@
     }
   },
   {
-    "__docId__": 117,
+    "__docId__": 118,
     "kind": "member",
     "name": "cursorY",
     "memberof": "src/vi.js~Vi",
@@ -2959,7 +2991,7 @@
     }
   },
   {
-    "__docId__": 118,
+    "__docId__": 119,
     "kind": "member",
     "name": "bufferText",
     "memberof": "src/vi.js~Vi",
@@ -2978,7 +3010,7 @@
     }
   },
   {
-    "__docId__": 119,
+    "__docId__": 120,
     "kind": "member",
     "name": "editorElement",
     "memberof": "src/vi.js~Vi",
@@ -2997,7 +3029,7 @@
     }
   },
   {
-    "__docId__": 120,
+    "__docId__": 121,
     "kind": "member",
     "name": "bufferElement",
     "memberof": "src/vi.js~Vi",
@@ -3016,7 +3048,7 @@
     }
   },
   {
-    "__docId__": 121,
+    "__docId__": 122,
     "kind": "member",
     "name": "editorConsoleElement",
     "memberof": "src/vi.js~Vi",
@@ -3035,7 +3067,7 @@
     }
   },
   {
-    "__docId__": 122,
+    "__docId__": 123,
     "kind": "member",
     "name": "termElement",
     "memberof": "src/vi.js~Vi",
@@ -3054,7 +3086,7 @@
     }
   },
   {
-    "__docId__": 123,
+    "__docId__": 124,
     "kind": "method",
     "name": "startSession",
     "memberof": "src/vi.js~Vi",
@@ -3068,7 +3100,7 @@
     "params": []
   },
   {
-    "__docId__": 124,
+    "__docId__": 125,
     "kind": "method",
     "name": "getBufferLine",
     "memberof": "src/vi.js~Vi",
@@ -3101,7 +3133,7 @@
     }
   },
   {
-    "__docId__": 125,
+    "__docId__": 126,
     "kind": "method",
     "name": "getLineElement",
     "memberof": "src/vi.js~Vi",
@@ -3134,7 +3166,7 @@
     }
   },
   {
-    "__docId__": 126,
+    "__docId__": 127,
     "kind": "method",
     "name": "endSession",
     "memberof": "src/vi.js~Vi",
@@ -3159,7 +3191,7 @@
     ]
   },
   {
-    "__docId__": 127,
+    "__docId__": 128,
     "kind": "method",
     "name": "errorMessage",
     "memberof": "src/vi.js~Vi",
@@ -3184,7 +3216,7 @@
     ]
   },
   {
-    "__docId__": 128,
+    "__docId__": 129,
     "kind": "method",
     "name": "parseKeystroke",
     "memberof": "src/vi.js~Vi",
@@ -3209,7 +3241,7 @@
     ]
   },
   {
-    "__docId__": 129,
+    "__docId__": 130,
     "kind": "method",
     "name": "normalKeystroke",
     "memberof": "src/vi.js~Vi",
@@ -3234,7 +3266,7 @@
     ]
   },
   {
-    "__docId__": 130,
+    "__docId__": 131,
     "kind": "member",
     "name": "mode",
     "memberof": "src/vi.js~Vi",
@@ -3257,7 +3289,7 @@
     }
   },
   {
-    "__docId__": 131,
+    "__docId__": 132,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3280,7 +3312,7 @@
     }
   },
   {
-    "__docId__": 132,
+    "__docId__": 133,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3303,7 +3335,7 @@
     }
   },
   {
-    "__docId__": 133,
+    "__docId__": 134,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3326,7 +3358,7 @@
     }
   },
   {
-    "__docId__": 134,
+    "__docId__": 135,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3349,7 +3381,7 @@
     }
   },
   {
-    "__docId__": 135,
+    "__docId__": 136,
     "kind": "member",
     "name": "cursorY",
     "memberof": "src/vi.js~Vi",
@@ -3372,7 +3404,7 @@
     }
   },
   {
-    "__docId__": 136,
+    "__docId__": 137,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3395,7 +3427,7 @@
     }
   },
   {
-    "__docId__": 137,
+    "__docId__": 138,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3418,7 +3450,7 @@
     }
   },
   {
-    "__docId__": 138,
+    "__docId__": 139,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3441,7 +3473,7 @@
     }
   },
   {
-    "__docId__": 139,
+    "__docId__": 140,
     "kind": "member",
     "name": "heldNum",
     "memberof": "src/vi.js~Vi",
@@ -3464,7 +3496,7 @@
     }
   },
   {
-    "__docId__": 140,
+    "__docId__": 141,
     "kind": "member",
     "name": "heldNum",
     "memberof": "src/vi.js~Vi",
@@ -3487,7 +3519,7 @@
     }
   },
   {
-    "__docId__": 141,
+    "__docId__": 142,
     "kind": "method",
     "name": "setInsertMode",
     "memberof": "src/vi.js~Vi",
@@ -3501,7 +3533,7 @@
     "params": []
   },
   {
-    "__docId__": 142,
+    "__docId__": 143,
     "kind": "member",
     "name": "mode",
     "memberof": "src/vi.js~Vi",
@@ -3524,7 +3556,7 @@
     }
   },
   {
-    "__docId__": 143,
+    "__docId__": 144,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3547,7 +3579,7 @@
     }
   },
   {
-    "__docId__": 144,
+    "__docId__": 145,
     "kind": "method",
     "name": "repeatableNormalKeystroke",
     "memberof": "src/vi.js~Vi",
@@ -3572,7 +3604,7 @@
     ]
   },
   {
-    "__docId__": 145,
+    "__docId__": 146,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3595,7 +3627,7 @@
     }
   },
   {
-    "__docId__": 146,
+    "__docId__": 147,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3618,7 +3650,7 @@
     }
   },
   {
-    "__docId__": 147,
+    "__docId__": 148,
     "kind": "member",
     "name": "cursorY",
     "memberof": "src/vi.js~Vi",
@@ -3641,7 +3673,7 @@
     }
   },
   {
-    "__docId__": 148,
+    "__docId__": 149,
     "kind": "member",
     "name": "cursorY",
     "memberof": "src/vi.js~Vi",
@@ -3664,7 +3696,7 @@
     }
   },
   {
-    "__docId__": 149,
+    "__docId__": 150,
     "kind": "member",
     "name": "cursorY",
     "memberof": "src/vi.js~Vi",
@@ -3687,7 +3719,7 @@
     }
   },
   {
-    "__docId__": 150,
+    "__docId__": 151,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3710,7 +3742,7 @@
     }
   },
   {
-    "__docId__": 151,
+    "__docId__": 152,
     "kind": "method",
     "name": "insertKeystroke",
     "memberof": "src/vi.js~Vi",
@@ -3735,7 +3767,7 @@
     ]
   },
   {
-    "__docId__": 152,
+    "__docId__": 153,
     "kind": "member",
     "name": "mode",
     "memberof": "src/vi.js~Vi",
@@ -3758,7 +3790,7 @@
     }
   },
   {
-    "__docId__": 153,
+    "__docId__": 154,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3781,7 +3813,7 @@
     }
   },
   {
-    "__docId__": 154,
+    "__docId__": 155,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3804,7 +3836,7 @@
     }
   },
   {
-    "__docId__": 155,
+    "__docId__": 156,
     "kind": "member",
     "name": "cursorY",
     "memberof": "src/vi.js~Vi",
@@ -3827,7 +3859,7 @@
     }
   },
   {
-    "__docId__": 156,
+    "__docId__": 157,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3850,7 +3882,7 @@
     }
   },
   {
-    "__docId__": 157,
+    "__docId__": 158,
     "kind": "method",
     "name": "backspace",
     "memberof": "src/vi.js~Vi",
@@ -3885,7 +3917,7 @@
     ]
   },
   {
-    "__docId__": 158,
+    "__docId__": 159,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3908,7 +3940,7 @@
     }
   },
   {
-    "__docId__": 159,
+    "__docId__": 160,
     "kind": "member",
     "name": "cursorY",
     "memberof": "src/vi.js~Vi",
@@ -3931,7 +3963,7 @@
     }
   },
   {
-    "__docId__": 160,
+    "__docId__": 161,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -3954,7 +3986,7 @@
     }
   },
   {
-    "__docId__": 161,
+    "__docId__": 162,
     "kind": "method",
     "name": "deleteChar",
     "memberof": "src/vi.js~Vi",
@@ -3989,7 +4021,7 @@
     ]
   },
   {
-    "__docId__": 162,
+    "__docId__": 163,
     "kind": "method",
     "name": "writeChar",
     "memberof": "src/vi.js~Vi",
@@ -4034,7 +4066,7 @@
     ]
   },
   {
-    "__docId__": 163,
+    "__docId__": 164,
     "kind": "method",
     "name": "commandKeystroke",
     "memberof": "src/vi.js~Vi",
@@ -4059,7 +4091,7 @@
     ]
   },
   {
-    "__docId__": 164,
+    "__docId__": 165,
     "kind": "member",
     "name": "mode",
     "memberof": "src/vi.js~Vi",
@@ -4082,7 +4114,7 @@
     }
   },
   {
-    "__docId__": 165,
+    "__docId__": 166,
     "kind": "member",
     "name": "commandText",
     "memberof": "src/vi.js~Vi",
@@ -4105,7 +4137,7 @@
     }
   },
   {
-    "__docId__": 166,
+    "__docId__": 167,
     "kind": "member",
     "name": "commandText",
     "memberof": "src/vi.js~Vi",
@@ -4128,7 +4160,7 @@
     }
   },
   {
-    "__docId__": 167,
+    "__docId__": 168,
     "kind": "member",
     "name": "commandText",
     "memberof": "src/vi.js~Vi",
@@ -4151,7 +4183,7 @@
     }
   },
   {
-    "__docId__": 168,
+    "__docId__": 169,
     "kind": "method",
     "name": "executeCommand",
     "memberof": "src/vi.js~Vi",
@@ -4165,7 +4197,7 @@
     "params": []
   },
   {
-    "__docId__": 169,
+    "__docId__": 170,
     "kind": "member",
     "name": "commandText",
     "memberof": "src/vi.js~Vi",
@@ -4188,7 +4220,7 @@
     }
   },
   {
-    "__docId__": 170,
+    "__docId__": 171,
     "kind": "member",
     "name": "mode",
     "memberof": "src/vi.js~Vi",
@@ -4211,7 +4243,7 @@
     }
   },
   {
-    "__docId__": 171,
+    "__docId__": 172,
     "kind": "method",
     "name": "drawCursor",
     "memberof": "src/vi.js~Vi",
@@ -4225,7 +4257,7 @@
     "params": []
   },
   {
-    "__docId__": 172,
+    "__docId__": 173,
     "kind": "member",
     "name": "cursorY",
     "memberof": "src/vi.js~Vi",
@@ -4248,7 +4280,7 @@
     }
   },
   {
-    "__docId__": 173,
+    "__docId__": 174,
     "kind": "member",
     "name": "cursorY",
     "memberof": "src/vi.js~Vi",
@@ -4271,7 +4303,7 @@
     }
   },
   {
-    "__docId__": 174,
+    "__docId__": 175,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -4294,7 +4326,7 @@
     }
   },
   {
-    "__docId__": 175,
+    "__docId__": 176,
     "kind": "member",
     "name": "cursorX",
     "memberof": "src/vi.js~Vi",
@@ -4317,7 +4349,7 @@
     }
   },
   {
-    "__docId__": 176,
+    "__docId__": 177,
     "kind": "member",
     "name": "cursorElement",
     "memberof": "src/vi.js~Vi",
@@ -4340,7 +4372,7 @@
     }
   },
   {
-    "__docId__": 177,
+    "__docId__": 178,
     "kind": "method",
     "name": "saveBuffer",
     "memberof": "src/vi.js~Vi",
@@ -4362,7 +4394,7 @@
     }
   },
   {
-    "__docId__": 178,
+    "__docId__": 179,
     "kind": "method",
     "name": "writeNewFile",
     "memberof": "src/vi.js~Vi",
@@ -4381,7 +4413,7 @@
     }
   },
   {
-    "__docId__": 179,
+    "__docId__": 180,
     "kind": "member",
     "name": "file",
     "memberof": "src/vi.js~Vi",
@@ -4389,7 +4421,7 @@
     "longname": "src/vi.js~Vi#file",
     "access": null,
     "description": null,
-    "lineNumber": 351,
+    "lineNumber": 349,
     "undocument": true,
     "unknown": [
       {
@@ -4404,7 +4436,7 @@
     }
   },
   {
-    "__docId__": 180,
+    "__docId__": 181,
     "kind": "method",
     "name": "edxString",
     "memberof": "src/vi.js~Vi",
@@ -4414,7 +4446,7 @@
     "longname": "src/vi.js~Vi.edxString",
     "access": null,
     "description": "rewrite string so that every character is enveloped by an <ed-x> tag,\nso that we can traverse it with nth-child selector. space chars will\nbe replaced with '&nbsp;'",
-    "lineNumber": 362,
+    "lineNumber": 361,
     "params": [
       {
         "nullable": null,
@@ -4437,7 +4469,7 @@
     }
   },
   {
-    "__docId__": 181,
+    "__docId__": 182,
     "kind": "method",
     "name": "drawLine",
     "memberof": "src/vi.js~Vi",
@@ -4447,7 +4479,7 @@
     "longname": "src/vi.js~Vi#drawLine",
     "access": null,
     "description": "draw single line in editor buffer.\nappended to end if no line element is provided.",
-    "lineNumber": 379,
+    "lineNumber": 378,
     "params": [
       {
         "nullable": null,
@@ -4472,7 +4504,7 @@
     ]
   },
   {
-    "__docId__": 182,
+    "__docId__": 183,
     "kind": "method",
     "name": "renderBuffer",
     "memberof": "src/vi.js~Vi",
@@ -4482,11 +4514,11 @@
     "longname": "src/vi.js~Vi#renderBuffer",
     "access": null,
     "description": "render entire contents of buffer",
-    "lineNumber": 388,
+    "lineNumber": 387,
     "params": []
   },
   {
-    "__docId__": 183,
+    "__docId__": 184,
     "kind": "member",
     "name": "currentLineElement",
     "memberof": "src/vi.js~Vi",
@@ -4494,7 +4526,7 @@
     "longname": "src/vi.js~Vi#currentLineElement",
     "access": null,
     "description": null,
-    "lineNumber": 391,
+    "lineNumber": 390,
     "undocument": true,
     "unknown": [
       {
@@ -4509,7 +4541,7 @@
     }
   },
   {
-    "__docId__": 185,
+    "__docId__": 186,
     "kind": "external",
     "name": "Infinity",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
@@ -4521,7 +4553,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 186,
+    "__docId__": 187,
     "kind": "external",
     "name": "NaN",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
@@ -4533,7 +4565,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 187,
+    "__docId__": 188,
     "kind": "external",
     "name": "undefined",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
@@ -4545,7 +4577,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 188,
+    "__docId__": 189,
     "kind": "external",
     "name": "null",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
@@ -4557,7 +4589,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 189,
+    "__docId__": 190,
     "kind": "external",
     "name": "Object",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
@@ -4569,7 +4601,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 190,
+    "__docId__": 191,
     "kind": "external",
     "name": "object",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
@@ -4581,7 +4613,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 191,
+    "__docId__": 192,
     "kind": "external",
     "name": "Function",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
@@ -4593,7 +4625,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 192,
+    "__docId__": 193,
     "kind": "external",
     "name": "function",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
@@ -4605,7 +4637,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 193,
+    "__docId__": 194,
     "kind": "external",
     "name": "Boolean",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
@@ -4617,7 +4649,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 194,
+    "__docId__": 195,
     "kind": "external",
     "name": "boolean",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
@@ -4629,7 +4661,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 195,
+    "__docId__": 196,
     "kind": "external",
     "name": "Symbol",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
@@ -4641,7 +4673,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 196,
+    "__docId__": 197,
     "kind": "external",
     "name": "Error",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
@@ -4653,7 +4685,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 197,
+    "__docId__": 198,
     "kind": "external",
     "name": "EvalError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
@@ -4665,7 +4697,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 198,
+    "__docId__": 199,
     "kind": "external",
     "name": "InternalError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
@@ -4677,7 +4709,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 199,
+    "__docId__": 200,
     "kind": "external",
     "name": "RangeError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
@@ -4689,7 +4721,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 200,
+    "__docId__": 201,
     "kind": "external",
     "name": "ReferenceError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
@@ -4701,7 +4733,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 201,
+    "__docId__": 202,
     "kind": "external",
     "name": "SyntaxError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
@@ -4713,7 +4745,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 202,
+    "__docId__": 203,
     "kind": "external",
     "name": "TypeError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
@@ -4725,7 +4757,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 203,
+    "__docId__": 204,
     "kind": "external",
     "name": "URIError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
@@ -4737,7 +4769,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 204,
+    "__docId__": 205,
     "kind": "external",
     "name": "Number",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
@@ -4749,7 +4781,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 205,
+    "__docId__": 206,
     "kind": "external",
     "name": "number",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
@@ -4761,7 +4793,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 206,
+    "__docId__": 207,
     "kind": "external",
     "name": "Date",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
@@ -4773,7 +4805,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 207,
+    "__docId__": 208,
     "kind": "external",
     "name": "String",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
@@ -4785,7 +4817,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 208,
+    "__docId__": 209,
     "kind": "external",
     "name": "string",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
@@ -4797,7 +4829,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 209,
+    "__docId__": 210,
     "kind": "external",
     "name": "RegExp",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
@@ -4809,7 +4841,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 210,
+    "__docId__": 211,
     "kind": "external",
     "name": "Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
@@ -4821,7 +4853,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 211,
+    "__docId__": 212,
     "kind": "external",
     "name": "Int8Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
@@ -4833,7 +4865,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 212,
+    "__docId__": 213,
     "kind": "external",
     "name": "Uint8Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
@@ -4845,7 +4877,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 213,
+    "__docId__": 214,
     "kind": "external",
     "name": "Uint8ClampedArray",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
@@ -4857,7 +4889,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 214,
+    "__docId__": 215,
     "kind": "external",
     "name": "Int16Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
@@ -4869,7 +4901,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 215,
+    "__docId__": 216,
     "kind": "external",
     "name": "Uint16Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
@@ -4881,7 +4913,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 216,
+    "__docId__": 217,
     "kind": "external",
     "name": "Int32Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
@@ -4893,7 +4925,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 217,
+    "__docId__": 218,
     "kind": "external",
     "name": "Uint32Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
@@ -4905,7 +4937,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 218,
+    "__docId__": 219,
     "kind": "external",
     "name": "Float32Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
@@ -4917,7 +4949,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 219,
+    "__docId__": 220,
     "kind": "external",
     "name": "Float64Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
@@ -4929,7 +4961,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 220,
+    "__docId__": 221,
     "kind": "external",
     "name": "Map",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
@@ -4941,7 +4973,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 221,
+    "__docId__": 222,
     "kind": "external",
     "name": "Set",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
@@ -4953,7 +4985,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 222,
+    "__docId__": 223,
     "kind": "external",
     "name": "WeakMap",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
@@ -4965,7 +4997,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 223,
+    "__docId__": 224,
     "kind": "external",
     "name": "WeakSet",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
@@ -4977,7 +5009,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 224,
+    "__docId__": 225,
     "kind": "external",
     "name": "ArrayBuffer",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
@@ -4989,7 +5021,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 225,
+    "__docId__": 226,
     "kind": "external",
     "name": "DataView",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
@@ -5001,7 +5033,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 226,
+    "__docId__": 227,
     "kind": "external",
     "name": "JSON",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
@@ -5013,7 +5045,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 227,
+    "__docId__": 228,
     "kind": "external",
     "name": "Promise",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
@@ -5025,7 +5057,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 228,
+    "__docId__": 229,
     "kind": "external",
     "name": "Generator",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
@@ -5037,7 +5069,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 229,
+    "__docId__": 230,
     "kind": "external",
     "name": "GeneratorFunction",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
@@ -5049,7 +5081,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 230,
+    "__docId__": 231,
     "kind": "external",
     "name": "Reflect",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
@@ -5061,7 +5093,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 231,
+    "__docId__": 232,
     "kind": "external",
     "name": "Proxy",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
@@ -5074,7 +5106,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 233,
+    "__docId__": 234,
     "kind": "external",
     "name": "CanvasRenderingContext2D",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
@@ -5086,7 +5118,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 234,
+    "__docId__": 235,
     "kind": "external",
     "name": "DocumentFragment",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment",
@@ -5098,7 +5130,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 235,
+    "__docId__": 236,
     "kind": "external",
     "name": "Element",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
@@ -5110,7 +5142,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 236,
+    "__docId__": 237,
     "kind": "external",
     "name": "Event",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Event",
@@ -5122,7 +5154,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 237,
+    "__docId__": 238,
     "kind": "external",
     "name": "Node",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Node",
@@ -5134,7 +5166,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 238,
+    "__docId__": 239,
     "kind": "external",
     "name": "NodeList",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList",
@@ -5146,7 +5178,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 239,
+    "__docId__": 240,
     "kind": "external",
     "name": "XMLHttpRequest",
     "externalLink": "https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest",
@@ -5158,7 +5190,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 240,
+    "__docId__": 241,
     "kind": "external",
     "name": "AudioContext",
     "externalLink": "https://developer.mozilla.org/en/docs/Web/API/AudioContext",

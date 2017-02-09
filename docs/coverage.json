@@ -1,18 +1,18 @@
 {
-  "coverage": "96.42%",
-  "expectCount": 112,
-  "actualCount": 108,
+  "coverage": "96.46%",
+  "expectCount": 113,
+  "actualCount": 109,
   "files": {
     "src/fileobject.js": {
-      "expectCount": 18,
-      "actualCount": 18,
+      "expectCount": 21,
+      "actualCount": 21,
       "undocumentLines": []
     },
     "src/shell.js": {
-      "expectCount": 39,
-      "actualCount": 38,
+      "expectCount": 37,
+      "actualCount": 36,
       "undocumentLines": [
-        322
+        266
       ]
     },
     "src/shell-command.js": {
@@ -25,7 +25,7 @@
       "actualCount": 35,
       "undocumentLines": [
         13,
-        391,
+        390,
         329
       ]
     },

@@ -7,7 +7,8 @@ export class FileObject {
    * @constructor
    * @param {string} name
    * @param {string} fullPath
-   * @param {FileObject} parentRef
+   * @param {string} filetype
+   * @param {DirFile} parentRef
    * @param {Date} lastModified
    */
   constructor(name, fullPath, filetype, parentRef, lastModified) {
@@ -35,15 +36,15 @@ export class FileObject {
 
   /**
    * @param {Object} json
+   * @param {DirFile} parentRef - optional ParentRef argument
    */
-  static jsonToFile(json) {
+  static jsonToFile(json, parentRef = null) {
     const newFile = new FileObject(json.name, json.fullPath, json.filetype,
-        json.parentRef, json.lastModified);
+        parentRef, json.lastModified);
     if (newFile.filetype === 'dir') {
       newFile.children = [];
       json.children.forEach((child) => {
-        const childFile = this.jsonToFile(child);
-        childFile.parentRef = newFile;
+        const childFile = this.jsonToFile(child, newFile);
         newFile.children.push(childFile);
       });
     }
@@ -60,6 +61,28 @@ export class FileObject {
 
 }
 
+
+/**
+ * @extends {FileObject}
+ */
+export class TxtFile extends FileObject {
+  /**
+   * @constructor
+   * @param {string} name
+   * @param {string} fullPath
+   * @param {DirFile} parentRef
+   * @param {Date} lastModified
+   * @param {string[]} contents
+   */
+  constructor(name, fullPath, parentRef, lastModified, contents) {
+    super(name, fullPath, 'txt', parentRef, lastModified);
+    /**
+     * @type {string[]}
+     */
+    this.contents = contents || [];
+  }
+
+}
 /**
  * @extends {FileObject}
  */
@@ -72,8 +95,8 @@ export class DirFile extends FileObject {
    * @param {Date} lastModified
    * @param {FileObject[]} children
    */
-  constructor(name, fullPath, filetype, parentRef, lastModified, children) {
-    super(name, fullPath, filetype, parentRef, lastModified);
+  constructor(name, fullPath, parentRef, lastModified, children) {
+    super(name, fullPath, 'dir', parentRef, lastModified);
     /**
      * @type {FileObject[]}
      */
@@ -121,26 +144,74 @@ export class DirFile extends FileObject {
     return res;
   }
 
-}
-
-/**
- * @extends {FileObject}
- */
-export class TxtFile extends FileObject {
   /**
-   * @constructor
-   * @param {string} name
-   * @param {string} fullPath
-   * @param {FileObject} parentRef
-   * @param {Date} lastModified
-   * @param {string[]} contents
+   * Recursively traverses up through parentRefs to find base DirFile
+   * representing the entire file structure.
+   * @return {DirFile}
    */
-  constructor(name, fullPath, filetype, parentRef, lastModified, contents) {
-    super(name, fullPath, filetype, parentRef, lastModified);
-    /**
-     * @type {string[]}
-     */
-    this.contents = contents || [];
+  findTopParent() {
+    if (!this.parentRef) return this;
+    return this.parentRef.findTopParent();
+  }
+
+  /**
+   * Function to find file in a directory. Returns null if unsuccesful; it is the responsibility
+   * of the calling function to otherwise deal with failure.
+   * @param {string[]} filepath Path to file to be found
+   * @param {string} filetype Type of file to find (optional)
+   * @return {FileObject} Returns file object if found, null if not
+   */
+  findFile(filepath, filetype) {
+    if (filepath.length > 1 && filepath[filepath.length - 1] === '' &&
+        filetype === 'dir') filepath.splice(-1, 1);
+    if (filepath.length === 0 && filetype === 'dir') return this;
+    let found = null;
+    const pathArg = filepath[0];
+    const typeToFind = filepath.length === 1 ? filetype : 'dir';
+    switch (pathArg) {
+      case '.':
+        found = this;
+        break;
+      case '..':
+        found = this.parentRef;
+        break;
+      case '~':
+        found = this.findTopParent();
+        break;
+      default:
+        this.children.forEach((child) => {
+          if (pathArg === child.name && (!typeToFind || typeToFind === child.filetype)) {
+            found = child;
+          }
+        });
+    }
+
+    if (filepath.length === 1 || !found) return found;
+    return found.findFile(filepath.slice(1), filetype);
+  }
+
+  /**
+   * Attempt to find correct parent directory and create new file as its
+   * child.
+   * @param {string[]} filepath Path to file from working directory, including name of new file
+   * @param {string} filetype Type of file (dir, txt)
+   * @return {FileObject} Newly created FileObject, or null on failure
+   */
+  createChild(filepath, filetype) {
+    if (filepath.length === 0) return null;
+    const filename = filepath.slice(-1)[0];
+    if (filepath.length > 1) {
+      const dir = this.findFile(filepath.slice(0, -1), 'dir');
+      if (!dir) return null;
+      return dir.createChild([filename], filetype);
+    }
+    const pathStr = `${this.fullPath}/${filename}`;
+    let file;
+    if (filetype === 'dir') file = new DirFile(filename, pathStr, this);
+    else file = new TxtFile(filename, pathStr, this);
+    this.children.push(file);
+    return file;
   }
 
 }
+

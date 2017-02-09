@@ -346,9 +346,8 @@ export default class Vi {
    * create new FileObject and assign it to Vi session
    */
   writeNewFile() {
-    const newFileResult = this.shellRef.newFile(this.filePath, 'txt');
-    if (!newFileResult.data) return false;
-    this.file = newFileResult.data;
+    this.file = this.shellRef.currentDir.createChild(this.filePath, 'txt');
+    if (!this.file) return false;
     return true;
   }
 

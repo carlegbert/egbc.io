@@ -169,7 +169,7 @@ export default class Shell {
     const newInput = inputString.slice(0, i) + otherArgs.join(' ');
     const res = this.executeCommand(newInput);
     const filepath = afterSymbol[0];
-    const file = this.findFile(this.currentDir, [filepath], 'txt') || this.newFile([filepath], 'txt').data;
+    const file = this.currentDir.findFile([filepath], 'txt') || this.currentDir.createChild([filepath], 'txt');
     if (!file) return new ShellCommandResult(null, `bash: ${filepath}: No such file or directory`);
     file.contents = pattern === '>' ? res.stdOut : file.contents.concat(res.stdOut);
     return new ShellCommandResult(null, res.stdErr);
@@ -225,7 +225,7 @@ export default class Shell {
     const partialAsArray = partial.split('/');
     const partialName = partialAsArray.slice(-1)[0];
     const dirPath = partialAsArray.slice(0, -1);
-    const dir = this.findFile(this.currentDir, dirPath, 'dir');
+    const dir = this.currentDir.findFile(dirPath, 'dir');
     const fileOptions = dir.getContentsByTypes(filetypes);
     const options = [];
     fileOptions.forEach((f) => {
@@ -262,62 +262,6 @@ export default class Shell {
     this.inputPromptElement.append(completion);
   }
 
-  /**
-   * Function to find file in a directory. Returns null if unsuccesful; it is the responsibility
-   * of the calling function to otherwise deal with failure.
-   *
-   * @param {DirFile} dir Directory to find file in
-   * @param {string[]} filepath Path to file to be found
-   * @param {string} filetype Type of file to find (optional)
-   * @return {FileObject} Returns file object if found, null if not
-   */
-  findFile(dir, filepath, filetype) {
-    if ((filepath.length === 0 || (filepath.length === 1 && filepath[0] === ''))
-        && filetype === 'dir') return dir;
-    let found = null;
-    const pathArg = filepath[0];
-    const typeToFind = filepath.length === 1 ? filetype : 'dir';
-    switch (pathArg) {
-      case '.':
-        found = dir;
-        break;
-      case '..':
-        found = dir.parentRef;
-        break;
-      case '~':
-        found = this.fileStructure;
-        break;
-      default:
-        dir.children.forEach((child) => {
-          if (pathArg === child.name && (!typeToFind || typeToFind === child.filetype)) {
-            found = child;
-          }
-        });
-    }
-
-    if (filepath.length === 1 || !found) return found;
-    return this.findFile(found, filepath.slice(1), filetype);
-  }
-
-  /**
-   * create new file
-   * @param {string} filepath Path to file from working directory, including name of new file
-   * @param {string} filetype Type of file (dir, txt)
-   * @return {ShellCommandResult} ShellCommandResult object with ref to file or stderr string
-   */
-  newFile(filepath, filetype) {
-    let dir;
-    if (filepath.length === 1) dir = this.currentDir;
-    else dir = this.findFile(this.currentDir, filepath.slice(0, -1), 'dir');
-    if (!dir) return new ShellCommandResult(null, `${filepath.slice(0, -1).join('/')}: Directory not found`);
-    const filename = filepath.slice(-1)[0];
-    const pathStr = `${dir.fullPath}/${filename}`;
-    let file;
-    if (filetype === 'dir') file = new DirFile(filename, pathStr, filetype, dir);
-    else file = new TxtFile(filename, pathStr, filetype, dir);
-    dir.children.push(file);
-    return new ShellCommandResult(null, null, file);
-  }
 
   killChildProcess() {
     this.childProcess = null;
@@ -396,7 +340,7 @@ export default class Shell {
    */
   cd(shellCommand) {
     const dir = shellCommand.args.length === 0 ? this.fileStructure :
-      this.findFile(this.currentDir, shellCommand.args[0].split('/'), 'dir');
+      this.currentDir.findFile(shellCommand.args[0].split('/'), 'dir');
     if (dir) {
       this.currentDir = dir;
       this.PS1Element.html(this.getPS1String());
@@ -416,7 +360,7 @@ export default class Shell {
       res.stdOut.push(this.currentDir.lsHelper());
     } else {
       shellCommand.args.forEach((arg) => {
-        const dir = this.findFile(this.currentDir, arg.split('/'), 'dir');
+        const dir = this.currentDir.findFile(arg.split('/'), 'dir');
         if (!dir) {
           res.stdErr.push(`ls: cannot access ${arg}: no such file or directory`);
         } else {
@@ -441,7 +385,7 @@ export default class Shell {
     if (shellCommand.args.length === 0) return res;
     shellCommand.args.forEach((arg) => {
       const path = arg.split('/');
-      const file = this.findFile(this.currentDir, path);
+      const file = this.currentDir.findFile(path);
       if (file && file.filetype === 'dir') {
         res.stdErr.push(`cat: ${file.name}: Is a directory`);
       } else if (file) {
@@ -463,11 +407,11 @@ export default class Shell {
     if (shellCommand.args.length === 0) return res;
     shellCommand.args.forEach((arg) => {
       const path = arg.split('/');
-      const file = this.findFile(this.currentDir, path, 'txt');
+      const file = this.currentDir.findFile(path, 'txt');
       if (file) file.lastModified = new Date();
       else {
-        const newFileRes = this.newFile(path, 'txt');
-        res.combine(newFileRes);
+        const newFileRes = this.currentDir.createChild(path, 'txt');
+        if (!newFileRes) res.stdErr.push(`touch: cannout touch ${path}: No such file or directory`);
       }
     });
     return res;
@@ -483,10 +427,10 @@ export default class Shell {
     if (shellCommand.args.length === 0) return res;
     shellCommand.args.forEach((arg) => {
       const path = arg.split('/');
-      const file = this.findFile(this.currentDir, path, 'dir');
+      const file = this.currentDir.findFile(path, 'dir');
       if (!file) {
-        const newFileRes = this.newFile(path, 'dir');
-        res.combine(newFileRes);
+        const newFileRes = this.currentDir.createChild(path, 'dir');
+        if (!newFileRes) res.stdErr.push(`touch: cannout touch ${path}: No such file or directory`);
       }
     });
     return res;
@@ -509,7 +453,7 @@ export default class Shell {
    */
   vi(shellCommand) {
     const fPath = shellCommand.args[0].split('/');
-    const file = this.findFile(this.currentDir, fPath, 'txt');
+    const file = this.currentDir.findFile(fPath, 'txt');
     this.childProcess = new Vi(this, fPath, file);
     return new ShellCommandResult();
   }
