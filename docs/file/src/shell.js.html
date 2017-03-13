@@ -34,9 +34,10 @@
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~LinkFile.html">LinkFile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~TxtFile.html">TxtFile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command-result.js~ShellCommandResult.html">ShellCommandResult</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell.js~Shell.html">Shell</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/vi.js~Vi.html">Vi</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getChar">getChar</a></span></span></li>
@@ -48,11 +49,10 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/shell.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* eslint-env jquery */
-
 import { getChar, print, printInline } from &apos;./io&apos;;
-import { TxtFile, DirFile } from &apos;./fileobject&apos;;
-import { ShellCommand, ShellCommandResult } from &apos;./shell-command&apos;;
-import Vi from &apos;./vi&apos;;
+import ShellCommand from &apos;./shell-command&apos;;
+import ShellCommandResult from &apos;./shell-command-result&apos;;
+
 
 /**
  * Object encapsulating shell session
@@ -196,12 +196,12 @@ export default class Shell {
     if (inputString.includes(&apos;&gt;&gt;&apos;)) return this.redirect(inputString, &apos;&gt;&gt;&apos;);
     if (inputString.includes(&apos;&gt;&apos;)) return this.redirect(inputString, &apos;&gt;&apos;);
 
-    const shellCommand = new ShellCommand(inputString);
-    if (!Shell.validCommands().includes(shellCommand.command)) {
+    const shellCommand = new ShellCommand(inputString, this);
+    if (!ShellCommand.validCommands().includes(shellCommand.command)) {
       return new ShellCommandResult([], `${shellCommand.command}: command not found`);
     }
-    const evalStr = `this.${shellCommand.command}(shellCommand)`;
-    return eval(evalStr);
+    const funcStr = `shellCommand.${shellCommand.command}()`;
+    return eval(funcStr);
   }
 
   /**
@@ -229,18 +229,18 @@ export default class Shell {
    */
   handleTab() {
     const spaceAtEnd = (this.inputString[this.inputString.length - 1] === &apos; &apos;);
-    const cmd = new ShellCommand(this.inputString);
+    const cmd = new ShellCommand(this.inputString, this);
     let options;
     let partial;
     if (!cmd.command) {
       partial = &apos;&apos;;
-      options = Shell.validCommands();
+      options = ShellCommand.validCommands();
     } else if (!spaceAtEnd &amp;&amp; cmd.args.length === 0) {
       partial = cmd.command;
-      options = Shell.filterAutoCompleteOptions(partial, Shell.validCommands());
+      options = Shell.filterAutoCompleteOptions(partial, ShellCommand.validCommands());
     } else {
       partial = cmd.args[cmd.args.length - 1] || &apos;&apos;;
-      options = this.getAutocompleteFiles(partial, Shell.getValidTypes(cmd.command));
+      options = this.getAutocompleteFiles(partial, ShellCommand.getValidTypes(cmd.command));
       if (options.length === 0) options = this.getAutocompleteFiles(partial, [&apos;dir&apos;]);
     }
     if (options.length === 1) this.executeAutoComplete(partial, options[0]);
@@ -319,193 +319,6 @@ export default class Shell {
   // Shell Commands
   // TODO: should these be moved to seperate class, or to ShellCommand class?
 
-  /**
-   * List of all valid commands, used for autocompletion and to validate ShellCommand
-   * objects before using eval
-   * @return {string[]} List of valid commands that can be executed
-   */
-  static validCommands() {
-    return [
-      &apos;clear&apos;,
-      &apos;pwd&apos;,
-      &apos;whoami&apos;,
-      &apos;cd&apos;,
-      &apos;ls&apos;,
-      &apos;cat&apos;,
-      &apos;touch&apos;,
-      &apos;mkdir&apos;,
-      &apos;echo&apos;,
-      &apos;vi&apos;,
-    ];
-  }
-
-  /**
-   * Determine valid filetypes for command arguments
-   * @param {string} cmdName Command name, eg, &apos;ls&apos;, &apos;cat&apos;, etc
-   * @return {string[]} array of valid filetypes
-   */
-  static getValidTypes(cmdName) {
-    const typeDict = {
-      ls: [&apos;dir&apos;],
-      cd: [&apos;dir&apos;],
-      mkdir: [&apos;dir&apos;],
-      cat: [&apos;txt&apos;],
-      &apos;&gt;&apos;: [&apos;txt&apos;],
-      vi: [&apos;txt&apos;],
-    };
-    return typeDict[cmdName] || [&apos;dir&apos;, &apos;txt&apos;];
-  }
-
-
-  /**
-   * Clear #terminal-output. Removes elemnts from DOM rather than just scrolling.
-   * @return {ShellCommandResult}
-   */
-  clear() {
-    $(&apos;#terminal-output&apos;).html(&apos;&apos;);
-    return new ShellCommandResult();
-  }
-
-  /**
-   * Get current directory
-   * @return {ShellCommandResult}
-   */
-  pwd() {
-    return new ShellCommandResult(this.currentDir.fullPath);
-  }
-
-  /**
-   * Get current user
-   * @return {ShellCommandResult}
-   */
-  whoami() {
-    return new ShellCommandResult(this.user);
-  }
-
-  /**
-   * Change directory
-   * @param {ShellCommand} shellCommand
-   * @return {ShellCommandResult}
-   */
-  cd(shellCommand) {
-    const dir = shellCommand.args.length === 0 ? this.fileStructure :
-      this.currentDir.findFile(shellCommand.args[0].split(&apos;/&apos;), &apos;dir&apos;);
-    if (dir) {
-      this.currentDir = dir;
-      this.PS1Element.html(this.getPS1String());
-      return new ShellCommandResult();
-    }
-    return new ShellCommandResult(null, `${shellCommand.args[0]}: directory not found`);
-  }
-
-  /**
-   * List contents of directory/directories
-   * @param {ShellCommand} shellCommand
-   * @return {ShellCommandResult}
-   */
-  ls(shellCommand) {
-    const res = new ShellCommandResult([]);
-    if (shellCommand.args.length === 0) {
-      res.stdOut.push(this.currentDir.lsHelper());
-    } else {
-      shellCommand.args.forEach((arg) =&gt; {
-        const dir = this.currentDir.findFile(arg.split(&apos;/&apos;), &apos;dir&apos;);
-        if (!dir) {
-          res.stdErr.push(`ls: cannot access ${arg}: no such file or directory`);
-        } else {
-          let str = &apos;&apos;;
-          if (shellCommand.args.length &gt; 1) str += `${arg}:`;
-          str += dir.lsHelper();
-          res.stdOut.push(str);
-        }
-      });
-    }
-    return res;
-  }
-
-
-  /**
-   * List contents of text file(s)
-   * @param {ShellCommand} shellCommand
-   * @return {ShellCommandResult}
-   */
-  cat(shellCommand) {
-    const res = new ShellCommandResult();
-    if (shellCommand.args.length === 0) return res;
-    shellCommand.args.forEach((arg) =&gt; {
-      const path = arg.split(&apos;/&apos;);
-      const file = this.currentDir.findFile(path);
-      if (file &amp;&amp; file.filetype === &apos;dir&apos;) {
-        res.stdErr.push(`cat: ${file.name}: Is a directory`);
-      } else if (file) {
-        res.stdOut = res.stdOut.concat(file.contents);
-      } else {
-        res.stdErr.push(`cat: ${arg}: No such file or directory`);
-      }
-    });
-    return res;
-  }
-
-  /**
-   * Mark file or directory as modified. Create new file if one doesn&apos;t exist at path.
-   * @param {ShellCommand} shellCommand
-   * @return {ShellCommandResult}
-   */
-  touch(shellCommand) {
-    const res = new ShellCommandResult();
-    if (shellCommand.args.length === 0) return res;
-    shellCommand.args.forEach((arg) =&gt; {
-      const path = arg.split(&apos;/&apos;);
-      const file = this.currentDir.findFile(path, &apos;txt&apos;);
-      if (file) file.lastModified = new Date();
-      else {
-        const newFileRes = this.currentDir.createChild(path, &apos;txt&apos;);
-        if (!newFileRes) res.stdErr.push(`touch: cannout touch ${path}: No such file or directory`);
-      }
-    });
-    return res;
-  }
-
-  /**
-   * Create new directory
-   * @param {ShellCommand} shellCommand
-   * @return {ShellCommandResult}
-   */
-  mkdir(shellCommand) {
-    const res = new ShellCommandResult();
-    if (shellCommand.args.length === 0) return res;
-    shellCommand.args.forEach((arg) =&gt; {
-      const path = arg.split(&apos;/&apos;);
-      const file = this.currentDir.findFile(path, &apos;dir&apos;);
-      if (!file) {
-        const newFileRes = this.currentDir.createChild(path, &apos;dir&apos;);
-        if (!newFileRes) res.stdErr.push(`touch: cannout touch ${path}: No such file or directory`);
-      }
-    });
-    return res;
-  }
-
-  /**
-   * Print text
-   * @param {ShellCommand} shellCommand
-   * @return {ShellCommandResult}
-   */
-  echo(shellCommand) {
-    const output = shellCommand.args.join(&apos; &apos;);
-    return new ShellCommandResult(output);
-  }
-
-  /**
-   * Start new vi session
-   * @param {ShellCommand} shellCommand
-   * @return {ShellCommandResult}
-   */
-  vi(shellCommand) {
-    const fPath = shellCommand.args[0].split(&apos;/&apos;);
-    const file = this.currentDir.findFile(fPath, &apos;txt&apos;);
-    this.childProcess = new Vi(this, fPath, file);
-    return new ShellCommandResult();
-  }
 
 }
 </code></pre>

@@ -34,9 +34,10 @@
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~LinkFile.html">LinkFile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~TxtFile.html">TxtFile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command-result.js~ShellCommandResult.html">ShellCommandResult</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell.js~Shell.html">Shell</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/vi.js~Vi.html">Vi</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getChar">getChar</a></span></span></li>
@@ -47,9 +48,7 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/fileobject.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* eslint-env browser */
-
-/**
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
  * Base File class
  * @class
  */
@@ -107,7 +106,7 @@ export class FileObject {
    * @return {string}
    */
   getLsEntry() {
-    return `&lt;span class=&quot;dir ${this.filetype}&quot; id=&quot;${this.fullPath}&quot;&gt;${this.name}&lt;/span&gt;`;
+    return `&lt;span class=&quot;inline ${this.filetype}&quot; id=&quot;${this.fullPath}&quot;&gt;${this.name}&lt;/span&gt;`;
   }
 
 }
@@ -130,10 +129,41 @@ export class TxtFile extends FileObject {
     /**
      * @type {string[]}
      */
-    this.contents = contents || [];
+    this.contents = contents || [&apos;&apos;];
   }
 
 }
+
+/**
+ * @extends {TxtFile}
+ */
+export class LinkFile extends TxtFile {
+  /**
+   * @constructor
+   * @param {string} name
+   * @param {string} fullPath
+   * @param {DirFile} parentRef
+   * @param {Date} lastModified
+   * @param {string} url
+   */
+  constructor(name, fullPath, parentRef, lastModified, url) {
+    super(name, fullPath, &apos;txt&apos;, parentRef, lastModified);
+    /**
+     * @type {string}
+     */
+    this.url = url;
+  }
+
+  /**
+   * Returns HTML-formatted filename
+   * @return {string}
+   */
+  getLsEntry() {
+    return `&lt;span class=&quot;inline link&quot;&gt;&lt;a href=&quot;${this.url}&quot; target=&quot;_blank&quot;&gt;${this.name}&lt;a&gt;&lt;/span&gt;`;
+  }
+
+}
+
 /**
  * @extends {FileObject}
  */
@@ -189,7 +219,7 @@ export class DirFile extends FileObject {
   lsHelper() {
     let res = &apos;&lt;div&gt;&apos;;
     this.children.forEach((child) =&gt; {
-      res += `&lt;li class=&quot;inline ${child.filetype}&quot;&gt;${child.name}&lt;/li&gt;`;
+      res += child.getLsEntry();
     });
     res += &apos;&lt;/div&gt;&apos;;
     return res;

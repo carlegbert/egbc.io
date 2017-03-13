@@ -34,9 +34,10 @@
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~LinkFile.html">LinkFile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~TxtFile.html">TxtFile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command-result.js~ShellCommandResult.html">ShellCommandResult</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell.js~Shell.html">Shell</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/vi.js~Vi.html">Vi</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getChar">getChar</a></span></span></li>
@@ -47,13 +48,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Shell from &apos;<span><a href="file/src/shell.js.html#lineNumber12">wwwterm/src/shell.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Shell from &apos;<span><a href="file/src/shell.js.html#lineNumber11">wwwterm/src/shell.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/src/shell.js.html#lineNumber12">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/shell.js.html#lineNumber11">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -111,63 +112,6 @@
         
         
         <div data-ice="description"><p>filter array of strings into options that match up with partial argument</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          <span data-ice="name"><span><a href="class/src/shell.js~Shell.html#static-method-getValidTypes">getValidTypes</a></span></span><span data-ice="signature">(cmdName: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Determine valid filetypes for command arguments</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          <span data-ice="name"><span><a href="class/src/shell.js~Shell.html#static-method-validCommands">validCommands</a></span></span><span data-ice="signature">(): <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>List of all valid commands, used for autocompletion and to validate ShellCommand
-objects before using eval</p>
 </div>
       </div>
     </td>
@@ -535,118 +479,6 @@ objects before using eval</p>
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/shell.js~Shell.html#instance-method-cat">cat</a></span></span><span data-ice="signature">(shellCommand: <span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span>): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>List contents of text file(s)</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          <span data-ice="name"><span><a href="class/src/shell.js~Shell.html#instance-method-cd">cd</a></span></span><span data-ice="signature">(shellCommand: <span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span>): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Change directory</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          <span data-ice="name"><span><a href="class/src/shell.js~Shell.html#instance-method-clear">clear</a></span></span><span data-ice="signature">(): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Clear #terminal-output.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          <span data-ice="name"><span><a href="class/src/shell.js~Shell.html#instance-method-echo">echo</a></span></span><span data-ice="signature">(shellCommand: <span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span>): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Print text</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
           <span data-ice="name"><span><a href="class/src/shell.js~Shell.html#instance-method-executeAutoComplete">executeAutoComplete</a></span></span><span data-ice="signature">(partial: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, complete: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>)</span>
         </p>
       </div>
@@ -841,62 +673,6 @@ objects before using eval</p>
         <p>
           
           
-          <span data-ice="name"><span><a href="class/src/shell.js~Shell.html#instance-method-ls">ls</a></span></span><span data-ice="signature">(shellCommand: <span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span>): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>List contents of directory/directories</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          <span data-ice="name"><span><a href="class/src/shell.js~Shell.html#instance-method-mkdir">mkdir</a></span></span><span data-ice="signature">(shellCommand: <span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span>): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Create new directory</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
           <span data-ice="name"><span><a href="class/src/shell.js~Shell.html#instance-method-parseKeystroke">parseKeystroke</a></span></span><span data-ice="signature">(event: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>)</span>
         </p>
       </div>
@@ -933,34 +709,6 @@ if there is one active</p>
         
         
         <div data-ice="description"><p>prints valid autocomplete options.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          <span data-ice="name"><span><a href="class/src/shell.js~Shell.html#instance-method-pwd">pwd</a></span></span><span data-ice="signature">(): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Get current directory</p>
 </div>
       </div>
     </td>
@@ -1025,90 +773,6 @@ if there is one active</p>
       
     </td>
   </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          <span data-ice="name"><span><a href="class/src/shell.js~Shell.html#instance-method-touch">touch</a></span></span><span data-ice="signature">(shellCommand: <span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span>): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Mark file or directory as modified.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          <span data-ice="name"><span><a href="class/src/shell.js~Shell.html#instance-method-vi">vi</a></span></span><span data-ice="signature">(shellCommand: <span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span>): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Start new vi session</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          <span data-ice="name"><span><a href="class/src/shell.js~Shell.html#instance-method-whoami">whoami</a></span></span><span data-ice="signature">(): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Get current user</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
 </tbody>
 </table>
 </div>
@@ -1130,7 +794,7 @@ if there is one active</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber207">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber206">source</a></span></span>
     </span>
   </h3>
 
@@ -1199,138 +863,6 @@ if there is one active</p>
   
   
 </div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-method-getValidTypes">
-    <span class="access" data-ice="access">public</span>
-    <span data-ice="static">static</span>
-    
-    
-    
-    
-    <span data-ice="name">getValidTypes</span><span data-ice="signature">(cmdName: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber298">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Determine valid filetypes for command arguments</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">cmdName</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>Command name, eg, &apos;ls&apos;, &apos;cat&apos;, etc</p>
-</td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type" data-ice="returnType"><span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></td>
-          <td class="return-desc" data-ice="returnDescription"><p>array of valid filetypes</p>
-</td>
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-method-validCommands">
-    <span class="access" data-ice="access">public</span>
-    <span data-ice="static">static</span>
-    
-    
-    
-    
-    <span data-ice="name">validCommands</span><span data-ice="signature">(): <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber278">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>List of all valid commands, used for autocompletion and to validate ShellCommand
-objects before using eval</p>
-</div>
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type" data-ice="returnType"><span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></td>
-          <td class="return-desc" data-ice="returnDescription"><p>List of valid commands that can be executed</p>
-</td>
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
 </div>
 <div data-ice="constructorDetails"><h2 data-ice="title">Public Constructors</h2>
 
@@ -1346,7 +878,7 @@ objects before using eval</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber18">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber17">source</a></span></span>
     </span>
   </h3>
 
@@ -1410,7 +942,7 @@ objects before using eval</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber54">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber53">source</a></span></span>
     </span>
   </h3>
 
@@ -1453,7 +985,7 @@ objects before using eval</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber38">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber37">source</a></span></span>
     </span>
   </h3>
 
@@ -1496,7 +1028,7 @@ objects before using eval</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber62">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber61">source</a></span></span>
     </span>
   </h3>
 
@@ -1539,7 +1071,7 @@ objects before using eval</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber26">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber25">source</a></span></span>
     </span>
   </h3>
 
@@ -1582,7 +1114,7 @@ objects before using eval</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber22">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber21">source</a></span></span>
     </span>
   </h3>
 
@@ -1625,7 +1157,7 @@ objects before using eval</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber42">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber41">source</a></span></span>
     </span>
   </h3>
 
@@ -1668,7 +1200,7 @@ objects before using eval</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber50">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber49">source</a></span></span>
     </span>
   </h3>
 
@@ -1711,7 +1243,7 @@ objects before using eval</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber34">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber33">source</a></span></span>
     </span>
   </h3>
 
@@ -1754,7 +1286,7 @@ objects before using eval</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber58">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber57">source</a></span></span>
     </span>
   </h3>
 
@@ -1797,7 +1329,7 @@ objects before using eval</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber46">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber45">source</a></span></span>
     </span>
   </h3>
 
@@ -1840,7 +1372,7 @@ objects before using eval</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber30">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber29">source</a></span></span>
     </span>
   </h3>
 
@@ -1875,278 +1407,6 @@ objects before using eval</p>
 <div data-ice="methodDetails"><h2 data-ice="title">Public Methods</h2>
 
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-cat">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span data-ice="name">cat</span><span data-ice="signature">(shellCommand: <span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span>): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber383">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>List contents of text file(s)</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">shellCommand</td>
-      <td data-ice="type"><span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type" data-ice="returnType"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-cd">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span data-ice="name">cd</span><span data-ice="signature">(shellCommand: <span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span>): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber341">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Change directory</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">shellCommand</td>
-      <td data-ice="type"><span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type" data-ice="returnType"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-clear">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span data-ice="name">clear</span><span data-ice="signature">(): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber315">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Clear #terminal-output. Removes elemnts from DOM rather than just scrolling.</p>
-</div>
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type" data-ice="returnType"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-echo">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span data-ice="name">echo</span><span data-ice="signature">(shellCommand: <span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span>): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber444">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Print text</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">shellCommand</td>
-      <td data-ice="type"><span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type" data-ice="returnType"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-method-executeAutoComplete">
     <span class="access" data-ice="access">public</span>
     
@@ -2158,7 +1418,7 @@ objects before using eval</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber257">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber256">source</a></span></span>
     </span>
   </h3>
 
@@ -2226,7 +1486,7 @@ objects before using eval</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber146">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber145">source</a></span></span>
     </span>
   </h3>
 
@@ -2301,7 +1561,7 @@ be a ShellCommandResult object</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber224">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber223">source</a></span></span>
     </span>
   </h3>
 
@@ -2382,7 +1642,7 @@ be a ShellCommandResult object</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber68">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber67">source</a></span></span>
     </span>
   </h3>
 
@@ -2438,7 +1698,7 @@ be a ShellCommandResult object</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber126">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber125">source</a></span></span>
     </span>
   </h3>
 
@@ -2482,7 +1742,7 @@ be a ShellCommandResult object</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber181">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber180">source</a></span></span>
     </span>
   </h3>
 
@@ -2526,7 +1786,7 @@ be a ShellCommandResult object</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber266">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber265">source</a></span></span>
     </span>
   </h3>
 
@@ -2558,150 +1818,6 @@ be a ShellCommandResult object</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-ls">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span data-ice="name">ls</span><span data-ice="signature">(shellCommand: <span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span>): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber357">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>List contents of directory/directories</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">shellCommand</td>
-      <td data-ice="type"><span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type" data-ice="returnType"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-mkdir">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span data-ice="name">mkdir</span><span data-ice="signature">(shellCommand: <span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span>): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber425">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Create new directory</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">shellCommand</td>
-      <td data-ice="type"><span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type" data-ice="returnType"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-method-parseKeystroke">
     <span class="access" data-ice="access">public</span>
     
@@ -2713,7 +1829,7 @@ be a ShellCommandResult object</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber78">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber77">source</a></span></span>
     </span>
   </h3>
 
@@ -2775,7 +1891,7 @@ if there is one active</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber243">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber242">source</a></span></span>
     </span>
   </h3>
 
@@ -2825,62 +1941,6 @@ if there is one active</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-pwd">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span data-ice="name">pwd</span><span data-ice="signature">(): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber324">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Get current directory</p>
-</div>
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type" data-ice="returnType"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-method-redirect">
     <span class="access" data-ice="access">public</span>
     
@@ -2892,7 +1952,7 @@ if there is one active</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber164">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber163">source</a></span></span>
     </span>
   </h3>
 
@@ -2973,7 +2033,7 @@ if there is one active</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber87">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber86">source</a></span></span>
     </span>
   </h3>
 
@@ -3006,206 +2066,6 @@ if there is one active</p>
 </div>
 
   
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-touch">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span data-ice="name">touch</span><span data-ice="signature">(shellCommand: <span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span>): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber405">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Mark file or directory as modified. Create new file if one doesn&apos;t exist at path.</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">shellCommand</td>
-      <td data-ice="type"><span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type" data-ice="returnType"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-vi">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span data-ice="name">vi</span><span data-ice="signature">(shellCommand: <span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span>): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber454">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Start new vi session</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">shellCommand</td>
-      <td data-ice="type"><span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type" data-ice="returnType"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-whoami">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span data-ice="name">whoami</span><span data-ice="signature">(): <span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/shell.js.html#lineNumber332">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Get current user</p>
-</div>
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type" data-ice="returnType"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
 
   
 

@@ -71,7 +71,6 @@ export default class Vi {
      */
     this.termElement = $('#terminal');
 
-    this.startSession();
   }
 
   /**

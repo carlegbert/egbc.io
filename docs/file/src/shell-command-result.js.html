@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../">
-  <title data-ice="title">src/io.js | API Document</title>
+  <title data-ice="title">src/shell-command-result.js | API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -47,97 +47,55 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">src/io.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* eslint-env jquery */
-
-/**
- * function for parsing keycode from keystroke event into a
- * single character. necessary because of poor keystroke event
- * support in Safari.
- * @param {Event} event Keystroke event
- * @return {string} single-char string or null, or empty string
- *  on failure.
+<div class="content" data-ice="content"><h1 data-ice="title">src/shell-command-result.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * Object containing results of shell action
+ * @class
  */
-export function getChar(event) {
-  const code = event.keyCode;
-  if (code === 32) return &apos; &apos;; // spacebar
-  if (event.shiftKey) { // if shift key depressed
-    if (code &lt;= 91 &amp;&amp; code &gt;= 65) { // capital letters
-      return String.fromCharCode(code);
-    }
-
-    switch (code) {
-      case 49: return &apos;!&apos;;
-      case 50: return &apos;@&apos;;
-      case 51: return &apos;#&apos;;
-      case 52: return &apos;$&apos;;
-      case 53: return &apos;%&apos;;
-      case 54: return &apos;^&apos;;
-      case 55: return &apos;&amp;&apos;;
-      case 56: return &apos;*&apos;;
-      case 57: return &apos;(&apos;;
-      case 58: return &apos;)&apos;;
-      case 189: return &apos;_&apos;;
-      case 187: return &apos;+&apos;;
-      case 219: return &apos;{&apos;;
-      case 221: return &apos;}&apos;;
-      case 220: return &apos;|&apos;;
-      case 186: return &apos;:&apos;;
-      case 222: return &apos;&quot;&apos;;
-      case 191: return &apos;?&apos;;
-      case 190: return &apos;&gt;&apos;;
-      case 188: return &apos;&lt;&apos;;
-      case 192: return &apos;~&apos;;
-      default:
-        break;
-    }
-  // shift key not depressed
-  } else if ((code &lt;= 91 &amp;&amp; code &gt;= 65) || (code &lt;= 57 &amp;&amp; code &gt;= 48)) {
-    return String.fromCharCode(code).toLowerCase(); // lowercase &amp; nums
-  } else {
-    switch (code) {
-      case 189: return &apos;-&apos;;
-      case 187: return &apos;=&apos;;
-      case 219: return &apos;[&apos;;
-      case 221: return &apos;]&apos;;
-      case 220: return &apos;\\&apos;;
-      case 186: return &apos;;&apos;;
-      case 222: return &quot;&apos;&quot;;
-      case 191: return &apos;/&apos;;
-      case 190: return &apos;.&apos;;
-      case 188: return &apos;,&apos;;
-      case 192: return &apos;`&apos;;
-      default:
-        break;
-    }
+export default class ShellCommandResult {
+  /**
+   * @constructor
+   * @param {string[]} stdOut Results of succesful action
+   * @param {string[]} stdErr Results of unsuccesful action
+   * @param {*} data Wildcard data that the command may need to pass back (for example,
+   * a newly created file)
+   */
+  constructor(stdOut, stdErr, data) {
+    /**
+     * @type {string[]}
+     */
+    this.stdOut = stdOut || [];
+    /**
+     * @type {string[]}
+     */
+    this.stdErr = stdErr || [];
+    /**
+     * @type {*}
+     */
+    this.data = data;
   }
-  return &apos;&apos;;
-}
 
-/**
- * print output to screen. format if necessary
- * TODO: consider refactoring into seperate functions for
- * single string and array.
- * @param {string|string[]} output String or array of strings to print
- * @param {HTMLElement} target HTML element to print to
- */
-export function print(output, target) {
-  if (typeof output === &apos;string&apos;) {
-    target.append(`&lt;li&gt;${output}&lt;/li&gt;`);
-  } else if (typeof output === &apos;object&apos;) {
-    output.forEach(line =&gt; print(line, target));
+  /**
+   * return stdErr if it is not undefined, stdOut if it isn&apos;t,
+   * and an empty array if neither are.
+   * @return {string[]}
+   */
+  getDefaultOutput() {
+    return this.stdOut.concat(this.stdErr);
   }
-}
 
-/**
- * print output to screen without linebreaks
- * @param {string[]} output Array of strings to print
- * @param {HTMLElement} target HTML element to print to
- */
-export function printInline(output, target) {
-  output.forEach((line) =&gt; {
-    target.append(`&lt;li class=&apos;inline&apos;&gt;${line}&lt;/li&gt;`);
-  });
+  /**
+   * combine two shellCommandResults into one for use in
+   * recursive or chained functions
+   * @param {ShellCommandResult} otherResult
+   * @return {ShellCommandResult}
+   */
+  combine(otherResult) {
+    this.stdErr += otherResult.stdErr;
+    this.stdOut += otherResult.stdOut;
+    this.data += otherResult.data;
+  }
+
 }
 </code></pre>
 

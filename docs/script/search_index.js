@@ -12,6 +12,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "wwwterm/src/fileobject.js~linkfile",
+    "class/src/fileobject.js~LinkFile.html",
+    "<span>LinkFile</span> <span class=\"search-result-import-path\">wwwterm/src/fileobject.js</span>",
+    "class"
+  ],
+  [
     "wwwterm/src/shell.js~shell",
     "class/src/shell.js~Shell.html",
     "<span>Shell</span> <span class=\"search-result-import-path\">wwwterm/src/shell.js</span>",
@@ -24,9 +30,9 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "wwwterm/src/shell-command.js~shellcommandresult",
-    "class/src/shell-command.js~ShellCommandResult.html",
-    "<span>ShellCommandResult</span> <span class=\"search-result-import-path\">wwwterm/src/shell-command.js</span>",
+    "wwwterm/src/shell-command-result.js~shellcommandresult",
+    "class/src/shell-command-result.js~ShellCommandResult.html",
+    "<span>ShellCommandResult</span> <span class=\"search-result-import-path\">wwwterm/src/shell-command-result.js</span>",
     "class"
   ],
   [
@@ -498,6 +504,24 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/fileobject.js~linkfile#constructor",
+    "class/src/fileobject.js~LinkFile.html#instance-constructor-constructor",
+    "src/fileobject.js~LinkFile#constructor",
+    "method"
+  ],
+  [
+    "src/fileobject.js~linkfile#getlsentry",
+    "class/src/fileobject.js~LinkFile.html#instance-method-getLsEntry",
+    "src/fileobject.js~LinkFile#getLsEntry",
+    "method"
+  ],
+  [
+    "src/fileobject.js~linkfile#url",
+    "class/src/fileobject.js~LinkFile.html#instance-member-url",
+    "src/fileobject.js~LinkFile#url",
+    "member"
+  ],
+  [
     "src/fileobject.js~txtfile#constructor",
     "class/src/fileobject.js~TxtFile.html#instance-constructor-constructor",
     "src/fileobject.js~TxtFile#constructor",
@@ -522,6 +546,48 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/shell-command-result.js",
+    "file/src/shell-command-result.js.html",
+    "src/shell-command-result.js",
+    "file"
+  ],
+  [
+    "src/shell-command-result.js~shellcommandresult#combine",
+    "class/src/shell-command-result.js~ShellCommandResult.html#instance-method-combine",
+    "src/shell-command-result.js~ShellCommandResult#combine",
+    "method"
+  ],
+  [
+    "src/shell-command-result.js~shellcommandresult#constructor",
+    "class/src/shell-command-result.js~ShellCommandResult.html#instance-constructor-constructor",
+    "src/shell-command-result.js~ShellCommandResult#constructor",
+    "method"
+  ],
+  [
+    "src/shell-command-result.js~shellcommandresult#data",
+    "class/src/shell-command-result.js~ShellCommandResult.html#instance-member-data",
+    "src/shell-command-result.js~ShellCommandResult#data",
+    "member"
+  ],
+  [
+    "src/shell-command-result.js~shellcommandresult#getdefaultoutput",
+    "class/src/shell-command-result.js~ShellCommandResult.html#instance-method-getDefaultOutput",
+    "src/shell-command-result.js~ShellCommandResult#getDefaultOutput",
+    "method"
+  ],
+  [
+    "src/shell-command-result.js~shellcommandresult#stderr",
+    "class/src/shell-command-result.js~ShellCommandResult.html#instance-member-stdErr",
+    "src/shell-command-result.js~ShellCommandResult#stdErr",
+    "member"
+  ],
+  [
+    "src/shell-command-result.js~shellcommandresult#stdout",
+    "class/src/shell-command-result.js~ShellCommandResult.html#instance-member-stdOut",
+    "src/shell-command-result.js~ShellCommandResult#stdOut",
+    "member"
+  ],
+  [
     "src/shell-command.js",
     "file/src/shell-command.js.html",
     "src/shell-command.js",
@@ -532,6 +598,24 @@ window.esdocSearchIndex = [
     "class/src/shell-command.js~ShellCommand.html#instance-member-args",
     "src/shell-command.js~ShellCommand#args",
     "member"
+  ],
+  [
+    "src/shell-command.js~shellcommand#cat",
+    "class/src/shell-command.js~ShellCommand.html#instance-method-cat",
+    "src/shell-command.js~ShellCommand#cat",
+    "method"
+  ],
+  [
+    "src/shell-command.js~shellcommand#cd",
+    "class/src/shell-command.js~ShellCommand.html#instance-method-cd",
+    "src/shell-command.js~ShellCommand#cd",
+    "method"
+  ],
+  [
+    "src/shell-command.js~shellcommand#clear",
+    "class/src/shell-command.js~ShellCommand.html#instance-method-clear",
+    "src/shell-command.js~ShellCommand#clear",
+    "method"
   ],
   [
     "src/shell-command.js~shellcommand#command",
@@ -546,10 +630,34 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/shell-command.js~shellcommand#echo",
+    "class/src/shell-command.js~ShellCommand.html#instance-method-echo",
+    "src/shell-command.js~ShellCommand#echo",
+    "method"
+  ],
+  [
     "src/shell-command.js~shellcommand#flags",
     "class/src/shell-command.js~ShellCommand.html#instance-member-flags",
     "src/shell-command.js~ShellCommand#flags",
     "member"
+  ],
+  [
+    "src/shell-command.js~shellcommand#help",
+    "class/src/shell-command.js~ShellCommand.html#instance-method-help",
+    "src/shell-command.js~ShellCommand#help",
+    "method"
+  ],
+  [
+    "src/shell-command.js~shellcommand#ls",
+    "class/src/shell-command.js~ShellCommand.html#instance-method-ls",
+    "src/shell-command.js~ShellCommand#ls",
+    "method"
+  ],
+  [
+    "src/shell-command.js~shellcommand#mkdir",
+    "class/src/shell-command.js~ShellCommand.html#instance-method-mkdir",
+    "src/shell-command.js~ShellCommand#mkdir",
+    "method"
   ],
   [
     "src/shell-command.js~shellcommand#originalinput",
@@ -564,40 +672,46 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/shell-command.js~shellcommandresult#combine",
-    "class/src/shell-command.js~ShellCommandResult.html#instance-method-combine",
-    "src/shell-command.js~ShellCommandResult#combine",
+    "src/shell-command.js~shellcommand#pwd",
+    "class/src/shell-command.js~ShellCommand.html#instance-method-pwd",
+    "src/shell-command.js~ShellCommand#pwd",
     "method"
   ],
   [
-    "src/shell-command.js~shellcommandresult#constructor",
-    "class/src/shell-command.js~ShellCommandResult.html#instance-constructor-constructor",
-    "src/shell-command.js~ShellCommandResult#constructor",
+    "src/shell-command.js~shellcommand#shell",
+    "class/src/shell-command.js~ShellCommand.html#instance-member-shell",
+    "src/shell-command.js~ShellCommand#shell",
+    "member"
+  ],
+  [
+    "src/shell-command.js~shellcommand#touch",
+    "class/src/shell-command.js~ShellCommand.html#instance-method-touch",
+    "src/shell-command.js~ShellCommand#touch",
     "method"
   ],
   [
-    "src/shell-command.js~shellcommandresult#data",
-    "class/src/shell-command.js~ShellCommandResult.html#instance-member-data",
-    "src/shell-command.js~ShellCommandResult#data",
-    "member"
-  ],
-  [
-    "src/shell-command.js~shellcommandresult#getdefaultoutput",
-    "class/src/shell-command.js~ShellCommandResult.html#instance-method-getDefaultOutput",
-    "src/shell-command.js~ShellCommandResult#getDefaultOutput",
+    "src/shell-command.js~shellcommand#vi",
+    "class/src/shell-command.js~ShellCommand.html#instance-method-vi",
+    "src/shell-command.js~ShellCommand#vi",
     "method"
   ],
   [
-    "src/shell-command.js~shellcommandresult#stderr",
-    "class/src/shell-command.js~ShellCommandResult.html#instance-member-stdErr",
-    "src/shell-command.js~ShellCommandResult#stdErr",
-    "member"
+    "src/shell-command.js~shellcommand#whoami",
+    "class/src/shell-command.js~ShellCommand.html#instance-method-whoami",
+    "src/shell-command.js~ShellCommand#whoami",
+    "method"
   ],
   [
-    "src/shell-command.js~shellcommandresult#stdout",
-    "class/src/shell-command.js~ShellCommandResult.html#instance-member-stdOut",
-    "src/shell-command.js~ShellCommandResult#stdOut",
-    "member"
+    "src/shell-command.js~shellcommand.getvalidtypes",
+    "class/src/shell-command.js~ShellCommand.html#static-method-getValidTypes",
+    "src/shell-command.js~ShellCommand.getValidTypes",
+    "method"
+  ],
+  [
+    "src/shell-command.js~shellcommand.validcommands",
+    "class/src/shell-command.js~ShellCommand.html#static-method-validCommands",
+    "src/shell-command.js~ShellCommand.validCommands",
+    "method"
   ],
   [
     "src/shell.js",
@@ -618,28 +732,10 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/shell.js~shell#cat",
-    "class/src/shell.js~Shell.html#instance-method-cat",
-    "src/shell.js~Shell#cat",
-    "method"
-  ],
-  [
-    "src/shell.js~shell#cd",
-    "class/src/shell.js~Shell.html#instance-method-cd",
-    "src/shell.js~Shell#cd",
-    "method"
-  ],
-  [
     "src/shell.js~shell#childprocess",
     "class/src/shell.js~Shell.html#instance-member-childProcess",
     "src/shell.js~Shell#childProcess",
     "member"
-  ],
-  [
-    "src/shell.js~shell#clear",
-    "class/src/shell.js~Shell.html#instance-method-clear",
-    "src/shell.js~Shell#clear",
-    "method"
   ],
   [
     "src/shell.js~shell#constructor",
@@ -652,12 +748,6 @@ window.esdocSearchIndex = [
     "class/src/shell.js~Shell.html#instance-member-currentDir",
     "src/shell.js~Shell#currentDir",
     "member"
-  ],
-  [
-    "src/shell.js~shell#echo",
-    "class/src/shell.js~Shell.html#instance-method-echo",
-    "src/shell.js~Shell#echo",
-    "method"
   ],
   [
     "src/shell.js~shell#executeautocomplete",
@@ -726,18 +816,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/shell.js~shell#ls",
-    "class/src/shell.js~Shell.html#instance-method-ls",
-    "src/shell.js~Shell#ls",
-    "method"
-  ],
-  [
-    "src/shell.js~shell#mkdir",
-    "class/src/shell.js~Shell.html#instance-method-mkdir",
-    "src/shell.js~Shell#mkdir",
-    "method"
-  ],
-  [
     "src/shell.js~shell#outputelement",
     "class/src/shell.js~Shell.html#instance-member-outputElement",
     "src/shell.js~Shell#outputElement",
@@ -753,12 +831,6 @@ window.esdocSearchIndex = [
     "src/shell.js~shell#printautocompleteoptions",
     "class/src/shell.js~Shell.html#instance-method-printAutoCompleteOptions",
     "src/shell.js~Shell#printAutoCompleteOptions",
-    "method"
-  ],
-  [
-    "src/shell.js~shell#pwd",
-    "class/src/shell.js~Shell.html#instance-method-pwd",
-    "src/shell.js~Shell#pwd",
     "method"
   ],
   [
@@ -780,45 +852,15 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/shell.js~shell#touch",
-    "class/src/shell.js~Shell.html#instance-method-touch",
-    "src/shell.js~Shell#touch",
-    "method"
-  ],
-  [
     "src/shell.js~shell#user",
     "class/src/shell.js~Shell.html#instance-member-user",
     "src/shell.js~Shell#user",
     "member"
   ],
   [
-    "src/shell.js~shell#vi",
-    "class/src/shell.js~Shell.html#instance-method-vi",
-    "src/shell.js~Shell#vi",
-    "method"
-  ],
-  [
-    "src/shell.js~shell#whoami",
-    "class/src/shell.js~Shell.html#instance-method-whoami",
-    "src/shell.js~Shell#whoami",
-    "method"
-  ],
-  [
     "src/shell.js~shell.filterautocompleteoptions",
     "class/src/shell.js~Shell.html#static-method-filterAutoCompleteOptions",
     "src/shell.js~Shell.filterAutoCompleteOptions",
-    "method"
-  ],
-  [
-    "src/shell.js~shell.getvalidtypes",
-    "class/src/shell.js~Shell.html#static-method-getValidTypes",
-    "src/shell.js~Shell.getValidTypes",
-    "method"
-  ],
-  [
-    "src/shell.js~shell.validcommands",
-    "class/src/shell.js~Shell.html#static-method-validCommands",
-    "src/shell.js~Shell.validCommands",
     "method"
   ],
   [

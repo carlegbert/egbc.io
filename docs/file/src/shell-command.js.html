@@ -34,9 +34,10 @@
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~DirFile.html">DirFile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~FileObject.html">FileObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~LinkFile.html">LinkFile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/fileobject.js~TxtFile.html">TxtFile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command-result.js~ShellCommandResult.html">ShellCommandResult</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command.js~ShellCommand.html">ShellCommand</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell-command.js~ShellCommandResult.html">ShellCommandResult</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shell.js~Shell.html">Shell</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/vi.js~Vi.html">Vi</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getChar">getChar</a></span></span></li>
@@ -47,16 +48,22 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/shell-command.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
- * Object encapsulating information to be passed to a shell command
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Vi from &apos;./vi&apos;;
+import ShellCommandResult from &apos;./shell-command-result&apos;;
+
+
+/**
+ * Object encapsulating information to be passed to a shell operation,
+ * and the functions that execute those operations.
  * @class
  */
-export class ShellCommand {
+export default class ShellCommand {
   /**
    * @constructor
    * @param {string} input User-inputted statement from terminal
+   * @param {Shell} shell Parent shell object
    */
-  constructor(input) {
+  constructor(input, shell) {
     /**
      * @type {string}
      */
@@ -73,6 +80,10 @@ export class ShellCommand {
      * @type string
      */
     this.command = &apos;&apos;;
+    /**
+     * @type Shell
+     */
+    this.shell = shell;
 
     this.parseInput();
   }
@@ -93,57 +104,206 @@ export class ShellCommand {
       });
     }
   }
-}
 
-/**
- * Object containing results of shell action
- * @class
- */
-export class ShellCommandResult {
-  /**
-   * @constructor
-   * @param {string[]} stdOut Results of succesful action
-   * @param {string[]} stdErr Results of unsuccesful action
-   * @param {*} data Wildcard data that the command may need to pass back (for example,
-   * a newly created file)
+   /**
+   * List of all valid commands, used for autocompletion and to validate input
+   * before using eval
+   * @return {string[]} List of valid commands that can be executed
    */
-  constructor(stdOut, stdErr, data) {
-    /**
-     * @type {string[]}
-     */
-    this.stdOut = stdOut || [];
-    /**
-     * @type {string[]}
-     */
-    this.stdErr = stdErr || [];
-    /**
-     * @type {*}
-     */
-    this.data = data;
+  static validCommands() {
+    return [
+      &apos;clear&apos;,
+      &apos;pwd&apos;,
+      &apos;whoami&apos;,
+      &apos;cd&apos;,
+      &apos;ls&apos;,
+      &apos;cat&apos;,
+      &apos;touch&apos;,
+      &apos;mkdir&apos;,
+      &apos;echo&apos;,
+      &apos;vi&apos;,
+      &apos;help&apos;,
+    ];
   }
 
   /**
-   * return stdErr if it is not undefined, stdOut if it isn&apos;t,
-   * and an empty array if neither are.
-   * @return {string[]}
+
+  /**
+   * Determine valid filetypes for command arguments
+   * @param {string} cmdName Command name, eg, &apos;ls&apos;, &apos;cat&apos;, etc
+   * @return {string[]} array of valid filetypes
    */
-  getDefaultOutput() {
-    return this.stdOut.concat(this.stdErr);
+  static getValidTypes(cmdName) {
+    const typeDict = {
+      ls: [&apos;dir&apos;],
+      cd: [&apos;dir&apos;],
+      mkdir: [&apos;dir&apos;],
+      cat: [&apos;txt&apos;],
+      &apos;&gt;&apos;: [&apos;txt&apos;],
+      vi: [&apos;txt&apos;],
+      vim: [&apos;txt&apos;],
+    };
+    return typeDict[cmdName] || [&apos;dir&apos;, &apos;txt&apos;];
   }
 
   /**
-   * combine two shellCommandResults into one for use in
-   * recursive or chained functions
-   * @param {ShellCommandResult} otherResult
+   * List available commands
    * @return {ShellCommandResult}
    */
-  combine(otherResult) {
-    this.stdErr += otherResult.stdErr;
-    this.stdOut += otherResult.stdOut;
-    this.data += otherResult.data;
+  help() {
+    const data = [&apos;Available commands:&apos;]
+      .concat(ShellCommand.validCommands())
+      .concat([&apos;History navigation with &amp;uarr;&amp;darr;&apos;, &apos;tab autocompletion&apos;, &apos;redirection with &gt;, &gt;&gt;&apos;]);
+    const res = new ShellCommandResult(data);
+    return res;
   }
 
+  /**
+   * Clear #terminal-output. Removes elemnts from DOM rather than just scrolling.
+   * @return {ShellCommandResult}
+   */
+  clear() {
+    this.shell.outputElement.html(&apos;&apos;);
+    return new ShellCommandResult();
+  }
+
+  /**
+   * Get current directory
+   * @return {ShellCommandResult}
+   */
+  pwd() {
+    return new ShellCommandResult(this.shell.currentDir.fullPath);
+  }
+
+  /**
+   * Get current user
+   * @return {ShellCommandResult}
+   */
+  whoami() {
+    return new ShellCommandResult(this.shell.user);
+  }
+
+  /**
+   * Change directory
+   * @return {ShellCommandResult}
+   */
+  cd() {
+    const dir = this.args.length === 0 ? this.shell.fileStructure :
+      this.shell.currentDir.findFile(this.args[0].split(&apos;/&apos;), &apos;dir&apos;);
+    if (dir) {
+      this.shell.currentDir = dir;
+      this.shell.PS1Element.html(this.shell.getPS1String());
+      return new ShellCommandResult();
+    }
+    return new ShellCommandResult(null, `${this.args[0]}: directory not found`);
+  }
+
+  /**
+   * List contents of directory/directories
+   * @return {ShellCommandResult}
+   */
+  ls() {
+    const res = new ShellCommandResult([]);
+    if (this.args.length === 0) {
+      res.stdOut.push(this.shell.currentDir.lsHelper());
+    } else {
+      this.args.forEach((arg) =&gt; {
+        const dir = this.shell.currentDir.findFile(arg.split(&apos;/&apos;), &apos;dir&apos;);
+        if (!dir) {
+          res.stdErr.push(`ls: cannot access ${arg}: no such file or directory`);
+        } else {
+          let str = &apos;&apos;;
+          if (this.args.length &gt; 1) str += `${arg}:`;
+          str += dir.lsHelper();
+          res.stdOut.push(str);
+        }
+      });
+    }
+    return res;
+  }
+
+
+  /**
+   * List contents of text file(s)
+   * @return {ShellCommandResult}
+   */
+  cat() {
+    const res = new ShellCommandResult();
+    if (this.args.length === 0) return res;
+    this.args.forEach((arg) =&gt; {
+      const path = arg.split(&apos;/&apos;);
+      const file = this.shell.currentDir.findFile(path);
+      if (file &amp;&amp; file.filetype === &apos;dir&apos;) {
+        res.stdErr.push(`cat: ${file.name}: Is a directory`);
+      } else if (file) {
+        res.stdOut = res.stdOut.concat(file.contents);
+      } else {
+        res.stdErr.push(`cat: ${arg}: No such file or directory`);
+      }
+    });
+    return res;
+  }
+
+  /**
+   * Mark file or directory as modified. Create new file if one doesn&apos;t exist at path.
+   * @return {ShellCommandResult}
+   */
+  touch() {
+    const res = new ShellCommandResult();
+    if (this.args.length === 0) return res;
+    this.args.forEach((arg) =&gt; {
+      const path = arg.split(&apos;/&apos;);
+      const file = this.shell.currentDir.findFile(path, &apos;txt&apos;);
+      if (file) file.lastModified = new Date();
+      else {
+        const newFileRes = this.shell.currentDir.createChild(path, &apos;txt&apos;);
+        if (!newFileRes) res.stdErr.push(`touch: cannout touch ${path}: No such file or directory`);
+      }
+    });
+    return res;
+  }
+
+  /**
+   * Create new directory
+   * @return {ShellCommandResult}
+   */
+  mkdir() {
+    const res = new ShellCommandResult();
+    if (this.args.length === 0) return res;
+    this.args.forEach((arg) =&gt; {
+      const path = arg.split(&apos;/&apos;);
+      const file = this.shell.currentDir.findFile(path, &apos;dir&apos;);
+      if (!file) {
+        const newFileRes = this.shell.currentDir.createChild(path, &apos;dir&apos;);
+        if (!newFileRes) res.stdErr.push(`touch: cannout touch ${path}: No such file or directory`);
+      }
+    });
+    return res;
+  }
+
+  /**
+   * Print text
+   * @return {ShellCommandResult}
+   */
+  echo() {
+    const output = this.args.join(&apos; &apos;);
+    return new ShellCommandResult(output);
+  }
+
+  /**
+   * Start new vi session
+   * @return {ShellCommandResult}
+   */
+  vi() {
+    const fPath = this.args[0].split(&apos;/&apos;);
+    const file = this.shell.currentDir.findFile(fPath, &apos;txt&apos;);
+    const vi = new Vi(this.shell, fPath, file);
+    this.shell.childProcess = vi;
+    vi.startSession();
+    return new ShellCommandResult();
+  }
 }
+
 </code></pre>
 
 </div>

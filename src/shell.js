@@ -1,9 +1,8 @@
 /* eslint-env jquery */
-
 import { getChar, print, printInline } from './io';
-import { TxtFile, DirFile } from './fileobject';
-import { ShellCommand, ShellCommandResult } from './shell-command';
-import Vi from './vi';
+import ShellCommand from './shell-command';
+import ShellCommandResult from './shell-command-result';
+
 
 /**
  * Object encapsulating shell session
@@ -147,12 +146,12 @@ export default class Shell {
     if (inputString.includes('>>')) return this.redirect(inputString, '>>');
     if (inputString.includes('>')) return this.redirect(inputString, '>');
 
-    const shellCommand = new ShellCommand(inputString);
-    if (!Shell.validCommands().includes(shellCommand.command)) {
+    const shellCommand = new ShellCommand(inputString, this);
+    if (!ShellCommand.validCommands().includes(shellCommand.command)) {
       return new ShellCommandResult([], `${shellCommand.command}: command not found`);
     }
-    const evalStr = `this.${shellCommand.command}(shellCommand)`;
-    return eval(evalStr);
+    const funcStr = `shellCommand.${shellCommand.command}()`;
+    return eval(funcStr);
   }
 
   /**
@@ -180,18 +179,18 @@ export default class Shell {
    */
   handleTab() {
     const spaceAtEnd = (this.inputString[this.inputString.length - 1] === ' ');
-    const cmd = new ShellCommand(this.inputString);
+    const cmd = new ShellCommand(this.inputString, this);
     let options;
     let partial;
     if (!cmd.command) {
       partial = '';
-      options = Shell.validCommands();
+      options = ShellCommand.validCommands();
     } else if (!spaceAtEnd && cmd.args.length === 0) {
       partial = cmd.command;
-      options = Shell.filterAutoCompleteOptions(partial, Shell.validCommands());
+      options = Shell.filterAutoCompleteOptions(partial, ShellCommand.validCommands());
     } else {
       partial = cmd.args[cmd.args.length - 1] || '';
-      options = this.getAutocompleteFiles(partial, Shell.getValidTypes(cmd.command));
+      options = this.getAutocompleteFiles(partial, ShellCommand.getValidTypes(cmd.command));
       if (options.length === 0) options = this.getAutocompleteFiles(partial, ['dir']);
     }
     if (options.length === 1) this.executeAutoComplete(partial, options[0]);
@@ -265,210 +264,6 @@ export default class Shell {
 
   killChildProcess() {
     this.childProcess = null;
-  }
-
-  // Shell Commands
-  // TODO: should these be moved to seperate class, or to ShellCommand class?
-
-  /**
-   * List of all valid commands, used for autocompletion and to validate ShellCommand
-   * objects before using eval
-   * @return {string[]} List of valid commands that can be executed
-   */
-  static validCommands() {
-    return [
-      'clear',
-      'pwd',
-      'whoami',
-      'cd',
-      'ls',
-      'cat',
-      'touch',
-      'mkdir',
-      'echo',
-      'vi',
-      'help',
-    ];
-  }
-
-  /**
-   * Determine valid filetypes for command arguments
-   * @param {string} cmdName Command name, eg, 'ls', 'cat', etc
-   * @return {string[]} array of valid filetypes
-   */
-  static getValidTypes(cmdName) {
-    const typeDict = {
-      ls: ['dir'],
-      cd: ['dir'],
-      mkdir: ['dir'],
-      cat: ['txt'],
-      '>': ['txt'],
-      vi: ['txt'],
-    };
-    return typeDict[cmdName] || ['dir', 'txt'];
-  }
-
-  /**
-   * List available commands
-   * @return {ShellCommandResult}
-   */
-  help() {
-    const data = ['Available commands:']
-      .concat(Shell.validCommands())
-      .concat(['History navigation with &uarr;&darr;', 'tab autocompletion', 'redirection with >, >>']);
-    const res = new ShellCommandResult(data);
-    return res;
-  }
-
-
-  /**
-   * Clear #terminal-output. Removes elemnts from DOM rather than just scrolling.
-   * @return {ShellCommandResult}
-   */
-  clear() {
-    $('#terminal-output').html('');
-    return new ShellCommandResult();
-  }
-
-  /**
-   * Get current directory
-   * @return {ShellCommandResult}
-   */
-  pwd() {
-    return new ShellCommandResult(this.currentDir.fullPath);
-  }
-
-  /**
-   * Get current user
-   * @return {ShellCommandResult}
-   */
-  whoami() {
-    return new ShellCommandResult(this.user);
-  }
-
-  /**
-   * Change directory
-   * @param {ShellCommand} shellCommand
-   * @return {ShellCommandResult}
-   */
-  cd(shellCommand) {
-    const dir = shellCommand.args.length === 0 ? this.fileStructure :
-      this.currentDir.findFile(shellCommand.args[0].split('/'), 'dir');
-    if (dir) {
-      this.currentDir = dir;
-      this.PS1Element.html(this.getPS1String());
-      return new ShellCommandResult();
-    }
-    return new ShellCommandResult(null, `${shellCommand.args[0]}: directory not found`);
-  }
-
-  /**
-   * List contents of directory/directories
-   * @param {ShellCommand} shellCommand
-   * @return {ShellCommandResult}
-   */
-  ls(shellCommand) {
-    const res = new ShellCommandResult([]);
-    if (shellCommand.args.length === 0) {
-      res.stdOut.push(this.currentDir.lsHelper());
-    } else {
-      shellCommand.args.forEach((arg) => {
-        const dir = this.currentDir.findFile(arg.split('/'), 'dir');
-        if (!dir) {
-          res.stdErr.push(`ls: cannot access ${arg}: no such file or directory`);
-        } else {
-          let str = '';
-          if (shellCommand.args.length > 1) str += `${arg}:`;
-          str += dir.lsHelper();
-          res.stdOut.push(str);
-        }
-      });
-    }
-    return res;
-  }
-
-
-  /**
-   * List contents of text file(s)
-   * @param {ShellCommand} shellCommand
-   * @return {ShellCommandResult}
-   */
-  cat(shellCommand) {
-    const res = new ShellCommandResult();
-    if (shellCommand.args.length === 0) return res;
-    shellCommand.args.forEach((arg) => {
-      const path = arg.split('/');
-      const file = this.currentDir.findFile(path);
-      if (file && file.filetype === 'dir') {
-        res.stdErr.push(`cat: ${file.name}: Is a directory`);
-      } else if (file) {
-        res.stdOut = res.stdOut.concat(file.contents);
-      } else {
-        res.stdErr.push(`cat: ${arg}: No such file or directory`);
-      }
-    });
-    return res;
-  }
-
-  /**
-   * Mark file or directory as modified. Create new file if one doesn't exist at path.
-   * @param {ShellCommand} shellCommand
-   * @return {ShellCommandResult}
-   */
-  touch(shellCommand) {
-    const res = new ShellCommandResult();
-    if (shellCommand.args.length === 0) return res;
-    shellCommand.args.forEach((arg) => {
-      const path = arg.split('/');
-      const file = this.currentDir.findFile(path, 'txt');
-      if (file) file.lastModified = new Date();
-      else {
-        const newFileRes = this.currentDir.createChild(path, 'txt');
-        if (!newFileRes) res.stdErr.push(`touch: cannout touch ${path}: No such file or directory`);
-      }
-    });
-    return res;
-  }
-
-  /**
-   * Create new directory
-   * @param {ShellCommand} shellCommand
-   * @return {ShellCommandResult}
-   */
-  mkdir(shellCommand) {
-    const res = new ShellCommandResult();
-    if (shellCommand.args.length === 0) return res;
-    shellCommand.args.forEach((arg) => {
-      const path = arg.split('/');
-      const file = this.currentDir.findFile(path, 'dir');
-      if (!file) {
-        const newFileRes = this.currentDir.createChild(path, 'dir');
-        if (!newFileRes) res.stdErr.push(`touch: cannout touch ${path}: No such file or directory`);
-      }
-    });
-    return res;
-  }
-
-  /**
-   * Print text
-   * @param {ShellCommand} shellCommand
-   * @return {ShellCommandResult}
-   */
-  echo(shellCommand) {
-    const output = shellCommand.args.join(' ');
-    return new ShellCommandResult(output);
-  }
-
-  /**
-   * Start new vi session
-   * @param {ShellCommand} shellCommand
-   * @return {ShellCommandResult}
-   */
-  vi(shellCommand) {
-    const fPath = shellCommand.args[0].split('/');
-    const file = this.currentDir.findFile(fPath, 'txt');
-    this.childProcess = new Vi(this, fPath, file);
-    return new ShellCommandResult();
   }
 
 }

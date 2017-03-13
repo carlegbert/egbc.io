@@ -79,7 +79,7 @@ export class TxtFile extends FileObject {
     /**
      * @type {string[]}
      */
-    this.contents = contents || [];
+    this.contents = contents || [''];
   }
 
 }
