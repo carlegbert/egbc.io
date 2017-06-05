@@ -245,8 +245,15 @@ export default class ShellCommand {
    * @return {ShellCommandResult}
    */
   vi() {
-    const fPath = this.args[0].split('/');
-    const file = this.shell.currentDir.findFile(fPath, 'txt');
+    let fPath;
+    let file;
+    try {
+      fPath = this.args[0].split('/');
+      file = this.shell.currentDir.findFile(fPath, 'txt');
+    } catch (TypeError) {
+      fPath = null;
+      file = null;
+    }
     const vi = new Vi(this.shell, fPath, file);
     this.shell.childProcess = vi;
     vi.startSession();

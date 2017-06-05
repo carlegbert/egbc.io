@@ -70,7 +70,6 @@ export default class Vi {
      * @type {HTMLElement}
      */
     this.termElement = $('#terminal');
-
   }
 
   /**
@@ -344,7 +343,11 @@ export default class Vi {
   /**
    * create new FileObject and assign it to Vi session
    */
-  writeNewFile() {
+  writeNewFile(fPath = this.filePath) {
+    if (!fPath) {
+      this.editorConsoleElement.html('Error: No file selected for writing');
+      return false;
+    }
     this.file = this.shellRef.currentDir.createChild(this.filePath, 'txt');
     if (!this.file) return false;
     return true;
