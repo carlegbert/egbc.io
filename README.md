@@ -9,8 +9,13 @@
 
 * you will need webpack (`npm install -g webpack`)
 * `npm install`
-* to run the dev server: `npm run dev` (page served at localhost:8080)
-* for an optimized build: `npm run build`
+* to run the dev server: `npm dev` (page served at localhost:8080)
+* for an optimized build: `npm build`
+
+#### running tests
+
+* start the dev server with `npm dev`
+* `npm test`
 
 #### building documentation page
 
