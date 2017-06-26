@@ -193,9 +193,12 @@ export class DirFile extends FileObject {
    * @return {FileObject} Returns file object if found, null if not
    */
   findFile(filepath, filetype) {
-    if (filepath.length > 1 && filepath[filepath.length - 1] === '' &&
-        filetype === 'dir') filepath.splice(-1, 1);
-    if (filepath.length === 0 && filetype === 'dir') return this;
+    if (filepath.length > 1 && filepath[filepath.length - 1] === '') {
+      filepath.splice(-1, 1);
+    } else if (filepath.length === 0 && filetype === 'dir') {
+      return this;
+    }
+
     let found = null;
     const pathArg = filepath[0];
     const typeToFind = filepath.length === 1 ? filetype : 'dir';
