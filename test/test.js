@@ -9,6 +9,7 @@ test.describe('Shell Commands', function () {
   let driver;
   let body;
   let terminalOutput;
+
   test.before(function () {
     this.timeout(10000);
     driver = new Builder().forBrowser('firefox').build();
