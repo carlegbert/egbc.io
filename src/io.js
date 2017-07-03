@@ -1,4 +1,4 @@
-/* eslint-env jquery */
+/* eslint-disable no-param-reassign */
 
 /**
  * function for parsing keycode from keystroke event into a
@@ -73,7 +73,7 @@ export function getChar(event) {
  */
 export function print(output, target) {
   if (typeof output === 'string') {
-    target.append(`<li>${output}</li>`);
+    target.innerHTML += `<li>${output}</li>`;
   } else if (typeof output === 'object') {
     output.forEach(line => print(line, target));
   }
@@ -86,6 +86,6 @@ export function print(output, target) {
  */
 export function printInline(output, target) {
   output.forEach((line) => {
-    target.append(`<li class='inline'>${line}</li>`);
+    target.innerHTML += `<li class='inline'>${line}</li>`;
   });
 }

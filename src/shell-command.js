@@ -113,7 +113,7 @@ export default class ShellCommand {
    * @return {ShellCommandResult}
    */
   clear() {
-    this.shell.outputElement.html('');
+    this.shell.outputElement.innerHTML = '';
     return new ShellCommandResult();
   }
 
@@ -142,7 +142,7 @@ export default class ShellCommand {
       this.shell.currentDir.findFile(this.args[0].split('/'), 'dir');
     if (dir) {
       this.shell.currentDir = dir;
-      this.shell.PS1Element.html(this.shell.getPS1String());
+      this.shell.PS1Element.innerHTML = this.shell.getPS1String();
       return new ShellCommandResult();
     }
     return new ShellCommandResult(null, `${this.args[0]}: directory not found`);

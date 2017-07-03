@@ -1,4 +1,5 @@
-/* eslint-env jquery */
+/* eslint-env browser */
+/* eslint-disable no-eval */
 import { getChar, print, printInline } from './io';
 import ShellCommand from './shell-command';
 import ShellCommandResult from './shell-command-result';
@@ -46,15 +47,15 @@ export default class Shell {
     /**
      * @type {HTMLElement}
      */
-    this.inputPromptElement = $('#input');
+    this.inputPromptElement = document.getElementById('input');
     /**
      * @type {HTMLElement}
      */
-    this.PS1Element = $('#PS1');
+    this.PS1Element = document.getElementById('PS1');
     /**
      * @type {HTMLElement}
      */
-    this.outputElement = $('#terminal-output');
+    this.outputElement = document.getElementById('terminal-output');
     /**
      * @type {Object} - TODO: create base Process class
      */
@@ -92,20 +93,20 @@ export default class Shell {
       this.tabPressed = false;
       event.preventDefault();
       this.inputString = this.inputString.slice(0, (this.inputString.length - 1));
-      this.inputPromptElement.html(this.inputString.replace(/ /g, '&nbsp;'));
+      this.inputPromptElement.innerHTML = this.inputString.replace(/ /g, '&nbsp;');
     } else if (event.which === 38 && this.historyIndex > 0) { // up arrow
       this.tabPressed = false;
       event.preventDefault();
       this.historyIndex -= 1;
       this.inputString = this.bashHistory[this.historyIndex];
-      this.inputPromptElement.html(this.inputString);
+      this.inputPromptElement.innerHTML = this.inputString;
     } else if (event.which === 40 && this.historyIndex < this.bashHistory.length) { // down
       this.tabPressed = false;
       event.preventDefault();
       this.historyIndex += 1;
       if (this.historyIndex === this.bashHistory.length) this.inputString = '';
       else this.inputString = this.bashHistory[this.historyIndex];
-      this.inputPromptElement.html(this.inputString);
+      this.inputPromptElement.innerHTML = this.inputString;
     } else if (event.which === 9) { // tab
       event.preventDefault();
       this.handleTab();
@@ -114,9 +115,9 @@ export default class Shell {
       const k = getChar(event);
       this.inputString += k;
       const kSpaceAdjusted = k === ' ' ? '&nbsp;' : k;
-      this.inputPromptElement.append(kSpaceAdjusted);
+      this.inputPromptElement.innerHTML += kSpaceAdjusted;
     }
-    this.inputPromptElement[0].scrollIntoView(false);
+    this.inputPromptElement.scrollIntoView(false);
   }
 
   /**
@@ -132,7 +133,7 @@ export default class Shell {
       print(res.getDefaultOutput(), this.outputElement);
     }
     this.inputString = '';
-    this.inputPromptElement.html('');
+    this.inputPromptElement.innerHTML = '';
     this.historyIndex = this.bashHistory.length;
   }
 

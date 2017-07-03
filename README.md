@@ -41,12 +41,14 @@
 * vi
 
 #### TODO
+* cut out jquery
+* redux/other state management library?
+* better instantiation for file objects
 * line wrapping for vi
 * 'localstorage' dir
-* refactor shell commands from Shell class into ShellCommand class?
 * autocompletion with >, >>
 * unit testing
+* more automation
 * help
 * pipe with |
-* wire up to [wwwterm-api](https://github.com/carlegbert/wwwterm-api)
 * results of ls are clickable & other user-friendliness

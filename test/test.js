@@ -23,6 +23,9 @@ test.describe('Shell Commands', function () {
   });
 
   test.afterEach(function () {
+    terminalOutput.getText().then((txt) => {
+      assert.notMatch(txt, /<.*>.*<\/.*>/, 'HTML tags present in output');
+    });
     execCommand(body, 'cd');
     execCommand(body, 'clear');
   });
