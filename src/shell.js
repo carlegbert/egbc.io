@@ -199,7 +199,7 @@ export default class Shell {
   }
 
   /**
-   * filter array of strings into options that match up with partial argument
+   * Filter array of strings into options that match up with partial argument.
    * @param {string} partial String to be autocompleted
    * @param {string[]} options List of files or commands to check against partial
    * @return {string[]} Array of strings from options that match against partial
@@ -212,7 +212,34 @@ export default class Shell {
         validOptions.push(opt);
       }
     });
+    if (validOptions.length > 1) {
+      const longestPartial = Shell.checkForSameBeginning(partial, validOptions);
+      if (longestPartial === partial) return validOptions;
+      return [longestPartial];
+    }
     return validOptions;
+  }
+
+  /**
+   * Make sure a list of different autocomplete options aren't identical up to a
+   * certain amount of letters, eg, if there are two options 'catalogue' and 'catamaran',
+   * and a user types 'vi c <Tab>', the input should be completed to 'cata'.
+   * @param {string} partial Original user input to be autocompleted
+   * @param {string[]} options Available options
+   * @return {string} A string representing the longest matching beginning.
+   * */
+  static checkForSameBeginning(partial, options) {
+    const sortedOpts = options.slice().sort((a, b) => a.length - b.length);
+    const shortestOpt = sortedOpts[0];
+    let longestPartial = partial;
+    for (let i = partial.length; i < shortestOpt.length; i += 1) {
+      const charToCheckFor = shortestOpt[i];
+      for (let j = 1; j < options.length; j += 1) {
+        if (options[j][i] !== charToCheckFor) return longestPartial;
+      }
+      longestPartial += shortestOpt[i];
+    }
+    return longestPartial;
   }
 
   /**

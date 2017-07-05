@@ -41,8 +41,7 @@
 * vi
 
 #### TODO
-* cut out jquery
-* redux/other state management library?
+* refactor vi (use ViBuffer class, remove jq)
 * better instantiation for file objects
 * line wrapping for vi
 * 'localstorage' dir
