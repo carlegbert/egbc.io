@@ -4,6 +4,6 @@ require('./io.js');
 require('./shell.js');
 require('./shell-command.js');
 require('./shell-command-result.js');
-require('./vi.js');
+require('./Vi.js');
 
 require('./styles.css');

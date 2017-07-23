@@ -90,3 +90,7 @@ a:hover {
 ed-y {
   display: block;
 }
+
+ed-x {
+  display: inline;
+}

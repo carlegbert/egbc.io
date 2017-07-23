@@ -1,4 +1,7 @@
-import Vi from './vi';
+/* eslint-disable class-methods-use-this */
+
+// import Vi from './vi';
+import Vi from './Vi';
 import ShellCommandResult from './shell-command-result';
 
 
@@ -237,7 +240,7 @@ export default class ShellCommand {
    */
   echo() {
     const output = this.args.join(' ');
-    return new ShellCommandResult(output);
+    return new ShellCommandResult([output]);
   }
 
   /**
