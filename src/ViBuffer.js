@@ -114,12 +114,6 @@ export default class ViBuffer {
     this.cursorElement.className = 'cursor';
   }
 
-  addChar(ch, xCoord, yCoord) {
-    const textLine = this.text[yCoord];
-    const newTextLine = textLine.slice(0, xCoord) + ch + textLine.slice(xCoord);
-    this.text[yCoord] = newTextLine;
-  }
-
   addLineBreak(xCoord, yCoord) {
     const currentLine = this.text[yCoord];
     const beforeLineBreak = currentLine.slice(0, xCoord);
@@ -138,6 +132,12 @@ export default class ViBuffer {
     const yCoord = y + this.cursorY;
     const textLine = this.text[yCoord];
     const newTextLine = textLine.slice(0, xCoord) + textLine.slice(xCoord + 1);
+    this.text[yCoord] = newTextLine;
+  }
+
+  addChar(ch, xCoord = this.cursorX, yCoord = this.cursorY) {
+    const textLine = this.text[yCoord];
+    const newTextLine = textLine.slice(0, xCoord) + ch + textLine.slice(xCoord);
     this.text[yCoord] = newTextLine;
   }
 

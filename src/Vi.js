@@ -95,8 +95,8 @@ export default class Vim {
         this.beginInsertMode();
         break;
       case 'o':
+        this.buffer.addLine(this.buffer.cursorY + 1);
         this.buffer.moveCursor(0, 1);
-        this.buffer.addLine(this.buffer.cursorY);
         this.beginInsertMode();
         break;
       case 'O':
@@ -106,7 +106,7 @@ export default class Vim {
         this.beginInsertMode();
         break;
       case ':':
-        this.enterCommandMode();
+        this.beginCommandMode();
         break;
       case '$':
         this.buffer.moveCursorToEOL();
@@ -170,8 +170,10 @@ export default class Vim {
     } else if (event.which === 8) { // backspace
       this.insertModeBackspace();
     } else if (c.length === 1) {
+      this.buffer.addChar(c);
       this.buffer.moveCursor(1, 0);
       this.buffer.renderLine();
+      this.buffer.renderCursor();
     }
   }
 
@@ -192,11 +194,18 @@ export default class Vim {
     this.mode = 'insert';
     this.editorConsoleElement.innerHTML = '<strong>-- INSERT --</strong>';
     this.buffer.renderLine();
+    this.buffer.moveCursor(0, 0, true);
+    this.buffer.renderCursor();
   }
 
   beginNormalMode() {
     this.mode = 'normal';
     this.buffer.renderCursor();
+    this.editorConsoleElement.innerHTML = '';
+  }
+
+  beginCommandMode() {
+    this.mode = 'command';
     this.editorConsoleElement.innerHTML = '';
   }
 
