@@ -64,14 +64,14 @@ a:hover {
 }
 
 /* styling for non-terminal part of site */
-#notshell {
-  display: none;
-  width: 65%;
-  margin: auto;
+.header {
+  text-align: center;
+  margin: 20px;
 }
 
-.header {
-  margin: 80px 0px;
+.header-btn {
+  display: inline-block;
+  margin: 0px 20px;
 }
 
 /* styling for editor */

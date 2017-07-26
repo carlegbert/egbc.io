@@ -1,7 +1,9 @@
 /* eslint-env browser */
 
 import { TxtFile, DirFile, LinkFile } from './fileobject';
+import ShellCommand from './shell-command';
 import Shell from './shell';
+import { print } from './io';
 
 const root = new DirFile('~', '~', null, null, null);
 const links = new DirFile('links', '~/links', root, null, null);
@@ -18,11 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const shell = new Shell(root);
   const cursor = document.getElementById('shell-cursor');
   const PS1 = document.getElementById('PS1');
+  const aboutBtn = document.getElementById('about-btn');
+  const helpBtn = document.getElementById('help-btn');
   PS1.innerHTML = shell.getPS1String();
 
   let blinking = setInterval(() => {
     cursor.style.display = (cursor.style.display === 'none' ? '' : 'none');
   }, 700);
+
   document.onkeydown = (event) => {
     shell.parseKeystroke(event);
     cursor.style.display = '';
@@ -30,5 +35,17 @@ document.addEventListener('DOMContentLoaded', () => {
     blinking = setInterval(() => {
       cursor.style.display = (cursor.style.display === 'none' ? '' : 'none');
     }, 700);
+  };
+
+  aboutBtn.onclick = () => {
+    const aboutRes = new ShellCommand('cat ~/about.txt', shell).cat();
+    print(shell.getPS1String() + ' cat ~/about.txt', shell.outputElement);
+    print(aboutRes.getDefaultOutput(), shell.outputElement);
+  };
+
+  helpBtn.onclick = () => {
+    const helpRes = new ShellCommand('help').help();
+    print(shell.getPS1String() + ' help', shell.outputElement);
+    print(helpRes.getDefaultOutput(), shell.outputElement);
   };
 });

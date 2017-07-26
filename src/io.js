@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+/* eslint-env browser */
 
 /**
  * function for parsing keycode from keystroke event into a
