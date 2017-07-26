@@ -94,7 +94,6 @@ export default class ShellCommand {
       cat: ['txt'],
       '>': ['txt'],
       vi: ['txt'],
-      vim: ['txt'],
     };
     return typeDict[cmdName] || ['dir', 'txt'];
   }
