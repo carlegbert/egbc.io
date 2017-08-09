@@ -1,8 +1,5 @@
-/* eslint-disable class-methods-use-this */
-
-// import Vi from './vi';
-import Vi from './Vi';
-import ShellCommandResult from './shell-command-result';
+import Vi from '../Vi';
+import ShellCommandResult from './CommandResult';
 
 
 /**
@@ -80,7 +77,6 @@ export default class ShellCommand {
   }
 
   /**
-
   /**
    * Determine valid filetypes for command arguments
    * @param {string} cmdName Command name, eg, 'ls', 'cat', etc
@@ -239,7 +235,7 @@ export default class ShellCommand {
    */
   echo() {
     const output = this.args.join(' ');
-    return new ShellCommandResult([output]);
+    return new ShellCommandResult(output);
   }
 
   /**
@@ -262,4 +258,3 @@ export default class ShellCommand {
     return new ShellCommandResult();
   }
 }
-

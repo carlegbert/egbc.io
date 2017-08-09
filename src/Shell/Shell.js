@@ -1,8 +1,8 @@
 /* eslint-env browser */
 /* eslint-disable no-eval */
-import { getChar, print, printInline } from './io';
-import ShellCommand from './shell-command';
-import ShellCommandResult from './shell-command-result';
+import { getChar, print, printInline } from '../util/io';
+import ShellCommand from './Command';
+import ShellCommandResult from './CommandResult';
 
 
 /**

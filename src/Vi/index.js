@@ -1,6 +1,6 @@
 /* eslint-env browser */
 
-import { getChar } from './io';
+import { getChar } from '../util/io';
 import ViBuffer from './ViBuffer';
 
 /**
@@ -14,41 +14,14 @@ export default class Vim {
    * @param {Object} file Reference to TxtFile to write to (optional)
    */
   constructor(shellRef, filePath, file = null) {
-    /**
-     * @type {Shell}
-     */
     this.shellRef = shellRef;
-    /**
-     * @type {string[]}
-     */
     this.filePath = filePath;
-    /**
-     * @type {TxtFile}
-     */
     this.file = file;
-    /**
-     * @type {string}
-     */
     this.mode = 'normal';
-    /**
-     * @type {string}
-     */
     this.heldNum = '';
-    /**
-     * @type {string}
-     */
     this.commandText = '';
-    /**
-     * @type {number}
-     */
     this.editorElement = document.getElementById('editor');
-    /**
-     * @type {HTMLElement}
-     */
     this.editorConsoleElement = document.getElementById('editor-console');
-    /**
-     * @type {ViBuffer}
-     */
     this.buffer = null;
   }
 
