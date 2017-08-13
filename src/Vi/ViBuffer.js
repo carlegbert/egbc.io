@@ -41,6 +41,8 @@ export default class ViBuffer {
   }
 
   renderAllLines() {
+    this.element.innerHTML = '';
+    this.bufferLines = [];
     this.text.forEach((txtLine, y) => {
       const bufLine = new BufferLine(this, y);
       this.element.appendChild(bufLine.element);
@@ -90,6 +92,28 @@ export default class ViBuffer {
   removeChar(x = this.cursorX) {
     this.bufferLines[this.cursorY].removeChar(x);
     this.renderCursor();
+  }
+
+  removeLine(y) {
+    this.element.removeChild(this.bufferLines[y].element);
+    this.bufferLines.splice(y, 1);
+    this.text.splice(y, 1);
+    this.resetLineIndices();
+  }
+
+  concatLines() {
+    this.moveCursorVertically(-1);
+    this.moveCursorToEOL();
+    this.text[this.cursorY] += this.text[this.cursorY + 1];
+    this.removeLine(this.cursorY + 1);
+    this.bufferLines[this.cursorY].renderChars();
+    this.renderCursor();
+  }
+
+  resetLineIndices() {
+    this.bufferLines.forEach((bufLine, i) => {
+      bufLine.y = i;
+    });
   }
 
 }

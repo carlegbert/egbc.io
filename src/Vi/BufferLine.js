@@ -23,6 +23,7 @@ export default class BufferLine {
 
   renderChars() {
     this.chars = [];
+    this.element.innerHTML = '';
     for (let i = 0; i < this.getText().length; i += 1) {
       const ch = document.createElement('bc');
       ch.innerHTML = this.getText()[i];
@@ -47,6 +48,7 @@ export default class BufferLine {
 
   removeChar(x) {
     let txt = this.getText();
+    if (txt.length === 0) return;
     this.element.removeChild(this.chars[x]);
     this.chars.splice(x, 1);
     txt = txt.slice(0, x) + txt.slice(x + 1);

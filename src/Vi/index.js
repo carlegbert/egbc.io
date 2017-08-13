@@ -149,15 +149,13 @@ export default class Vim {
   }
 
   insertModeBackspace() {
-    if (this.buffer.cursorX === 0 && this.buffer.cursorY > 0) {
-      this.buffer.removeLineBreak(this.cursorY);
-      this.buffer.moveCursorToBOL();
-      this.buffer.moveCursorVertically(-1);
-      this.buffer.renderAllLines();
-    } else if (this.cursorX > 0) {
+    if ((this.buffer.cursorX === 0
+        || this.buffer.text[this.buffer.cursorY].length === 0)
+        && this.buffer.cursorY > 0) {
+      this.buffer.concatLines();
+    } else if (this.buffer.cursorX > 0) {
       this.buffer.moveCursorHorizontally(-1);
-      this.buffer.removeChar(this.cursorX, this.cursorY);
-      this.buffer.renderLine(this.cursorY);
+      this.buffer.removeChar(this.cursorX);
     }
   }
 
