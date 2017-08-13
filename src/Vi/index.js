@@ -28,6 +28,7 @@ export default class Vim {
   createBuffer() {
     const bufferText = this.file !== null ? this.file.contents : [''];
     this.buffer = new ViBuffer(bufferText);
+    this.buffer.renderAllLines();
   }
 
   startSession() {
@@ -35,7 +36,6 @@ export default class Vim {
     this.editorElement.style.display = 'block';
     this.editorConsoleElement.innerHTML = '';
     this.createBuffer();
-    this.buffer.renderAllLines();
   }
 
   renderErrorMessage(errText) {
@@ -60,7 +60,7 @@ export default class Vim {
         this.beginInsertMode();
         break;
       case 'a':
-        this.buffer.moveCursor(1, 0);
+        this.buffer.moveCursorHorizontally(1, true);
         this.beginInsertMode();
         break;
       case 'A':
@@ -69,12 +69,12 @@ export default class Vim {
         break;
       case 'o':
         this.buffer.addLine(this.buffer.cursorY + 1);
-        this.buffer.moveCursor(0, 1);
+        this.buffer.moveCursorVertically(1);
         this.beginInsertMode();
         break;
       case 'O':
         this.buffer.moveCursorToBOL();
-        if (this.buffer.cursorY !== 0) this.buffer.moveCursor(0, -1);
+        if (this.buffer.cursorY !== 0) this.buffer.moveCursorVertically(-1);
         this.buffer.addLine(this.buffer.cursorY);
         this.beginInsertMode();
         break;
@@ -110,20 +110,20 @@ export default class Vim {
   repeatableNormalKeystroke(c, repeated = false) {
     switch (c) {
       case 'l':
-        this.buffer.moveCursor(1, 0);
+        this.buffer.moveCursorHorizontally(1);
         break;
       case 'h':
-        this.buffer.moveCursor(-1, 0);
+        this.buffer.moveCursorHorizontally(-1);
         break;
       case 'j':
-        this.buffer.moveCursor(0, 1);
+        this.buffer.moveCursorVertically(1);
         break;
       case 'k':
-        this.buffer.moveCursor(0, -1);
+        this.buffer.moveCursorVertically(-1);
         break;
       case 'x':
         this.buffer.removeChar();
-        if (repeated) this.buffer.moveCursor(1, 0);
+        if (repeated) this.buffer.moveCursorHorizontally(1);
         break;
       default:
         break;
@@ -133,20 +133,18 @@ export default class Vim {
   insertKeystroke(event) {
     const c = getChar(event);
     if (event.which === 27) { // escape
-      this.buffer.moveCursor(-1, 0);
+      this.buffer.moveCursorHorizontally(-1);
       this.beginNormalMode();
     } else if (event.which === 13) { // enter
       this.buffer.addLineBreak(this.cursorX, this.cursorY);
-      this.buffer.moveCursor(0, 1);
+      this.buffer.moveCursorVertically(1);
       this.buffer.moveCursorToBOL();
       this.buffer.renderAllLines();
     } else if (event.which === 8) { // backspace
       this.insertModeBackspace();
     } else if (c.length === 1) {
       this.buffer.addChar(c);
-      this.buffer.moveCursor(1, 0);
-      this.buffer.renderLine();
-      this.buffer.renderCursor();
+      this.buffer.moveCursorHorizontally(1, true);
     }
   }
 
@@ -154,10 +152,10 @@ export default class Vim {
     if (this.buffer.cursorX === 0 && this.buffer.cursorY > 0) {
       this.buffer.removeLineBreak(this.cursorY);
       this.buffer.moveCursorToBOL();
-      this.buffer.moveCursor(0, -1);
+      this.buffer.moveCursorVertically(-1);
       this.buffer.renderAllLines();
     } else if (this.cursorX > 0) {
-      this.buffer.moveCursor(-1, 0);
+      this.buffer.moveCursorHorizontally(-1);
       this.buffer.removeChar(this.cursorX, this.cursorY);
       this.buffer.renderLine(this.cursorY);
     }
@@ -166,9 +164,6 @@ export default class Vim {
   beginInsertMode() {
     this.mode = 'insert';
     this.editorConsoleElement.innerHTML = '<strong>-- INSERT --</strong>';
-    this.buffer.renderLine();
-    this.buffer.moveCursor(0, 0, true);
-    this.buffer.renderCursor();
   }
 
   beginNormalMode() {

@@ -14,8 +14,9 @@ const gh = new LinkFile('github', '~/links/github', links, null, 'https://github
 const linkedin = new LinkFile('linkedin', '~/links/linkedin', links, null, 'https://www.linkedin.com/in/carlegbert');
 const email = new LinkFile('egbertcarl@gmail.com', '~/links/egbertcarl@gmail.com', links, null, 'mailto:egbertcarl@gmail.com');
 const soundings = new LinkFile('gibson - soundings for double bass quartet', '~/links/soundings', links, null, 'https://www.youtube.com/watch?v=_VYZMzoVeZA');
+const x = new TxtFile('x', '~/x', root, null, ['xxxxx', 'xxxxx', '', 'xxxxx']);
 links.children = [email, gh, linkedin, soundings];
-root.children = [links, about];
+root.children = [links, about, x];
 
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -41,14 +41,55 @@ export default class ViBuffer {
   }
 
   renderAllLines() {
-    this.text.forEach((txtLine) => {
-      const bufLine = new BufferLine(txtLine);
+    this.text.forEach((txtLine, y) => {
+      const bufLine = new BufferLine(this, y);
       this.element.appendChild(bufLine.element);
-      console.log(bufLine);
       this.bufferLines.push(bufLine);
       bufLine.renderChars();
     });
+    this.renderCursor();
   }
 
+  renderCursor(insert = false) {
+    if (this.cursorElement) this.cursorElement.classList.remove('cursor');
+    this.cursorElement = this.bufferLines[this.cursorY].renderCursor(this.cursorX, insert);
+  }
+
+  moveCursorVertically(y) {
+    const max = this.text.length - 1;
+    this.cursorY += y;
+    if (this.cursorY > max) this.cursorY = max;
+    else if (this.cursorY < 0) this.cursorY = 0;
+    this.renderCursor();
+  }
+
+  moveCursorHorizontally(x, insert = false) {
+    let max = this.text[this.cursorY].length - 1;
+    if (insert || this.text[this.cursorY].length === 0) max += 1;
+    this.cursorX += x;
+    if (this.cursorX > max) this.cursorX = max;
+    else if (this.cursorX < 0) this.cursorX = 0;
+    this.renderCursor(insert);
+  }
+
+  moveCursorToBOL() {
+    this.cursorX = 0;
+    this.renderCursor();
+  }
+
+  moveCursorToEOL() {
+    const len = this.text[this.cursorY].length;
+    this.cursorX = len;
+    this.renderCursor();
+  }
+
+  addChar(c) {
+    this.bufferLines[this.cursorY].addChar(this.cursorX, c);
+  }
+
+  removeChar(x = this.cursorX) {
+    this.bufferLines[this.cursorY].removeChar(x);
+    this.renderCursor();
+  }
 
 }
