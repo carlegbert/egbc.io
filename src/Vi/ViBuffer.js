@@ -52,6 +52,17 @@ export default class ViBuffer {
     this.renderCursor();
   }
 
+  addLine(y, lineText) {
+    this.text.splice(y, 0, lineText);
+    const newBufferLine = new BufferLine(this, y);
+    this.bufferLines.splice(y, 0, newBufferLine);
+    if (y === this.text.length - 1) this.element.appendChild(newBufferLine.element);
+    else this.element.insertBefore(newBufferLine.element, this.bufferLines[y + 1].element);
+    newBufferLine.renderChars();
+    this.resetLineIndices();
+    return newBufferLine;
+  }
+
   renderCursor(insert = false) {
     if (this.cursorElement) this.cursorElement.classList.remove('cursor');
     this.cursorElement = this.bufferLines[this.cursorY].renderCursor(this.cursorX, insert);
@@ -114,6 +125,15 @@ export default class ViBuffer {
     this.bufferLines.forEach((bufLine, i) => {
       bufLine.y = i;
     });
+  }
+
+  insertLineBreak(x = this.cursorX, y = this.cursorY) {
+    const newBufLine = this.addLine(y + 1, this.text[y].slice(this.cursorX));
+    this.text[y] = this.text[y].slice(0, this.cursorX);
+    this.bufferLines[y].renderChars();
+    this.element.insertBefore(this.bufferLines[y].element, newBufLine.element);
+    this.moveCursorVertically(1);
+    this.renderCursor();
   }
 
 }
