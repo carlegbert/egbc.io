@@ -171,7 +171,8 @@ export default class Shell {
     const filepath = afterSymbol[0];
     const file = this.currentDir.findFile([filepath], 'txt') || this.currentDir.createChild([filepath], 'txt');
     if (!file) return new ShellCommandResult(null, `bash: ${filepath}: No such file or directory`);
-    file.contents = pattern === '>' ? res.stdOut : file.contents.concat(res.stdOut);
+    if (file.contents === ['']) file.contents = [];
+    file.contents = pattern === '>' ? [res.stdOut] : file.contents.concat(res.stdOut);
     return new ShellCommandResult(null, res.stdErr);
   }
 

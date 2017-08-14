@@ -1,3 +1,5 @@
+/* eslint-disable class-methods-use-this */
+
 import Vi from '../Vi';
 import ShellCommandResult from './CommandResult';
 
