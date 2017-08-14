@@ -6,7 +6,7 @@ import ViBuffer from './ViBuffer';
 /**
  * Class representing a single instance of Vi
  */
-export default class Vim {
+export default class Vi {
   /**
    * @constructor
    * @param {Object} shellRef Reference to parent Shell object

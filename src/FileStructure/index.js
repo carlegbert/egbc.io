@@ -6,20 +6,14 @@ export class FileObject {
   /**
    * @constructor
    * @param {string} name
-   * @param {string} fullPath
    * @param {string} filetype
    * @param {DirFile} parentRef
-   * @param {Date} lastModified
    */
-  constructor(name, fullPath, filetype, parentRef, lastModified) {
+  constructor(name, filetype, parentRef = null) {
     /**
      * @type {string}
      */
     this.name = name;
-    /**
-     * @type {string}
-     */
-    this.fullPath = fullPath;
     /**
      * @type {string}
      */
@@ -28,10 +22,8 @@ export class FileObject {
      * @type {DirFile}
      */
     this.parentRef = parentRef;
-    /**
-     * @type {Date}
-     */
-    this.lastModified = lastModified || new Date();
+
+    this.fullPath = this.getFullPath();
   }
 
   /**
@@ -39,8 +31,8 @@ export class FileObject {
    * @param {DirFile} parentRef - optional ParentRef argument
    */
   static jsonToFile(json, parentRef = null) {
-    const newFile = new FileObject(json.name, json.fullPath, json.filetype,
-        parentRef, json.lastModified);
+    const newFile = new FileObject(json.name, json.filetype,
+        parentRef);
     if (newFile.filetype === 'dir') {
       newFile.children = [];
       json.children.forEach((child) => {
@@ -59,6 +51,11 @@ export class FileObject {
     return `<span class="inline ${this.filetype}" id="${this.fullPath}">${this.name}</span>`;
   }
 
+  getFullPath() {
+    if (!this.parentRef) return this.name;
+    return `${this.parentRef.getFullPath()}/${this.name}`;
+  }
+
 }
 
 
@@ -69,13 +66,11 @@ export class TxtFile extends FileObject {
   /**
    * @constructor
    * @param {string} name
-   * @param {string} fullPath
    * @param {DirFile} parentRef
-   * @param {Date} lastModified
    * @param {string[]} contents
    */
-  constructor(name, fullPath, parentRef, lastModified, contents) {
-    super(name, fullPath, 'txt', parentRef, lastModified);
+  constructor(name, parentRef, contents) {
+    super(name, 'txt', parentRef);
     /**
      * @type {string[]}
      */
@@ -91,13 +86,11 @@ export class LinkFile extends TxtFile {
   /**
    * @constructor
    * @param {string} name
-   * @param {string} fullPath
    * @param {DirFile} parentRef
-   * @param {Date} lastModified
    * @param {string} url
    */
-  constructor(name, fullPath, parentRef, lastModified, url) {
-    super(name, fullPath, 'txt', parentRef, lastModified);
+  constructor(name, parentRef, url) {
+    super(name, parentRef);
     /**
      * @type {string}
      */
@@ -121,13 +114,11 @@ export class DirFile extends FileObject {
   /**
    * @constructor
    * @param {string} name
-   * @param {string} fullPath
    * @param {FileObject} parentRef
-   * @param {Date} lastModified
    * @param {FileObject[]} children
    */
-  constructor(name, fullPath, parentRef, lastModified, children) {
-    super(name, fullPath, 'dir', parentRef, lastModified);
+  constructor(name, parentRef, children) {
+    super(name, 'dir', parentRef);
     /**
      * @type {FileObject[]}
      */
@@ -239,10 +230,9 @@ export class DirFile extends FileObject {
       if (!dir) return null;
       return dir.createChild([filename], filetype);
     }
-    const pathStr = `${this.fullPath}/${filename}`;
     let file;
-    if (filetype === 'dir') file = new DirFile(filename, pathStr, this);
-    else file = new TxtFile(filename, pathStr, this);
+    if (filetype === 'dir') file = new DirFile(filename, this);
+    else file = new TxtFile(filename, this);
     this.children.push(file);
     return file;
   }

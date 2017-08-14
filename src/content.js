@@ -1,14 +1,14 @@
 import { DirFile, LinkFile } from './FileStructure';
 
-const root = new DirFile('~', '~', null);
+const root = new DirFile('~');
 
 const links = root.createChild(['~', 'links'], 'dir');
 
 links.children = [
-  new LinkFile('github', '~/links/github', links, null, 'https://github.com/carlegbert'),
-  new LinkFile('linkedin', '~/links/linkedin', null, 'https://linkedin.com/in/carlegbert'),
-  new LinkFile('email', '~/links/email', null, 'mailto:egbertcarl@gmail'),
-  new LinkFile('gibson - soundings for double bass quartet', '~/links/soundings', null, 'https://www.youtube.com/watch?v=_VYZMzoVeZA'),
+  new LinkFile('github', links, 'https://github.com/carlegbert'),
+  new LinkFile('linkedin', links, 'https://linkedin.com/in/carlegbert'),
+  new LinkFile('email', links, 'mailto:egbertcarl@gmail'),
+  new LinkFile('gibson - soundings for double bass quartet', links, 'https://www.youtube.com/watch?v=_VYZMzoVeZA'),
 ];
 
 const about = root.createChild(['~', 'about.txt']);
