@@ -161,15 +161,50 @@ export default class Vi {
     this.editorConsoleElement.innerHTML = '<strong>-- INSERT --</strong>';
   }
 
-  beginNormalMode() {
+  beginNormalMode(message = '') {
     this.mode = 'normal';
     this.buffer.renderCursor();
-    this.editorConsoleElement.innerHTML = '';
+    this.editorConsoleElement.innerHTML = message;
   }
 
   beginCommandMode() {
     this.mode = 'command';
-    this.editorConsoleElement.innerHTML = '';
+    this.buffer.disableCursor();
+    this.renderEmptyCommandElement();
+  }
+
+  renderEmptyCommandElement() {
+    const commandCursor = document.createElement('span');
+    commandCursor.innerHTML = '&nbsp;';
+    commandCursor.classList.add('cursor');
+    const commandBegin = document.createElement('span');
+    commandBegin.innerHTML = ':';
+    this.commandTextElement = document.createElement('span');
+    this.editorConsoleElement.appendChild(commandBegin);
+    this.editorConsoleElement.appendChild(this.commandTextElement);
+    this.editorConsoleElement.appendChild(commandCursor);
+  }
+
+  commandKeystroke(event) {
+    const c = getChar(event);
+    if (event.which === 27) { // escape
+      this.commandText = '';
+      this.beginNormalMode();
+    } else if (event.which === 8) { // backspace
+      this.commandText = this.commandText.slice(0, -1);
+      this.commandTextElement.innerHTML = this.commandText;
+    } else if (event.which === 13) { // enter
+      const message = this.evaluateCommand();
+      this.beginNormalMode(message);
+    } else if (c.length === 1) {
+      this.commandText += c;
+      this.commandTextElement.innerHTML += c;
+    }
+  }
+
+  evaluateCommand() {
+    // placeholder
+    return this.commandText;
   }
 
 }

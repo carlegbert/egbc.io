@@ -68,6 +68,11 @@ export default class ViBuffer {
     this.cursorElement = this.bufferLines[this.cursorY].renderCursor(this.cursorX, insert);
   }
 
+  disableCursor() {
+    // remove cursor class but retain reference to cursor element
+    this.cursorElement.classList.remove('cursor');
+  }
+
   moveCursorVertically(y) {
     const max = this.text.length - 1;
     this.cursorY += y;
