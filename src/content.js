@@ -1,8 +1,8 @@
 import { DirFile, LinkFile } from './FileStructure';
 
-const root = new DirFile('~');
+const homeDir = new DirFile('~');
 
-const links = root.createChild(['~', 'links'], 'dir');
+const links = homeDir.createChild(['~', 'links'], 'dir');
 
 links.children = [
   new LinkFile('github', links, 'https://github.com/carlegbert'),
@@ -11,7 +11,7 @@ links.children = [
   new LinkFile('gibson - soundings for double bass quartet', links, 'https://www.youtube.com/watch?v=_VYZMzoVeZA'),
 ];
 
-const about = root.createChild(['~', 'about.txt']);
+const about = homeDir.createChild(['~', 'about.txt']);
 
 about.contents = [
   '<p>Thanks for visiting my personal website. I\'m currently employed as a QA intern at Incomm in Portland, OR, primarily writing automated UI testing and related tooling, but also undertaking general QA duties. I\'m interested in further opportunities in test automation as well as fullstack and backend web development. I\'m comfortable with JS and Python and also have some familiarity with C#, and am generally unafraid of learning new languages, frameworks, and tools.</p>',
@@ -21,4 +21,4 @@ about.contents = [
   '<p>This site is written with ES6 features and transpiled with Babel/Webpack, without the aid of any framework.</p>',
 ];
 
-module.exports = root;
+module.exports = homeDir;
