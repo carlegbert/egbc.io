@@ -137,6 +137,8 @@ export default class Vi {
       this.beginNormalMode();
     } else if (event.which === 13) { // enter
       this.buffer.insertLineBreak();
+      this.buffer.moveCursorVertically(1);
+      this.buffer.moveCursorToBOL();
     } else if (event.which === 8) { // backspace
       this.insertModeBackspace();
     } else if (c.length === 1) {
