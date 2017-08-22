@@ -2,6 +2,7 @@
 
 import Vi from '../Vi';
 import ShellCommandResult from './CommandResult';
+import { removeExtraSpaces } from '../util/io';
 
 
 /**
@@ -44,7 +45,9 @@ export default class ShellCommand {
    * Parse input string into flags & args
    */
   parseInput() {
-    const splitInput = this.originalInput.split(' ');
+    let normalizedInput = removeExtraSpaces(this.originalInput);
+    if (normalizedInput[0] === ' ') normalizedInput = normalizedInput.slice(1);
+    const splitInput = normalizedInput.split(' ');
     this.command = splitInput[0];
     if (splitInput.length > 1) {
       splitInput.slice(1).forEach((word) => {

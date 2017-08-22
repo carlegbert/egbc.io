@@ -90,3 +90,9 @@ export function printInline(output, target) {
     target.innerHTML += `<li class='inline'>${line}</li>`;
   });
 }
+
+export function removeExtraSpaces(str) {
+  const i = str.indexOf('  ');
+  if (i === -1) return str;
+  return removeExtraSpaces(str.slice(i + 1));
+}
