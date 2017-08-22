@@ -137,7 +137,6 @@ export default class ViBuffer {
     this.text[y] = this.text[y].slice(0, this.cursorX);
     this.bufferLines[y].renderChars();
     this.element.insertBefore(this.bufferLines[y].element, newBufLine.element);
-    this.moveCursorVertically(1);
     this.renderCursor();
   }
 
