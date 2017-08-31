@@ -1,6 +1,7 @@
 /* eslint-env browser */
+/* eslint-disable consistent-return */
 
-import { getChar } from '../util/io';
+import { copyText, getChar, textEquals } from '../util/io';
 import ViBuffer from './ViBuffer';
 
 /**
@@ -36,6 +37,12 @@ export default class Vi {
     this.editorElement.style.display = 'block';
     this.editorConsoleElement.innerHTML = '';
     this.createBuffer();
+  }
+
+  endSession() {
+    document.getElementById('terminal').style.display = 'block';
+    this.editorElement.style.display = 'none';
+    this.shellRef.childProcess = null;
   }
 
   renderErrorMessage(errText) {
@@ -166,6 +173,7 @@ export default class Vi {
   beginNormalMode(message = '') {
     this.mode = 'normal';
     this.buffer.renderCursor();
+    this.commandText = '';
     this.editorConsoleElement.innerHTML = message;
   }
 
@@ -176,6 +184,7 @@ export default class Vi {
   }
 
   renderEmptyCommandElement() {
+    this.editorConsoleElement.innerHTML = '';
     const commandCursor = document.createElement('span');
     commandCursor.innerHTML = '&nbsp;';
     commandCursor.classList.add('cursor');
@@ -205,8 +214,34 @@ export default class Vi {
   }
 
   evaluateCommand() {
-    // placeholder
-    return this.commandText;
+    switch (this.commandText) {
+      case 'w':
+        return this.writeFile();
+      case 'q':
+        return this.quit();
+      case 'q!':
+        return this.quit(true);
+      case 'wq':
+        this.writeFile();
+        return this.quit();
+      default:
+        return `${this.commandText} is not a valid command`;
+    }
+  }
+
+  writeFile() {
+    if (!this.file) this.file = this.shellRef.currentDir.createChild(this.filePath, 'txt');
+    if (!this.file) return 'E212: Can\'t open file for writing: No such file or directory';
+    this.file.contents = copyText(this.buffer.text);
+    const msg = `"${this.file.fullPath}" written`;
+    return msg;
+  }
+
+  quit(force = false) {
+    if (!force &&
+      (!this.file || !textEquals(this.buffer.text, this.file.contents))) return 'E37: No write since last change';
+    this.endSession();
+    return '';
   }
 
 }

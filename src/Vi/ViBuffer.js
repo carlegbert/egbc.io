@@ -2,6 +2,7 @@
 /* eslint-disable class-methods-use-this, no-param-reassign */
 
 import BufferLine from './BufferLine';
+import { copyText } from '../util/io';
 
 
 /*
@@ -17,7 +18,7 @@ export default class ViBuffer {
     /**
      * @type {string[]}
      */
-    this.text = text;
+    this.text = copyText(text);
     /**
      * @type {number}
      */

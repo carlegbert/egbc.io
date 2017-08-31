@@ -96,3 +96,25 @@ export function removeExtraSpaces(str) {
   if (i === -1) return str;
   return removeExtraSpaces(str.slice(i + 1));
 }
+
+/**
+ * Evaluates equality of two arrays of strings
+ */
+export function textEquals(textA, textB) {
+  if (textA.length !== textB.length) return false;
+  for (let i = 0; i < textA.length; i += 1) {
+    if (textA[i] !== textB[i]) return false;
+  }
+  return true;
+}
+
+/**
+ * Puts shallow copy of textA at location of textB
+ */
+export function copyText(orig) {
+  const copy = [];
+  orig.forEach((line, i) => {
+    copy[i] = line;
+  });
+  return copy;
+}

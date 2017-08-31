@@ -9,7 +9,7 @@
   "scripts": {
     "build": "webpack -p",
     "dev": "webpack-dev-server",
-    "lint": "eslint .",
+    "lint": "eslint src",
     "test": "mocha"
   },
   "devDependencies": {
