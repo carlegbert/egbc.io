@@ -77,6 +77,7 @@ export default class Vi {
       case 'o':
         this.buffer.addLine(this.buffer.cursorY + 1);
         this.buffer.moveCursorVertically(1);
+        this.buffer.moveCursorToBOL();
         this.beginInsertMode();
         break;
       case 'O':

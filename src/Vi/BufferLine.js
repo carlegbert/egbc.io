@@ -24,9 +24,10 @@ export default class BufferLine {
   renderChars() {
     this.chars = [];
     this.element.innerHTML = '';
-    for (let i = 0; i < this.getText().length; i += 1) {
+    const txt = this.getText();
+    for (let i = 0; i < txt.length; i += 1) {
       const ch = document.createElement('bc');
-      ch.innerHTML = this.getText()[i];
+      ch.innerHTML = txt[i];
       this.element.appendChild(ch);
       this.chars.push(ch);
     }

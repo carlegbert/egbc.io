@@ -53,7 +53,7 @@ export default class ViBuffer {
     this.renderCursor();
   }
 
-  addLine(y, lineText) {
+  addLine(y, lineText = '') {
     this.text.splice(y, 0, lineText);
     const newBufferLine = new BufferLine(this, y);
     this.bufferLines.splice(y, 0, newBufferLine);
