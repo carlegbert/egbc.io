@@ -2,7 +2,7 @@
  * Base File class
  * @class
  */
-export default class FileObject {
+class FileObject {
   /**
    * @constructor
    * @param {string} name
@@ -30,7 +30,7 @@ export default class FileObject {
    * @param {Object} json
    * @param {DirFile} parentRef - optional ParentRef argument
    */
-  static jsonToFile(json, parentRef = null) {
+  static objToFile(json, parentRef = null) {
     const newFile = new FileObject(json.name, json.filetype,
         parentRef);
     if (newFile.filetype === 'dir') {
@@ -48,7 +48,8 @@ export default class FileObject {
    * @return {string}
    */
   getLsEntry() {
-    return `<span class="inline ${this.filetype}" id="${this.fullPath}">${this.name}</span>`;
+    const filetype = this.filetype || 'txt';
+    return `<span class="inline ${filetype}" id="${this.fullPath}">${this.name}</span>`;
   }
 
   getFullPath() {
@@ -57,3 +58,5 @@ export default class FileObject {
   }
 
 }
+
+module.exports = FileObject;
