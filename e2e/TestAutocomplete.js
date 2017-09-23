@@ -1,4 +1,4 @@
-/* eslint-disable prefer-arrow-callback, func-names */
+/* eslint-disable prefer-arrow-callback, func-names, import/no-extraneous-dependencies */
 
 const { Builder, By, Key } = require('selenium-webdriver');
 const test = require('selenium-webdriver/testing');

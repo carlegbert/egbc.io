@@ -8,15 +8,6 @@ const FileObject = require('./FileObject');
 describe('FileObject unit tests', function () {
   const testFile = new FileObject('testFile', null, null);
 
-  describe('#objToFile()', function () {
-    it('Creates FileObject from plain js object', function () {
-      const obj = { name: 'fileFromObject' };
-      const file = FileObject.objToFile(obj);
-      assert.equal(file.name, 'fileFromObject');
-      assert.instanceOf(file, FileObject);
-    });
-  });
-
   describe('#getLsEntry()', function () {
     it('Returns correct string', function () {
       const lsString = testFile.getLsEntry();

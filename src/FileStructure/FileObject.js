@@ -27,23 +27,6 @@ class FileObject {
   }
 
   /**
-   * @param {Object} json
-   * @param {DirFile} parentRef - optional ParentRef argument
-   */
-  static objToFile(json, parentRef = null) {
-    const newFile = new FileObject(json.name, json.filetype,
-        parentRef);
-    if (newFile.filetype === 'dir') {
-      newFile.children = [];
-      json.children.forEach((child) => {
-        const childFile = FileObject.jsonToFile(child, newFile);
-        newFile.children.push(childFile);
-      });
-    }
-    return newFile;
-  }
-
-  /**
    * Returns HTML-formatted filename
    * @return {string}
    */
