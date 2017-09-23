@@ -1,50 +1,26 @@
-import FileObject from './FileObject';
-import TxtFile from './TxtFile';
+const BaseFile = require('./BaseFile');
+const File = require('./File');
 
 /**
- * @extends {FileObject}
+ * @extends {BaseFile}
  */
-export default class DirFile extends FileObject {
+class Directory extends BaseFile {
   /**
    * @constructor
    * @param {string} name
-   * @param {FileObject} parentRef
-   * @param {FileObject[]} children
+   * @param {BaseFile} parentRef
    */
-  constructor(name, parentRef, children) {
+  constructor(name, parentRef) {
     super(name, 'dir', parentRef);
-    /**
-     * @type {FileObject[]}
-     */
-    this.children = children || [];
+    this.children = [];
   }
 
   /**
-   * @param {string[]} types Types to filter by
-   * @return {FileObject[]} array of FileObjects contained in directory
+   * @param {Class[]} types Types to filter by
+   * @return {BaseFile[]} array of BaseFiles contained in directory
    */
-  getContentsByTypes(types) {
-    const files = [];
-    this.children.forEach((child) => {
-      if (types.includes(child.filetype)) {
-        files.push(child);
-      }
-    });
-    return files;
-  }
-
-  /**
-   * @param {string[]} types Types to filter by
-   * @return {string[]} array of names of FileObjects contained in directory
-   */
-  getContentNamesByType(types) {
-    const filenames = [];
-    this.children.forEach((child) => {
-      if (types.includes(child.filetype)) {
-        filenames.push(child.name);
-      }
-    });
-    return filenames;
+  getChildrenByTypes(types) {
+    return this.children.filter(child => types.some(type => child instanceof type));
   }
 
   /**
@@ -61,9 +37,9 @@ export default class DirFile extends FileObject {
   }
 
   /**
-   * Recursively traverses up through parentRefs to find base DirFile
+   * Recursively traverses up through parentRefs to find base directory
    * representing the entire file structure.
-   * @return {DirFile}
+   * @return {Directory}
    */
   findTopParent() {
     if (!this.parentRef) return this;
@@ -75,7 +51,7 @@ export default class DirFile extends FileObject {
    * of the calling function to otherwise deal with failure.
    * @param {string[]} filepath Path to file to be found
    * @param {string} filetype Type of file to find (optional)
-   * @return {FileObject} Returns file object if found, null if not
+   * @return {BaseFile} Returns file object if found, null if not
    */
   findFile(filepath, filetype) {
     if (filepath.length > 1 && filepath[filepath.length - 1] === '') {
@@ -114,7 +90,7 @@ export default class DirFile extends FileObject {
    * child.
    * @param {string[]} filepath Path to file from working directory, including name of new file
    * @param {string} filetype Type of file (dir, txt)
-   * @return {FileObject} Newly created FileObject, or null on failure
+   * @return {BaseFile} Newly created BaseFile, or null on failure
    */
   createChild(filepath, filetype) {
     if (filepath.length === 0) return null;
@@ -125,11 +101,12 @@ export default class DirFile extends FileObject {
       return dir.createChild([filename], filetype);
     }
     let file;
-    if (filetype === 'dir') file = new DirFile(filename, this);
-    else file = new TxtFile(filename, this);
+    if (filetype === 'dir') file = new Directory(filename, this);
+    else file = new File(filename, this);
     this.children.push(file);
     return file;
   }
 
 }
 
+module.exports = Directory;

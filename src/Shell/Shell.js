@@ -13,15 +13,15 @@ export default class Shell {
   /**
    * Represents shell session. to be instantiated once upon browser load.
    * @constructor
-   * @param {DirFile} fileStructure base dir tied to shell session
+   * @param {Directory} fileStructure base dir tied to shell session
    */
   constructor(fileStructure) {
     /**
-     * @type {DirFile}
+     * @type {Directory}
      */
     this.fileStructure = fileStructure;
     /**
-     * @type {DirFile}
+     * @type {Directory}
      */
     this.currentDir = fileStructure;
     /**
@@ -254,7 +254,7 @@ export default class Shell {
     const partialName = partialAsArray.slice(-1)[0];
     const dirPath = partialAsArray.slice(0, -1);
     const dir = this.currentDir.findFile(dirPath, 'dir');
-    const fileOptions = dir.getContentsByTypes(filetypes);
+    const fileOptions = dir.getChildrenByTypes(filetypes);
     const options = [];
     fileOptions.forEach((f) => {
       let optName = f.name;

@@ -1,8 +1,8 @@
 /**
- * Base File class
+ * Base File class, to be inherited from but not used directly.
  * @class
  */
-class FileObject {
+class BaseFile {
   /**
    * @constructor
    * @param {string} name
@@ -10,17 +10,8 @@ class FileObject {
    * @param {DirFile} parentRef
    */
   constructor(name, filetype, parentRef = null) {
-    /**
-     * @type {string}
-     */
     this.name = name;
-    /**
-     * @type {string}
-     */
     this.filetype = filetype;
-    /**
-     * @type {DirFile}
-     */
     this.parentRef = parentRef;
 
     this.fullPath = this.getFullPath();
@@ -42,4 +33,4 @@ class FileObject {
 
 }
 
-module.exports = FileObject;
+module.exports = BaseFile;

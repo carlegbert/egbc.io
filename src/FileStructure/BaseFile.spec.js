@@ -3,10 +3,10 @@
 
 const assert = require('chai').assert;
 
-const FileObject = require('./FileObject');
+const BaseFile = require('./BaseFile');
 
-describe('FileObject unit tests', function () {
-  const testFile = new FileObject('testFile', null, null);
+describe('BaseFile unit tests', function () {
+  const testFile = new BaseFile('testFile', null, null);
 
   describe('#getLsEntry()', function () {
     it('Returns correct string', function () {

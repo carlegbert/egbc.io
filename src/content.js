@@ -1,6 +1,6 @@
-import { DirFile, LinkFile } from './FileStructure';
+import { Directory, LinkFile } from './FileStructure';
 
-const homeDir = new DirFile('~');
+const homeDir = new Directory('~');
 
 const links = homeDir.createChild(['~', 'links'], 'dir');
 

@@ -1,11 +1,9 @@
-import DirFile from './DirFile';
-import FileObject from './FileObject';
+import Directory from './Directory';
+import File from './File';
 import LinkFile from './LinkFile';
-import TxtFile from './TxtFile';
 
 module.exports = {
-  DirFile,
-  FileObject,
+  Directory,
+  File,
   LinkFile,
-  TxtFile,
 };

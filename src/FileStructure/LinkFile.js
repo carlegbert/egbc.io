@@ -1,13 +1,13 @@
-import TxtFile from './TxtFile';
+const BaseFile = require('./BaseFile');
 
 /**
- * @extends {TxtFile}
+ * @extends {BaseFile}
  */
-export default class LinkFile extends TxtFile {
+class LinkFile extends BaseFile {
   /**
    * @constructor
    * @param {string} name
-   * @param {DirFile} parentRef
+   * @param {Directory} parentRef
    * @param {string} url
    */
   constructor(name, parentRef, url) {
@@ -27,3 +27,5 @@ export default class LinkFile extends TxtFile {
   }
 
 }
+
+module.exports = LinkFile;

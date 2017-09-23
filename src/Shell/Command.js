@@ -3,6 +3,7 @@
 import Vi from '../Vi';
 import ShellCommandResult from './CommandResult';
 import { removeExtraSpaces } from '../util/io';
+import { Directory, File } from '../FileStructure';
 
 
 /**
@@ -89,14 +90,14 @@ export default class ShellCommand {
    */
   static getValidTypes(cmdName) {
     const typeDict = {
-      ls: ['dir'],
-      cd: ['dir'],
-      mkdir: ['dir'],
-      cat: ['txt'],
-      '>': ['txt'],
-      vi: ['txt'],
+      ls: [Directory],
+      cd: [Directory],
+      mkdir: [Directory],
+      cat: [File],
+      '>': [File],
+      vi: [File],
     };
-    return typeDict[cmdName] || ['dir', 'txt'];
+    return typeDict[cmdName] || [Directory, File];
   }
 
   /**
@@ -186,7 +187,7 @@ export default class ShellCommand {
     this.args.forEach((arg) => {
       const path = arg.split('/');
       const file = this.shell.currentDir.findFile(path);
-      if (file && file.filetype === 'dir') {
+      if (file && file.filetype instanceof Directory) {
         res.stdErr.push(`cat: ${file.name}: Is a directory`);
       } else if (file) {
         res.stdOut = res.stdOut.concat(file.contents);
@@ -206,10 +207,10 @@ export default class ShellCommand {
     if (this.args.length === 0) return res;
     this.args.forEach((arg) => {
       const path = arg.split('/');
-      const file = this.shell.currentDir.findFile(path, 'txt');
+      const file = this.shell.currentDir.findFile(path, File);
       if (file) file.lastModified = new Date();
       else {
-        const newFileRes = this.shell.currentDir.createChild(path, 'txt');
+        const newFileRes = this.shell.currentDir.createChild(path, File);
         if (!newFileRes) res.stdErr.push(`touch: cannout touch ${path}: No such file or directory`);
       }
     });
@@ -252,7 +253,7 @@ export default class ShellCommand {
     let file;
     try {
       fPath = this.args[0].split('/');
-      file = this.shell.currentDir.findFile(fPath, 'txt');
+      file = this.shell.currentDir.findFile(fPath, File);
     } catch (TypeError) {
       fPath = null;
       file = null;
