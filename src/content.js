@@ -1,7 +1,6 @@
-import { Directory, LinkFile } from './FileStructure';
+const { Directory, LinkFile } = require('./FileStructure');
 
 const homeDir = new Directory('~');
-
 const links = homeDir.createChild(['~', 'links'], 'dir');
 
 links.children = [

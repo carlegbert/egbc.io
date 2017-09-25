@@ -1,8 +1,8 @@
 /* eslint-env browser */
 /* eslint-disable consistent-return */
 
-import { copyText, getChar, textEquals } from '../util/io';
-import ViBuffer from './ViBuffer';
+const { copyText, getChar, textEquals } = require('../../util/io');
+const ViBuffer = require('./ViBuffer');
 
 /**
  * Class representing a single instance of Vi

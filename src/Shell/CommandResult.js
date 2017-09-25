@@ -2,7 +2,7 @@
  * Object containing results of shell action
  * @class
  */
-export default class ShellCommandResult {
+class ShellCommandResult {
   /**
    * @constructor
    * @param {string[]} stdOut Results of succesful action
@@ -11,17 +11,8 @@ export default class ShellCommandResult {
    * a newly created file)
    */
   constructor(stdOut, stdErr, data) {
-    /**
-     * @type {string[]}
-     */
     this.stdOut = stdOut || [];
-    /**
-     * @type {string[]}
-     */
     this.stdErr = stdErr || [];
-    /**
-     * @type {*}
-     */
     this.data = data;
   }
 
@@ -47,3 +38,5 @@ export default class ShellCommandResult {
   }
 
 }
+
+module.exports = ShellCommandResult;

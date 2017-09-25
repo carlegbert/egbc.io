@@ -9,7 +9,7 @@
  * @return {string} single-char string or null, or empty string
  *  on failure.
  */
-export function getChar(event) {
+function getChar(event) {
   const code = event.keyCode;
   if (code === 32) return ' '; // spacebar
   if (event.shiftKey) { // if shift key depressed
@@ -72,7 +72,7 @@ export function getChar(event) {
  * @param {string|string[]} output String or array of strings to print
  * @param {HTMLElement} target HTML element to print to
  */
-export function print(output, target) {
+function print(output, target) {
   if (typeof output === 'string') {
     target.innerHTML += `<li>${output}</li>`;
   } else if (typeof output === 'object') {
@@ -85,13 +85,13 @@ export function print(output, target) {
  * @param {string[]} output Array of strings to print
  * @param {HTMLElement} target HTML element to print to
  */
-export function printInline(output, target) {
+function printInline(output, target) {
   output.forEach((line) => {
     target.innerHTML += `<li class='inline'>${line}</li>`;
   });
 }
 
-export function removeExtraSpaces(str) {
+function removeExtraSpaces(str) {
   const i = str.indexOf('  ');
   if (i === -1) return str;
   return removeExtraSpaces(str.slice(i + 1));
@@ -100,7 +100,7 @@ export function removeExtraSpaces(str) {
 /**
  * Evaluates equality of two arrays of strings
  */
-export function textEquals(textA, textB) {
+function textEquals(textA, textB) {
   if (textA.length !== textB.length) return false;
   for (let i = 0; i < textA.length; i += 1) {
     if (textA[i] !== textB[i]) return false;
@@ -111,10 +111,19 @@ export function textEquals(textA, textB) {
 /**
  * Puts shallow copy of textA at location of textB
  */
-export function copyText(orig) {
+function copyText(orig) {
   const copy = [];
   orig.forEach((line, i) => {
     copy[i] = line;
   });
   return copy;
 }
+
+module.exports = {
+  copyText,
+  getChar,
+  print,
+  printInline,
+  removeExtraSpaces,
+  textEquals,
+};

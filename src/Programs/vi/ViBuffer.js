@@ -2,7 +2,7 @@
 /* eslint-disable class-methods-use-this, no-param-reassign */
 
 import BufferLine from './BufferLine';
-import { copyText } from '../util/io';
+import { copyText } from '../../util/io';
 
 
 /*

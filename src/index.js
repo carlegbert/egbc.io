@@ -1,9 +1,9 @@
 /* eslint-env browser */
 
-import Shell from './Shell/Shell';
-import ShellCommand from './Shell/Command';
-import { print } from './util/io';
-import homeDir from './content';
+const Shell = require('./Shell/Shell');
+const ShellCommand = require('./Shell/Command');
+const { print } = require('./util/io');
+const homeDir = require('./content');
 
 require('./styles.css');
 

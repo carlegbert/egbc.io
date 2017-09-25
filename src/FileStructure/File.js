@@ -10,7 +10,7 @@ class File extends BaseFile {
    * @param {BaseFile} parentRef
    */
   constructor(name, parentRef, contents) {
-    super(name, 'dir', parentRef);
+    super(name, 'txt', parentRef);
     this.contents = contents || [''];
   }
 }

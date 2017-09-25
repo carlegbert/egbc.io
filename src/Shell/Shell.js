@@ -1,15 +1,14 @@
 /* eslint-env browser */
-/* eslint-disable no-eval */
-import { getChar, print, printInline } from '../util/io';
-import ShellCommand from './Command';
-import ShellCommandResult from './CommandResult';
-
+const { getChar, print, printInline } = require('../util/io');
+const Programs = require('../Programs');
+const ShellCommand = require('./Command');
+const ShellCommandResult = require('./CommandResult');
 
 /**
  * Object encapsulating shell session
  * @class
  */
-export default class Shell {
+class Shell {
   /**
    * Represents shell session. to be instantiated once upon browser load.
    * @constructor
@@ -148,11 +147,9 @@ export default class Shell {
     if (inputString.includes('>')) return this.redirect(inputString, '>');
 
     const shellCommand = new ShellCommand(inputString, this);
-    if (!ShellCommand.validCommands().includes(shellCommand.command)) {
-      return new ShellCommandResult([], `${shellCommand.command}: command not found`);
-    }
-    const funcStr = `shellCommand.${shellCommand.command}()`;
-    return eval(funcStr);
+    const program = Programs[shellCommand.command];
+    if (!program) return new ShellCommandResult([], `${shellCommand.command}: command not found`);
+    return program.apply(shellCommand);
   }
 
   /**
@@ -296,3 +293,5 @@ export default class Shell {
   }
 
 }
+
+module.exports = Shell;
