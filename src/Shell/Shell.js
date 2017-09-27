@@ -1,5 +1,5 @@
-/* eslint-env browser */
 const { getChar, print, printInline } = require('../util/io');
+const { getElementById } = require('../util/selectors');
 const Programs = require('../Programs');
 const ShellCommand = require('./Command');
 const ShellCommandResult = require('./CommandResult');
