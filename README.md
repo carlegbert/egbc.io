@@ -27,6 +27,7 @@
 * cat
 * history navigation with up and down arrows
 * echo
+* vi
 * redirect with >, >>
 * tab autocompletion
 
@@ -38,9 +39,7 @@
 * better instantiation for file objects
 * line wrapping for vi
 * 'localstorage' dir
-* autocompletion with >, >>
 * unit testing
 * more automation
-* help
 * pipe with |
 * results of ls are clickable & other user-friendliness

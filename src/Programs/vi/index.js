@@ -11,7 +11,7 @@ function vi() {
   let file;
   try {
     fPath = this.args[0].split('/');
-    file = this.shell.currentDir.findFile(fPath, File);
+    file = this.shell.currentDir.findFile(fPath, 'txt');
   } catch (TypeError) {
     fPath = null;
     file = null;

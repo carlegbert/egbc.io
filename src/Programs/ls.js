@@ -5,10 +5,7 @@ const ShellCommandResult = require('../Shell/CommandResult');
  * @return {ShellCommandResult}
  */
 function ls() {
-  console.log('######################');
-  console.log('### in ls ############');
   console.log(this);
-  console.log('######################');
   const res = new ShellCommandResult([]);
   if (this.args.length === 0) {
     res.stdOut.push(this.shell.currentDir.lsHelper());

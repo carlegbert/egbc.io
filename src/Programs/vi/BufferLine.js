@@ -1,11 +1,6 @@
 /* eslint-env browser */
-// Each BufferLine object will exist in memory until it is deleted
-// or the instance of Vi ends
-// It will have a reference to its parent buffer, and via that parent line it will
-// be able to delete its own HTML element.
-// Each character will be represented by a child BufferChar.
 
-export default class BufferLine {
+class BufferLine {
   constructor(parentBuf, y) {
     this.parentBuf = parentBuf;
     this.y = y;
@@ -74,3 +69,4 @@ export default class BufferLine {
   }
 }
 
+module.exports = BufferLine;

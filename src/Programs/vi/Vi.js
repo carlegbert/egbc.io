@@ -7,7 +7,7 @@ const ViBuffer = require('./ViBuffer');
 /**
  * Class representing a single instance of Vi
  */
-export default class Vi {
+class Vi {
   /**
    * @constructor
    * @param {Object} shellRef Reference to parent Shell object
@@ -246,3 +246,5 @@ export default class Vi {
   }
 
 }
+
+module.exports = Vi;

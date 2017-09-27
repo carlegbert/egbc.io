@@ -15,49 +15,16 @@ class Shell {
    * @param {Directory} fileStructure base dir tied to shell session
    */
   constructor(fileStructure) {
-    /**
-     * @type {Directory}
-     */
     this.fileStructure = fileStructure;
-    /**
-     * @type {Directory}
-     */
     this.currentDir = fileStructure;
-    /**
-     * @type {string}
-     */
     this.user = 'guest';
-    /**
-     * @type {string}
-     */
     this.inputString = '';
-    /**
-     * @type {string[]}
-     */
     this.bashHistory = [];
-    /**
-     * @type {number}
-     */
     this.historyIndex = 0;
-    /**
-     * @type {boolean}
-     */
     this.tabPressed = false;
-    /**
-     * @type {HTMLElement}
-     */
-    this.inputPromptElement = document.getElementById('input');
-    /**
-     * @type {HTMLElement}
-     */
-    this.PS1Element = document.getElementById('PS1');
-    /**
-     * @type {HTMLElement}
-     */
-    this.outputElement = document.getElementById('terminal-output');
-    /**
-     * @type {Object} - TODO: create base Process class
-     */
+    this.inputPromptElement = getElementById('input');
+    this.PS1Element = getElementById('PS1');
+    this.outputElement = getElementById('terminal-output');
     this.childProcess = null;
   }
 

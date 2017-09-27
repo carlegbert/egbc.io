@@ -1,43 +1,24 @@
 /* eslint-env browser */
 /* eslint-disable class-methods-use-this, no-param-reassign */
 
-import BufferLine from './BufferLine';
-import { copyText } from '../../util/io';
-
+const BufferLine = require('./BufferLine');
+const { copyText } = require('../../util/io');
 
 /*
  * Object encapsulating a vi buffer. Performs tasks
  * such as writing to DOM, updating text, etc.
  */
-export default class ViBuffer {
+class ViBuffer {
   /**
    * @constructor
    * @param {string[]} text
    */
   constructor(text) {
-    /**
-     * @type {string[]}
-     */
     this.text = copyText(text);
-    /**
-     * @type {number}
-     */
     this.cursorX = 0;
-    /**
-     * @type {number}
-     */
     this.cursorY = 0;
-    /**
-     * @type {HTMLElement}
-     */
     this.element = document.getElementById('editor-buffer');
-    /**
-     * @type {HTMLElement}
-     */
     this.cursorElement = null;
-    /**
-     * @type {BufferLine[]}
-     */
     this.bufferLines = [];
   }
 
@@ -142,3 +123,5 @@ export default class ViBuffer {
   }
 
 }
+
+module.exports = ViBuffer;

@@ -1,6 +1,6 @@
-import Directory from './Directory';
-import File from './File';
-import LinkFile from './LinkFile';
+const Directory = require('./Directory');
+const File = require('./File');
+const LinkFile = require('./LinkFile');
 
 module.exports = {
   Directory,
