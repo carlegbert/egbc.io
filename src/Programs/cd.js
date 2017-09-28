@@ -12,7 +12,7 @@ function cd() {
     this.shell.PS1Element.innerHTML = this.shell.getPS1String();
     return new ShellCommandResult();
   }
-  return new ShellCommandResult(null, `${this.args[0]}: directory not found`);
+  return new ShellCommandResult(null, [`${this.args[0]}: directory not found`]);
 }
 
 module.exports = cd;

@@ -10,8 +10,8 @@ const ShellCommandResult = require('../Shell/CommandResult');
 
 describe('cat', function () {
   const textObject = ['test line one', 'test line two'];
-  const testFile = testShell.fileStructure.createChild(['~', 'testFile'], 'txt');
-  const secondTestFile = testShell.fileStructure.createChild(['~', 'secondTestFile'], 'txt');
+  const testFile = testShell.fileStructure.createChild(['testFile'], 'txt');
+  const secondTestFile = testShell.fileStructure.createChild(['secondTestFile'], 'txt');
   testFile.contents = textObject;
   secondTestFile.contents = ['test line three'];
 
