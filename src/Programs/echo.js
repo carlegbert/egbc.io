@@ -6,7 +6,7 @@ const ShellCommandResult = require('../Shell/CommandResult');
  */
 function echo() {
   const output = this.args.join(' ');
-  return new ShellCommandResult(output);
+  return new ShellCommandResult([output]);
 }
 
 module.exports = echo;
