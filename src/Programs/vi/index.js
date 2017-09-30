@@ -1,4 +1,3 @@
-const { File } = require('../../FileStructure');
 const ShellCommandResult = require('../../Shell/CommandResult');
 const Vi = require('./Vi');
 

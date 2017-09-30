@@ -32,14 +32,13 @@
 * tab autocompletion
 
 ### WIP:
+* unit testing
 * vi
 
 #### TODO
-* refactor vi (use ViBuffer class, remove jq)
 * better instantiation for file objects
 * line wrapping for vi
 * 'localstorage' dir
-* unit testing
 * more automation
 * pipe with |
 * results of ls are clickable & other user-friendliness
