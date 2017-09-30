@@ -34,6 +34,9 @@ class ShellCommandResult {
   combine(otherResult) {
     this.stdErr += otherResult.stdErr;
     this.stdOut += otherResult.stdOut;
+    // TODO: figure out test cases for times when shell command results with data need to be
+    // combined, then figure out a how to combine those ambiguous pieces of data other than
+    // concatenating and praying
     this.data += otherResult.data;
   }
 

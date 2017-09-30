@@ -1,11 +1,9 @@
 /* eslint-env mocha */
-/* eslint-disable prefer-arrow-callback, func-names, no-unused-vars */
+/* eslint-disable prefer-arrow-callback, func-names */
 
 const assert = require('chai').assert;
 
 const { testShell } = require('../util/test-helpers');
-const { File } = require('../FileStructure');
-const { textEquals } = require('../util/io');
 const ShellCommandResult = require('../Shell/CommandResult');
 
 describe('cat', function () {
