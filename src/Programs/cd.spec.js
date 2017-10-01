@@ -3,10 +3,11 @@
 
 const assert = require('chai').assert;
 
-const { testShell } = require('../util/test-helpers');
+const { testShellFactory } = require('../util/test-helpers');
 const ShellCommandResult = require('../Shell/CommandResult');
 
 describe('cd', function () {
+  const testShell = testShellFactory();
   const testDir = testShell.fileStructure.createChild(['testDir'], 'dir');
   const nestedTestDir = testDir.createChild(['nestedTestDir'], 'dir');
 

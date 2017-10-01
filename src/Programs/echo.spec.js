@@ -3,10 +3,12 @@
 
 const assert = require('chai').assert;
 
-const { testShell } = require('../util/test-helpers');
+const { testShellFactory } = require('../util/test-helpers');
 const ShellCommandResult = require('../Shell/CommandResult');
 
 describe('echo', function () {
+  const testShell = testShellFactory();
+
   it('returns single word', function () {
     const res = testShell.executeCommand('echo testCommand');
     assert.instanceOf(res, ShellCommandResult);

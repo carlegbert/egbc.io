@@ -3,10 +3,11 @@
 
 const assert = require('chai').assert;
 
-const { testShell } = require('../util/test-helpers');
+const { testShellFactory } = require('../util/test-helpers');
 const ShellCommandResult = require('../Shell/CommandResult');
 
 describe('cat', function () {
+  const testShell = testShellFactory();
   const textObject = ['test line one', 'test line two'];
   const testFile = testShell.fileStructure.createChild(['testFile'], 'txt');
   const secondTestFile = testShell.fileStructure.createChild(['secondTestFile'], 'txt');

@@ -3,10 +3,12 @@
 
 const assert = require('chai').assert;
 
-const { testShell } = require('../util/test-helpers');
+const { testShellFactory } = require('../util/test-helpers');
 const ShellCommandResult = require('../Shell/CommandResult');
 
 describe('clear', function () {
+  const testShell = testShellFactory();
+
   beforeEach(function () {
     // assign value to innerHTML property of empty object standing in for the DOM
     testShell.outputElement.innerHTML = 'This element is not empty';
