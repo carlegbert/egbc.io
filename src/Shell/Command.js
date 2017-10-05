@@ -3,7 +3,6 @@
 const { removeExtraSpaces } = require('../util/io');
 const { Directory, File } = require('../FileStructure');
 
-
 /**
  * Object encapsulating information to be passed to a shell operation,
  * and the functions that execute those operations.
@@ -16,25 +15,10 @@ class ShellCommand {
    * @param {Shell} shell Parent shell object
    */
   constructor(input, shell) {
-    /**
-     * @type {string}
-     */
     this.originalInput = input;
-    /**
-     * @type string[]
-     */
     this.args = [];
-    /**
-     * @type string[]
-     */
     this.flags = [];
-    /**
-     * @type string
-     */
     this.command = '';
-    /**
-     * @type Shell
-     */
     this.shell = shell;
 
     this.parseInput();

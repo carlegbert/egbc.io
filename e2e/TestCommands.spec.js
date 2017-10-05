@@ -2,7 +2,7 @@
 
 const { Builder, By } = require('selenium-webdriver');
 const test = require('selenium-webdriver/testing');
-const assert = require('chai').assert;
+const { assert } = require('chai');
 const { execCommand } = require('./TestUtils');
 
 test.describe('Shell Commands', function () {

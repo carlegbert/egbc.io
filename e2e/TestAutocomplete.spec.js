@@ -1,8 +1,8 @@
-/* eslint-disable prefer-arrow-callback, func-names, import/no-extraneous-dependencies */
+/* eslint-disable prefer-arrow-callback, func-names */
 
 const { Builder, By, Key } = require('selenium-webdriver');
 const test = require('selenium-webdriver/testing');
-const assert = require('chai').assert;
+const { assert } = require('chai');
 const { execCommand } = require('./TestUtils');
 
 test.describe('Autocomplete', function () {

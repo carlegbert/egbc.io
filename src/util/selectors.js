@@ -13,7 +13,7 @@ function getElementById(id) {
   } catch (err) {
     // return empty object that can have properties assigned to it
     // without throwing an exception
-    return {};
+    return { };
   }
 }
 
