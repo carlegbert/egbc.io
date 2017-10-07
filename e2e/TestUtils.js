@@ -1,7 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
-const { Key } = require('selenium-webdriver');
-
+const { Builder, Capabilities, Key } = require('selenium-webdriver');
 
 function execCommand(element, text) {
   text.split('').forEach((ch) => {
@@ -11,4 +10,17 @@ function execCommand(element, text) {
   element.sendKeys(Key.ENTER);
 }
 
-module.exports.execCommand = execCommand;
+function configuredDriver() {
+  const chromeCapabilities = Capabilities.chrome();
+  chromeCapabilities.set('chromeOptions', { args: ['--headless'] });
+  const driver = new Builder()
+    .forBrowser('chrome')
+    .withCapabilities(chromeCapabilities)
+    .build();
+  return driver;
+}
+
+module.exports = {
+  configuredDriver,
+  execCommand,
+};

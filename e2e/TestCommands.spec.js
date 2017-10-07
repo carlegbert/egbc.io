@@ -1,18 +1,17 @@
 /* eslint-disable prefer-arrow-callback, func-names */
 
-const { Builder, By } = require('selenium-webdriver');
+const { By } = require('selenium-webdriver');
 const test = require('selenium-webdriver/testing');
 const { assert } = require('chai');
-const { execCommand } = require('./TestUtils');
+const { configuredDriver, execCommand } = require('./TestUtils');
 
 test.describe('Shell Commands', function () {
-  let driver;
+  const driver = configuredDriver();
   let body;
   let terminalOutput;
 
   test.before(function () {
     this.timeout(10000);
-    driver = new Builder().forBrowser('firefox').build();
     driver.get('http://localhost:8080');
     body = driver.findElement(By.css('body'));
     terminalOutput = driver.findElement(By.id('terminal-output'));
