@@ -11,7 +11,7 @@ function cat() {
   this.args.forEach((arg) => {
     const path = arg.split('/');
     const file = this.shell.currentDir.findFile(path);
-    if (file && file.filetype instanceof Directory) {
+    if (file && file instanceof Directory) {
       res.stdErr.push(`cat: ${file.name}: Is a directory`);
     } else if (file) {
       res.stdOut = res.stdOut.concat(file.contents);

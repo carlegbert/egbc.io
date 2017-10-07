@@ -7,7 +7,11 @@ const ShellCommandResult = require('../Shell/CommandResult');
  */
 function touch() {
   const res = new ShellCommandResult();
-  if (this.args.length === 0) return res;
+  if (this.args.length === 0) {
+    res.stdErr.push('touch: missing file operand');
+    return res;
+  }
+
   this.args.forEach((arg) => {
     const path = arg.split('/');
     const file = this.shell.currentDir.findFile(path);

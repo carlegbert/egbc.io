@@ -89,4 +89,12 @@ describe('mkdir', function () {
     assert.equal(res.data.length, 1);
     assert.include(children, res.data[0]);
   });
+
+  it('fails when not passed an argument', function () {
+    const res = testShell.executeCommand('mkdir');
+    assert.instanceOf(res, ShellCommandResult);
+    assert.empty(res.stdOut);
+    assert.equal(res.stdErr.length, 1);
+    assert.equal(res.stdErr[0], 'mkdir: missing operand');
+  });
 });

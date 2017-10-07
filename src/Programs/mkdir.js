@@ -8,7 +8,10 @@ const { Directory } = require('../FileStructure');
 function mkdir() {
   const res = new ShellCommandResult();
   res.data = [];
-  if (this.args.length === 0) return res;
+  if (this.args.length === 0) {
+    res.stdErr.push('mkdir: missing operand');
+    return res;
+  }
   this.args.forEach((arg) => {
     const path = arg.split('/');
     let file = this.shell.currentDir.findFile(path);

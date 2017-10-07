@@ -73,4 +73,12 @@ describe('touch', function () {
     assert.equal(children.length, 1);
     assert.include(namesOfChildren, 'newFile');
   });
+
+  it('fails when called with no arguments', function () {
+    const res = testShell.executeCommand('touch');
+    assert.instanceOf(res, ShellCommandResult);
+    assert.empty(res.stdOut);
+    assert.equal(res.stdErr.length, 1);
+    assert.equal(res.stdErr[0], 'touch: missing file operand');
+  });
 });
