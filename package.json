@@ -11,6 +11,7 @@
     "dev": "webpack-dev-server",
     "lint": "eslint src",
     "test": "mocha src/**/*.spec.js",
+    "cov": "nyc mocha src/**/*.spec.js",
     "test-ui": "mocha e2e/",
     "test-all": "mocha e2e/ src/**/*.spec.js"
   },
@@ -29,6 +30,7 @@
     "file-loader": "^0.11.2",
     "html-webpack-plugin": "^2.30.1",
     "mocha": "^3.4.2",
+    "nyc": "^11.2.1",
     "selenium-webdriver": "^3.4.0",
     "style-loader": "^0.18.2",
     "webpack": "^3.5.5",
