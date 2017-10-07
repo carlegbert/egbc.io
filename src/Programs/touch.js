@@ -10,11 +10,11 @@ function touch() {
   if (this.args.length === 0) return res;
   this.args.forEach((arg) => {
     const path = arg.split('/');
-    const file = this.shell.currentDir.findFile(path, File);
+    const file = this.shell.currentDir.findFile(path);
     if (file) file.lastModified = new Date();
     else {
       const newFileRes = this.shell.currentDir.createChild(path, File);
-      if (!newFileRes) res.stdErr.push(`touch: cannout touch ${path}: No such file or directory`);
+      if (!newFileRes) res.stdErr.push(`touch: cannout touch ${arg}: No such file or directory`);
     }
   });
   return res;

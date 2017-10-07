@@ -11,7 +11,7 @@ describe('mkdir', function () {
   const children = testShell.fileStructure.children;
 
   beforeEach(function () {
-    testShell.fileStructure.children.splice(0, 9);
+    children.splice(0, 9);
   });
 
   it('creates directory', function () {
