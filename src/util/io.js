@@ -109,6 +109,17 @@ function textEquals(textA, textB) {
 }
 
 /**
+ * Determines if an object is an array of strings
+ */
+function isArrayOfStrings(arr) {
+  if (!(arr instanceof Array)) return false;
+  for (let i = 0; i < arr.length; i += 1) {
+    if (typeof arr[i] !== 'string') return false;
+  }
+  return true;
+}
+
+/**
  * Puts shallow copy of textA at location of textB
  */
 function copyText(orig) {
@@ -122,6 +133,7 @@ function copyText(orig) {
 module.exports = {
   copyText,
   getChar,
+  isArrayOfStrings,
   print,
   printInline,
   removeExtraSpaces,
