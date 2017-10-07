@@ -5,7 +5,7 @@ const ShellCommandResult = require('../Shell/CommandResult');
  * @return {ShellCommandResult}
  */
 function whoami() {
-  return new ShellCommandResult(this.shell.user);
+  return new ShellCommandResult([this.shell.user]);
 }
 
 module.exports = whoami;
