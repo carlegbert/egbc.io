@@ -31,8 +31,8 @@ describe('cd', function () {
 
   it('changes to nested directory', function () {
     const res = testShell.executeCommand('cd testDir/nestedTestDir');
-    assert.equal(testShell.currentDir, nestedTestDir);
     assert.instanceOf(res, ShellCommandResult);
+    assert.equal(testShell.currentDir, nestedTestDir);
     assert.empty(res.stdErr);
     assert.empty(res.stdOut);
   });

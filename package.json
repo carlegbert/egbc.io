@@ -6,12 +6,19 @@
   "repository": "https://github.com/carlegbert/wwwterm-es6",
   "author": "Carl Egbert <egbertcarl@gmail.com>",
   "license": "MIT",
+  "nyc": {
+    "exclude": [
+      "**/*.spec.js",
+      "build/"
+    ]
+  },
   "scripts": {
     "build": "webpack -p",
     "dev": "webpack-dev-server",
     "lint": "eslint src",
     "test": "mocha src/**/*.spec.js",
     "cov": "nyc mocha src/**/*.spec.js",
+    "cov-target": "nyc mocha",
     "test-ui": "mocha e2e/",
     "test-all": "mocha e2e/ src/**/*.spec.js"
   },
