@@ -16,7 +16,7 @@ describe('Directory unit tests', function () {
     });
 
     it('Creates child directory', function () {
-      const childDir = testDir.createChild(['childDir'], 'dir');
+      const childDir = testDir.createChild(['childDir'], Directory);
       assert.instanceOf(childDir, Directory);
     });
 
@@ -28,7 +28,7 @@ describe('Directory unit tests', function () {
 
   describe('#getChildrenByTypes()', function () {
     before(function () {
-      testDir.createChild(['firstDirChild'], 'dir');
+      testDir.createChild(['firstDirChild'], Directory);
       testDir.createChild(['testDirFile']);
     });
 
@@ -75,8 +75,8 @@ describe('Directory unit tests', function () {
     let secondChild;
 
     before(function () {
-      child = testDir.createChild(['child'], 'dir');
-      secondChild = child.createChild(['secondChild'], 'dir');
+      child = testDir.createChild(['child'], Directory);
+      secondChild = child.createChild(['secondChild'], Directory);
     });
 
     after(function () {

@@ -5,12 +5,13 @@ const { assert } = require('chai');
 
 const { testShellFactory } = require('../util/test-helpers');
 const ShellCommandResult = require('../Shell/CommandResult');
+const { Directory } = require('../FileStructure');
 
 describe('ls', function () {
   const testShell = testShellFactory();
-  const testDir = testShell.fileStructure.createChild(['testDir'], 'dir');
-  testDir.createChild(['nestedTestDir'], 'dir');
-  testShell.fileStructure.createChild(['file'], 'dir');
+  const testDir = testShell.fileStructure.createChild(['testDir'], Directory);
+  testDir.createChild(['nestedTestDir'], Directory);
+  testShell.fileStructure.createChild(['file'], Directory);
 
   it('lists files', function () {
     const res = testShell.executeCommand('ls testDir');

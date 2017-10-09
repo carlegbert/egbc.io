@@ -1,4 +1,5 @@
 const ShellCommandResult = require('../Shell/CommandResult');
+const { Directory } = require('../FileStructure');
 
 /**
  * Change directory
@@ -6,7 +7,7 @@ const ShellCommandResult = require('../Shell/CommandResult');
  */
 function cd() {
   const dir = this.args.length === 0 ? this.shell.fileStructure :
-    this.shell.currentDir.findFile(this.args[0].split('/'), 'dir');
+    this.shell.currentDir.findFile(this.args[0].split('/'), Directory);
   if (dir) {
     this.shell.currentDir = dir;
     this.shell.PS1Element.innerHTML = this.shell.getPS1String();

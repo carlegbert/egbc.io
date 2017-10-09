@@ -9,9 +9,8 @@ class BaseFile {
    * @param {string} filetype
    * @param {DirFile} parentRef
    */
-  constructor(name, filetype, parentRef = null) {
+  constructor(name, parentRef = null) {
     this.name = name;
-    this.filetype = filetype;
     this.parentRef = parentRef;
 
     this.fullPath = this.getFullPath();
@@ -22,8 +21,7 @@ class BaseFile {
    * @return {string}
    */
   getLsEntry() {
-    const filetype = this.filetype || 'txt';
-    return `<span class="inline ${filetype}" id="${this.fullPath}">${this.name}</span>`;
+    return `<span class="inline txt" id="${this.fullPath}">${this.name}</span>`;
   }
 
   getFullPath() {

@@ -1,5 +1,6 @@
 const ShellCommandResult = require('../../Shell/CommandResult');
 const Vi = require('./Vi');
+const { File } = require('../../FileStructure');
 
 /**
  * Start new vi session
@@ -10,7 +11,7 @@ function vi() {
   let file;
   try {
     fPath = this.args[0].split('/');
-    file = this.shell.currentDir.findFile(fPath, 'txt');
+    file = this.shell.currentDir.findFile(fPath, File);
   } catch (TypeError) {
     fPath = null;
     file = null;

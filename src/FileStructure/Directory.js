@@ -11,7 +11,7 @@ class Directory extends BaseFile {
    * @param {BaseFile} parentRef
    */
   constructor(name, parentRef) {
-    super(name, 'dir', parentRef);
+    super(name, parentRef);
     this.children = [];
   }
 
@@ -56,13 +56,13 @@ class Directory extends BaseFile {
   findFile(filepath, filetype) {
     if (filepath.length > 1 && filepath[filepath.length - 1] === '') {
       filepath.splice(-1, 1);
-    } else if (filepath.length === 0 && filetype === 'dir') {
+    } else if (filepath.length === 0 && filetype === Directory) {
       return this;
     }
 
     let found = null;
     const pathArg = filepath[0];
-    const typeToFind = filepath.length === 1 ? filetype : 'dir';
+    const typeToFind = filepath.length === 1 ? filetype : Directory;
     switch (pathArg) {
       case '.':
         found = this;
@@ -75,7 +75,7 @@ class Directory extends BaseFile {
         break;
       default:
         this.children.forEach((child) => {
-          if (pathArg === child.name && (!typeToFind || typeToFind === child.filetype)) {
+          if (pathArg === child.name && (!typeToFind || child instanceof typeToFind)) {
             found = child;
           }
         });
@@ -96,12 +96,12 @@ class Directory extends BaseFile {
     if (filepath.length === 0) return null;
     const filename = filepath.slice(-1)[0];
     if (filepath.length > 1) {
-      const dir = this.findFile(filepath.slice(0, -1), 'dir');
+      const dir = this.findFile(filepath.slice(0, -1), Directory);
       if (!dir) return null;
       return dir.createChild([filename], filetype);
     }
     let file;
-    if (filetype === 'dir') file = new Directory(filename, this);
+    if (filetype === Directory) file = new Directory(filename, this);
     else file = new File(filename, this);
     this.children.push(file);
     return file;

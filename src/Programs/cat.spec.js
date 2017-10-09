@@ -4,13 +4,14 @@
 const { assert } = require('chai');
 
 const { testShellFactory } = require('../util/test-helpers');
+const { Directory, File } = require('../FileStructure');
 const ShellCommandResult = require('../Shell/CommandResult');
 
 describe('cat', function () {
   const testShell = testShellFactory();
   const textObject = ['test line one', 'test line two'];
-  const testFile = testShell.fileStructure.createChild(['testFile'], 'txt');
-  const secondTestFile = testShell.fileStructure.createChild(['secondTestFile'], 'txt');
+  const testFile = testShell.fileStructure.createChild(['testFile'], File);
+  const secondTestFile = testShell.fileStructure.createChild(['secondTestFile'], File);
   testFile.contents = textObject;
   secondTestFile.contents = ['test line three'];
 
@@ -60,7 +61,7 @@ describe('cat', function () {
   });
 
   it('fails when called on directory', function () {
-    testShell.fileStructure.createChild(['testDir'], 'dir');
+    testShell.fileStructure.createChild(['testDir'], Directory);
     const res = testShell.executeCommand('cat testDir');
     assert.instanceOf(res, ShellCommandResult);
     assert.equal(res.stdOut.length, 0);

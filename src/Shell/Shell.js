@@ -1,5 +1,6 @@
 const { getChar, print, printInline } = require('../util/io');
 const { getElementById } = require('../util/selectors');
+const { Directory, File } = require('../FileStructure');
 const Programs = require('../Programs');
 const ShellCommand = require('./Command');
 const ShellCommandResult = require('./CommandResult');
@@ -133,7 +134,8 @@ class Shell {
     const newInput = inputString.slice(0, i) + otherArgs.join(' ');
     const res = this.executeCommand(newInput);
     const filepath = afterSymbol[0];
-    const file = this.currentDir.findFile([filepath], 'txt') || this.currentDir.createChild([filepath], 'txt');
+    const file = this.currentDir.findFile([filepath], File)
+      || this.currentDir.createChild([filepath], File);
     if (!file) return new ShellCommandResult(null, `bash: ${filepath}: No such file or directory`);
     if (file.contents === ['']) file.contents = [];
     file.contents = pattern === '>' ? [res.stdOut] : file.contents.concat(res.stdOut);
@@ -157,7 +159,7 @@ class Shell {
     } else {
       partial = cmd.args[cmd.args.length - 1] || '';
       options = this.getAutocompleteFiles(partial, ShellCommand.getValidTypes(cmd.command));
-      if (options.length === 0) options = this.getAutocompleteFiles(partial, ['dir']);
+      if (options.length === 0) options = this.getAutocompleteFiles(partial, [Directory]);
     }
     if (options.length === 1) this.executeAutoComplete(partial, options[0]);
     else if (options.length > 1) this.printAutoCompleteOptions(options);
@@ -210,19 +212,19 @@ class Shell {
   /**
    * returns list of all files in a directory for autocompletion purposes.
    * @param {string} partial Filepath to be completed, eg, 'path/to/fi' or 'pat'
-   * @param {string[]} filetypes Optional filetypes to filter for
+   * @param {Class[]} filetypes Optional filetypes to filter for
    * @return {string[]} array of filenames
    */
   getAutocompleteFiles(partial, filetypes) {
     const partialAsArray = partial.split('/');
     const partialName = partialAsArray.slice(-1)[0];
     const dirPath = partialAsArray.slice(0, -1);
-    const dir = this.currentDir.findFile(dirPath, 'dir');
+    const dir = this.currentDir.findFile(dirPath, Directory);
     const fileOptions = dir.getChildrenByTypes(filetypes);
     const options = [];
     fileOptions.forEach((f) => {
       let optName = f.name;
-      if (f.filetype === 'dir') optName += '/';
+      if (f instanceof Directory) optName += '/';
       options.push(optName);
     });
     return Shell.filterAutoCompleteOptions(partialName, options);

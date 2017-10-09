@@ -5,11 +5,12 @@ const { assert } = require('chai');
 
 const { testShellFactory } = require('../util/test-helpers');
 const ShellCommandResult = require('../Shell/CommandResult');
+const { Directory } = require('../FileStructure');
 
 describe('cd', function () {
   const testShell = testShellFactory();
-  const testDir = testShell.fileStructure.createChild(['testDir'], 'dir');
-  const nestedTestDir = testDir.createChild(['nestedTestDir'], 'dir');
+  const testDir = testShell.fileStructure.createChild(['testDir'], Directory);
+  const nestedTestDir = testDir.createChild(['nestedTestDir'], Directory);
 
   beforeEach(function () {
     testShell.currentDir = testShell.fileStructure;

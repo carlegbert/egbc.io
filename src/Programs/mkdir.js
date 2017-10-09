@@ -16,7 +16,7 @@ function mkdir() {
     const path = arg.split('/');
     let file = this.shell.currentDir.findFile(path);
     if (!file) {
-      file = this.shell.currentDir.createChild(path, 'dir');
+      file = this.shell.currentDir.createChild(path, Directory);
       if (!file) res.stdErr.push(`mkdir: cannot create directory ${arg}: No such file or directory`);
       else res.data.push(file);
     } else if (!(file instanceof Directory)) {

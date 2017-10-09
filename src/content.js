@@ -1,7 +1,7 @@
 const { Directory, LinkFile } = require('./FileStructure');
 
 const homeDir = new Directory('~');
-const links = homeDir.createChild(['~', 'links'], 'dir');
+const links = homeDir.createChild(['~', 'links'], Directory);
 
 links.children = [
   new LinkFile('github', links, 'https://github.com/carlegbert'),
