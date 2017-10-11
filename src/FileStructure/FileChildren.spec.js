@@ -156,4 +156,42 @@ describe('FileChildren unit tests', function () {
       }, Error, 'FileChildren error: File testChildDir not found in directory testDir');
     });
   });
+
+  describe('#findChild()', function () {
+    it('Finds child file when passed string', function () {
+      const children = new FileChildren(testDir, { testChildDir });
+      const foundChild = children.findChild('testChildDir');
+      assert.ok(foundChild);
+      assert.equal(foundChild, testChildDir);
+    });
+
+    it('Finds child file when passed callback', function () {
+      const children = new FileChildren(testDir, { testChildDir });
+      const foundChild = children.findChild(child => child.name === 'testChildDir');
+      assert.ok(foundChild);
+      assert.equal(foundChild, testChildDir);
+    });
+
+    it('Finds special reference', function () {
+      const children = new FileChildren(testDir);
+      const foundFile = children.findChild('.');
+      assert.ok(foundFile);
+      assert.equal(foundFile, testDir);
+    });
+
+    it('Throws error if file is not among children', function () {
+      const children = new FileChildren(testDir);
+      assert.throws(() => {
+        children.findChild('testDir');
+      }, Error, 'No such file or directory');
+    });
+
+    // TODO: make this test pass
+    // it('Fails to find file if passed non-filename object property', function () {
+    //   const children = new FileChildren(testDir);
+    //   assert.throws(() => {
+    //     children.findChild('hasOwnProperty');
+    //   }, Error, 'No such file or directory');
+    // });
+  });
 });

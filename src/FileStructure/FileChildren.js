@@ -58,6 +58,19 @@ class FileChildren {
   }
 
   /**
+   * Filter children. Ignores special file references.
+   * @param {Function} cb Filtering function that receives currentValue parameter and behaves
+   *  like Array.filter callback
+   * @return {BaseFile[]} Array of files inheriting from BaseFile class
+   */
+  filterToArray(cb) {
+    return Object.keys(this.members)
+      .filter(specialRefFilterCallback)
+      .map(filename => this.members[filename])
+      .filter(cb);
+  }
+
+  /**
    * Add file to collection
    * @param {BaseFile} file File to add
    */
@@ -70,6 +83,18 @@ class FileChildren {
     this.members[file.name] = file;
   }
 
+  /**
+   * Find single child in collection
+   * @param {string|Function} matcher String to match to name or callback function that will be
+   * passed each non-special file reference in children.members
+   */
+  findChild(matcher) {
+    const found = typeof matcher === 'string'
+      ? this.members[matcher]
+      : this.filterToArray(matcher)[0];
+    if (!found) throw new Error('No such file or directory');
+    return found;
+  }
   /**
    * Remove reference to child
    * @param {string} filename
