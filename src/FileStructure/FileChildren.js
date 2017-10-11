@@ -58,13 +58,26 @@ class FileChildren {
   }
 
   /**
+   * Add file to collection
+   * @param {BaseFile} file File to add
+   */
+  addChild(file) {
+    const hasChild = (Object.keys(this.members)
+      .filter(specialRefFilterCallback)
+      .includes(file.name));
+    if (hasChild) throw new Error(`FileChildren error: File ${file.name} exists`);
+    else if (this.members[file.name]) throw new Error('FileChildren error: Invalid file name');
+    this.members[file.name] = file;
+  }
+
+  /**
    * Remove reference to child
    * @param {string} filename
    */
   unlinkChild(filename) {
-    if (!this.members) throw new Error(`FileChildren error: File ${filename} not found in directory ${this.parent.name}`);
+    if (!this.members[filename]) throw new Error(`FileChildren error: File ${filename} not found in directory ${this.parent.name}`);
     else if (filename === '.' || filename === '..') throw new Error(`FileChildren error: Cannot unlink ${filename}`);
-    this.members[filename] = undefined;
+    delete this.members[filename];
   }
 }
 

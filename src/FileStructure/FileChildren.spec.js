@@ -65,7 +65,7 @@ describe('FileChildren unit tests', function () {
     });
   });
 
-  describe('#filter', function () {
+  describe('#filter()', function () {
     const childOne = new Directory('childOne', testDir);
     const childTwo = new Directory('childTwo', testDir);
     new Directory('theBadOne', testDir);
@@ -84,6 +84,76 @@ describe('FileChildren unit tests', function () {
       assert.equal(childCollector.childOne, childOne);
       assert.equal(childCollector.childTwo, childTwo);
       assert.isUndefined(childCollector.theBadOne);
+    });
+  });
+
+  describe('#addChild()', function () {
+    it('adds child', function () {
+      const children = new FileChildren(testDir);
+      const beforeLen = Object.keys(children.members).length;
+      const newChild = new Directory('newChild', testDir);
+      children.addChild(newChild);
+      const afterLen = Object.keys(children.members).length;
+      assert.equal(afterLen, beforeLen + 1);
+      assert.ok(children.members.newChild);
+      assert.equal(children.members.newChild, newChild);
+    });
+
+    it('fails to add child if file already exists', function () {
+      const children = new FileChildren(testDir, { testChildDir });
+      const beforeLen = Object.keys(children.members).length;
+      assert.throws(() => {
+        children.addChild(testChildDir);
+      }, Error, 'FileChildren error: File testChildDir exists');
+      const afterLen = Object.keys(children.members).length;
+      assert.equal(beforeLen, afterLen);
+    });
+
+    it('fails to add child if passed file with invalid name', function () {
+      const children = new FileChildren(testDir);
+      const beforeLen = Object.keys(children.members).length;
+      const file = new Directory('.', testDir);
+      assert.throws(() => {
+        children.addChild(file);
+      }, Error, 'FileChildren error: Invalid file name');
+      const afterLen = Object.keys(children.members).length;
+      assert.equal(beforeLen, afterLen);
+    });
+
+    it('fails to add child is passed file with name of an object property', function () {
+      const children = new FileChildren(testDir);
+      const beforeLen = Object.keys(children.members).length;
+      const file = new Directory('hasOwnProperty', testDir);
+      assert.throws(() => {
+        children.addChild(file);
+      }, Error, 'FileChildren error: Invalid file name');
+      const afterLen = Object.keys(children.members).length;
+      assert.equal(beforeLen, afterLen);
+    });
+  });
+
+  describe('#unlinkChild()', function () {
+    it('unlinks child', function () {
+      const children = new FileChildren(testDir, { testChildDir });
+      const beforeLen = Object.keys(children.members).length;
+      children.unlinkChild('testChildDir');
+      const afterLen = Object.keys(children.members).length;
+      assert.equal(afterLen, beforeLen - 1);
+      assert.isUndefined(children.members.testChildDir);
+    });
+
+    it('fails to unlink special directory', function () {
+      const children = new FileChildren(testDir);
+      assert.throws(() => {
+        children.unlinkChild('.');
+      }, Error, 'FileChildren error: Cannot unlink .');
+    });
+
+    it('fails to unlink file not in FileChildren', function () {
+      const children = new FileChildren(testDir);
+      assert.throws(() => {
+        children.unlinkChild('testChildDir');
+      }, Error, 'FileChildren error: File testChildDir not found in directory testDir');
     });
   });
 });
