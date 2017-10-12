@@ -80,7 +80,7 @@ class FileChildren {
     const hasChild = (Object.keys(this.members)
       .filter(specialRefFilterCallback)
       .includes(file.name));
-    if (hasChild) throw new FileExistsError(file);
+    if (hasChild) throw new FileExistsError(this.members[file.name]);
     else if (this.members[file.name]) throw new InvalidFileError(file.name);
     this.members[file.name] = file;
   }

@@ -1,5 +1,6 @@
 const ShellCommandResult = require('../Shell/CommandResult');
 const { Directory } = require('../FileStructure');
+const { FileExistsError, FileNotFoundError } = require('../Errors');
 
 /**
  * Create new directory
@@ -14,14 +15,16 @@ function mkdir() {
   }
   this.args.forEach((arg) => {
     const path = arg.split('/');
-    let file = this.shell.currentDir.findFile(path);
-    if (!file) {
-      file = this.shell.currentDir.createChild(path, Directory);
-      if (!file) res.stdErr.push(`mkdir: cannot create directory ${arg}: No such file or directory`);
-      else res.data.push(file);
-    } else if (!(file instanceof Directory)) {
-      res.stdErr.push(`mkdir: cannot create directory '${arg}': File exists`);
-    } // do nothing if file exists and is a directory
+    try {
+      const file = this.shell.currentDir.createChildNew(path, Directory);
+      res.data.push(file);
+    } catch (err) {
+      if (err instanceof FileNotFoundError) {
+        res.stdErr.push(`mkdir: cannot create directory ${arg}: No such file or directory`);
+      } else if ((err instanceof FileExistsError) && (!(err.file instanceof Directory))) {
+        res.stdErr.push(`mkdir: cannot create directory '${arg}': File exists`);
+      }
+    }
   });
   return res;
 }

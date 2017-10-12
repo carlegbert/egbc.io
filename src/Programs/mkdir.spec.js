@@ -12,13 +12,14 @@ describe('mkdir', function () {
 
   beforeEach(function () {
     children.splice(0, 9);
+    testShell.fileStructure.childrenObject.unlinkAll();
   });
 
   it('creates directory', function () {
     const res = testShell.executeCommand('mkdir testDir');
     assert.instanceOf(res, ShellCommandResult);
-    assert.empty(res.stdErr);
-    assert.empty(res.stdOut);
+    assert.empty(res.stdErr, 'expected res.stdErr to be empty');
+    assert.empty(res.stdOut, 'expected res.stdOut to be empty');
     assert.equal(children.length, 1);
     assert.instanceOf(children[0], Directory);
     assert.equal(children[0].name, 'testDir');
@@ -29,16 +30,16 @@ describe('mkdir', function () {
     testShell.fileStructure.createChild(['testDir'], Directory);
     const res = testShell.executeCommand('mkdir testDir');
     assert.instanceOf(res, ShellCommandResult);
-    assert.empty(res.stdErr);
-    assert.empty(res.stdOut);
-    assert.empty(res.data);
+    assert.empty(res.stdErr, 'expected res.stdErr to be empty');
+    assert.empty(res.stdOut, 'expected res.stdOut to be empty');
+    assert.empty(res.data, 'expected res.data to be empty');
   });
 
   it('creates multiple directories', function () {
     const res = testShell.executeCommand('mkdir testDir secondTestDir');
     assert.instanceOf(res, ShellCommandResult);
-    assert.empty(res.stdErr);
-    assert.empty(res.stdOut);
+    assert.empty(res.stdErr, 'expected res.stdErr to be empty');
+    assert.empty(res.stdOut, 'expected res.stdOut to be empty');
     assert.equal(res.data.length, 2);
     assert.equal(children.length, 2);
     assert.include(children, res.data[0]);
@@ -50,8 +51,8 @@ describe('mkdir', function () {
     const testDir = testShell.fileStructure.createChild(['testDir'], Directory);
     const res = testShell.executeCommand('mkdir testDir/nestedTestDir');
     assert.instanceOf(res, ShellCommandResult);
-    assert.empty(res.stdErr);
-    assert.empty(res.stdOut);
+    assert.empty(res.stdErr, 'expected res.stdErr to be empty');
+    assert.empty(res.stdOut, 'expected res.stdOut to be empty');
     assert.equal(testDir.children.length, 1);
     assert.instanceOf(res.data[0], Directory);
     assert.include(testDir.children, res.data[0]);
@@ -62,8 +63,8 @@ describe('mkdir', function () {
     const res = testShell.executeCommand('mkdir x/y/z');
     assert.equal(children.length, 0);
     assert.instanceOf(res, ShellCommandResult);
-    assert.empty(res.stdOut);
-    assert.equal(res.stdErr.length, 1);
+    assert.empty(res.stdOut, 'expected res.stdOut to be empty');
+    assert.equal(res.stdErr.length, 1, 'stderr has incorrect number of members');
     assert.equal(res.stdErr[0], 'mkdir: cannot create directory x/y/z: No such file or directory');
   });
 
@@ -73,9 +74,9 @@ describe('mkdir', function () {
     assert.equal(children.length, 1);
     assert.instanceOf(res, ShellCommandResult);
     assert.instanceOf(children[0], File);
-    assert.empty(res.stdOut);
-    assert.empty(res.data);
-    assert.equal(res.stdErr.length, 1);
+    assert.empty(res.stdOut, 'expected res.stdOut to be empty');
+    assert.empty(res.data, 'expected res.data to be empty');
+    assert.equal(res.stdErr.length, 1, 'stderr has incorrect number of members');
     assert.equal(res.stdErr[0], 'mkdir: cannot create directory \'testFile\': File exists');
   });
 
@@ -83,8 +84,8 @@ describe('mkdir', function () {
     const res = testShell.executeCommand('mkdir testDir x/y/z');
     assert.equal(children.length, 1);
     assert.instanceOf(res, ShellCommandResult);
-    assert.empty(res.stdOut);
-    assert.equal(res.stdErr.length, 1);
+    assert.empty(res.stdOut, 'expected res.stdOut to be empty');
+    assert.equal(res.stdErr.length, 1, 'stderr has incorrect number of members');
     assert.equal(res.stdErr[0], 'mkdir: cannot create directory x/y/z: No such file or directory');
     assert.equal(res.data.length, 1);
     assert.include(children, res.data[0]);
@@ -93,8 +94,8 @@ describe('mkdir', function () {
   it('fails when not passed an argument', function () {
     const res = testShell.executeCommand('mkdir');
     assert.instanceOf(res, ShellCommandResult);
-    assert.empty(res.stdOut);
-    assert.equal(res.stdErr.length, 1);
+    assert.empty(res.stdOut, 'expected res.stdOut to be empty');
+    assert.equal(res.stdErr.length, 1, 'stderr has incorrect number of members');
     assert.equal(res.stdErr[0], 'mkdir: missing operand');
   });
 });
