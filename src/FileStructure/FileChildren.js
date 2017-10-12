@@ -106,6 +106,13 @@ class FileChildren {
     else if (filename === '.' || filename === '..') throw new InvalidFileError(filename);
     delete this.members[filename];
   }
+
+  /**
+   * Remove all references to children
+   */
+  unlinkAll() {
+    this.forEach(file => this.unlinkChild(file.name));
+  }
 }
 
 module.exports = FileChildren;

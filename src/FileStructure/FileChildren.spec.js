@@ -158,6 +158,17 @@ describe('FileChildren unit tests', function () {
     });
   });
 
+  describe('#unlinkAll()', function () {
+    it('unlinks all children', function () {
+      const children = new FileChildren(testDir, { testChildDir });
+      const beforeLen = Object.keys(children.members).length;
+      children.unlinkChild('testChildDir');
+      const afterLen = Object.keys(children.members).length;
+      assert.equal(afterLen, beforeLen - 1);
+      assert.isUndefined(children.members.testChildDir);
+    });
+  });
+
   describe('#findChild()', function () {
     it('Finds child file when passed string', function () {
       const children = new FileChildren(testDir, { testChildDir });
