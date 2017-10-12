@@ -1,4 +1,4 @@
-class FileNotFound extends Error {
+class FileNotFoundError extends Error {
   constructor(filepath) {
     const msg = filepath
       ? `${filepath} not found`
@@ -7,9 +7,10 @@ class FileNotFound extends Error {
     super(msg);
     this.filepath = filepath;
     this.date = new Date();
+    this.name = this.constructor.name;
 
-    Error.captureStackTrace(this, FileNotFound);
+    Error.captureStackTrace(this, FileNotFoundError);
   }
 }
 
-module.exports = FileNotFound;
+module.exports = FileNotFoundError;

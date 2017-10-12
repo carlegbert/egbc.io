@@ -1,5 +1,9 @@
-const FileNotFound = require('./FileNotFound');
+const InvalidFileError = require('./InvalidFileError');
+const FileExistsError = require('./FileExistsError');
+const FileNotFoundError = require('./FileNotFoundError');
 
 module.exports = {
-  FileNotFound,
+  InvalidFileError,
+  FileExistsError,
+  FileNotFoundError,
 };

@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 
-const { FileNotFound } = require('../Errors');
+const { FileExistsError, FileNotFoundError, InvalidFileError } = require('../Errors');
 
 // helper for filtering out special file references
 const specialRefFilterCallback = filename => !['.', '..', '~'].includes(filename);
@@ -80,8 +80,8 @@ class FileChildren {
     const hasChild = (Object.keys(this.members)
       .filter(specialRefFilterCallback)
       .includes(file.name));
-    if (hasChild) throw new Error(`FileChildren error: File ${file.name} exists`);
-    else if (this.members[file.name]) throw new FileNotFound('FileChildren error: Invalid file name');
+    if (hasChild) throw new FileExistsError(file);
+    else if (this.members[file.name]) throw new InvalidFileError(file.name);
     this.members[file.name] = file;
   }
 
@@ -94,7 +94,7 @@ class FileChildren {
     const found = typeof matcher === 'string'
       ? this.members[matcher]
       : this.filterToArray(matcher)[0];
-    if (!found) throw new FileNotFound();
+    if (!found) throw new FileNotFoundError();
     return found;
   }
   /**
@@ -102,8 +102,8 @@ class FileChildren {
    * @param {string} filename
    */
   unlinkChild(filename) {
-    if (!this.members[filename]) throw new Error(`FileChildren error: File ${filename} not found in directory ${this.parent.name}`);
-    else if (filename === '.' || filename === '..') throw new Error(`FileChildren error: Cannot unlink ${filename}`);
+    if (!this.members[filename]) throw new FileNotFoundError(filename);
+    else if (filename === '.' || filename === '..') throw new InvalidFileError(filename);
     delete this.members[filename];
   }
 }

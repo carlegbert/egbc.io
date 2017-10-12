@@ -5,7 +5,7 @@ const { assert } = require('chai');
 
 const Directory = require('./Directory');
 const FileChildren = require('./FileChildren');
-const { FileNotFound } = require('../Errors');
+const { FileExistsError, FileNotFoundError, InvalidFileError } = require('../Errors');
 
 describe('FileChildren unit tests', function () {
   const testDir = new Directory('testDir', null);
@@ -105,7 +105,7 @@ describe('FileChildren unit tests', function () {
       const beforeLen = Object.keys(children.members).length;
       assert.throws(() => {
         children.addChild(testChildDir);
-      }, Error, 'FileChildren error: File testChildDir exists');
+      }, FileExistsError, 'testChildDir exists');
       const afterLen = Object.keys(children.members).length;
       assert.equal(beforeLen, afterLen);
     });
@@ -116,7 +116,7 @@ describe('FileChildren unit tests', function () {
       const file = new Directory('.', testDir);
       assert.throws(() => {
         children.addChild(file);
-      }, Error, 'FileChildren error: Invalid file name');
+      }, InvalidFileError, 'Invalid file .');
       const afterLen = Object.keys(children.members).length;
       assert.equal(beforeLen, afterLen);
     });
@@ -127,7 +127,7 @@ describe('FileChildren unit tests', function () {
       const file = new Directory('hasOwnProperty', testDir);
       assert.throws(() => {
         children.addChild(file);
-      }, Error, 'FileChildren error: Invalid file name');
+      }, InvalidFileError, 'Invalid file hasOwnProperty');
       const afterLen = Object.keys(children.members).length;
       assert.equal(beforeLen, afterLen);
     });
@@ -147,14 +147,14 @@ describe('FileChildren unit tests', function () {
       const children = new FileChildren(testDir);
       assert.throws(() => {
         children.unlinkChild('.');
-      }, Error, 'FileChildren error: Cannot unlink .');
+      }, InvalidFileError);
     });
 
     it('fails to unlink file not in FileChildren', function () {
       const children = new FileChildren(testDir);
       assert.throws(() => {
         children.unlinkChild('testChildDir');
-      }, Error, 'FileChildren error: File testChildDir not found in directory testDir');
+      }, FileNotFoundError);
     });
   });
 
@@ -184,7 +184,7 @@ describe('FileChildren unit tests', function () {
       const children = new FileChildren(testDir);
       assert.throws(() => {
         children.findChild('testDir');
-      }, FileNotFound);
+      }, FileNotFoundError);
     });
 
     // TODO: make this test pass
