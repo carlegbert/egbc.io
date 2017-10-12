@@ -5,6 +5,7 @@ const { assert } = require('chai');
 
 const Directory = require('./Directory');
 const FileChildren = require('./FileChildren');
+const { FileNotFound } = require('../Errors');
 
 describe('FileChildren unit tests', function () {
   const testDir = new Directory('testDir', null);
@@ -183,7 +184,7 @@ describe('FileChildren unit tests', function () {
       const children = new FileChildren(testDir);
       assert.throws(() => {
         children.findChild('testDir');
-      }, Error, 'No such file or directory');
+      }, FileNotFound);
     });
 
     // TODO: make this test pass

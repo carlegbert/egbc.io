@@ -1,5 +1,7 @@
 /* eslint-disable no-param-reassign */
 
+const { FileNotFound } = require('../Errors');
+
 // helper for filtering out special file references
 const specialRefFilterCallback = filename => !['.', '..', '~'].includes(filename);
 
@@ -79,7 +81,7 @@ class FileChildren {
       .filter(specialRefFilterCallback)
       .includes(file.name));
     if (hasChild) throw new Error(`FileChildren error: File ${file.name} exists`);
-    else if (this.members[file.name]) throw new Error('FileChildren error: Invalid file name');
+    else if (this.members[file.name]) throw new FileNotFound('FileChildren error: Invalid file name');
     this.members[file.name] = file;
   }
 
@@ -92,7 +94,7 @@ class FileChildren {
     const found = typeof matcher === 'string'
       ? this.members[matcher]
       : this.filterToArray(matcher)[0];
-    if (!found) throw new Error('No such file or directory');
+    if (!found) throw new FileNotFound();
     return found;
   }
   /**
