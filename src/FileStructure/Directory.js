@@ -26,6 +26,14 @@ class Directory extends BaseFile {
   }
 
   /**
+   * Returns HTML-formatted filename
+   * @return {string}
+   */
+  getLsEntry() {
+    return `<span class="inline dir" id="${this.fullPath}">${this.name}</span>`;
+  }
+
+  /**
    * Helper method for ls
    * @return {string}
    */
