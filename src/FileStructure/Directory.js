@@ -170,7 +170,6 @@ class Directory extends BaseFile {
       throw err;
     }
   }
-
 }
 
 module.exports = Directory;

@@ -1,6 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable prefer-arrow-callback, func-names */
-
 const { assert } = require('chai');
 const { testShellFactory } = require('../util/test-helpers');
 const { Directory, File } = require('../FileStructure');

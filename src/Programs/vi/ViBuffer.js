@@ -114,14 +114,13 @@ class ViBuffer {
     });
   }
 
-  insertLineBreak(x = this.cursorX, y = this.cursorY) {
+  insertLineBreak(y = this.cursorY) {
     const newBufLine = this.addLine(y + 1, this.text[y].slice(this.cursorX));
     this.text[y] = this.text[y].slice(0, this.cursorX);
     this.bufferLines[y].renderChars();
     this.element.insertBefore(this.bufferLines[y].element, newBufLine.element);
     this.renderCursor();
   }
-
 }
 
 module.exports = ViBuffer;

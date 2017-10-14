@@ -1,6 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable prefer-arrow-callback, func-names, no-new */
-
 const { assert } = require('chai');
 
 const Directory = require('./Directory');
@@ -69,7 +66,7 @@ describe('FileChildren unit tests', function () {
   describe('#filter()', function () {
     const childOne = new Directory('childOne', testDir);
     const childTwo = new Directory('childTwo', testDir);
-    new Directory('theBadOne', testDir);
+    const theBadOne = new Directory('theBadOne', testDir);
     const children = new FileChildren(testDir, { childOne, childTwo });
 
     it('ignores special references', function () {
@@ -84,7 +81,7 @@ describe('FileChildren unit tests', function () {
       assert.equal(len, 2);
       assert.equal(childCollector.childOne, childOne);
       assert.equal(childCollector.childTwo, childTwo);
-      assert.isUndefined(childCollector.theBadOne);
+      assert.notNestedInclude(childCollector, theBadOne);
     });
   });
 

@@ -28,7 +28,6 @@ class BaseFile {
     if (!this.parentRef) return this.name;
     return `${this.parentRef.getFullPath()}/${this.name}`;
   }
-
 }
 
 module.exports = BaseFile;

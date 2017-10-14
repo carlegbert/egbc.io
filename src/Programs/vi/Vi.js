@@ -245,7 +245,6 @@ class Vi {
     this.endSession();
     return '';
   }
-
 }
 
 module.exports = Vi;

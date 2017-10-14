@@ -260,7 +260,6 @@ class Shell {
   killChildProcess() {
     this.childProcess = null;
   }
-
 }
 
 module.exports = Shell;

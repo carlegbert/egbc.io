@@ -25,7 +25,6 @@ class LinkFile extends BaseFile {
   getLsEntry() {
     return `<span class="inline link"><a href="${this.url}" target="_blank">${this.name}<a></span>`;
   }
-
 }
 
 module.exports = LinkFile;

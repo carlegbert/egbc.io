@@ -39,7 +39,6 @@ class ShellCommandResult {
     // concatenating and praying
     this.data += otherResult.data;
   }
-
 }
 
 module.exports = ShellCommandResult;
