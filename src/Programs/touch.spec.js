@@ -9,7 +9,6 @@ describe('touch', function () {
 
   afterEach(function () {
     children.splice(0, 9);
-    testShell.fileStructure.childrenObject.unlinkAll();
   });
 
   it('creates file', function () {

@@ -9,7 +9,6 @@ describe('mkdir', function () {
 
   beforeEach(function () {
     children.splice(0, 9);
-    testShell.fileStructure.childrenObject.unlinkAll();
   });
 
   it('creates directory', function () {

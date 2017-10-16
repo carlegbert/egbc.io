@@ -1,6 +1,5 @@
 const BaseFile = require('./BaseFile');
 const File = require('./File');
-const FileChildren = require('./FileChildren');
 
 /**
  * @extends {BaseFile}
@@ -14,7 +13,6 @@ class Directory extends BaseFile {
   constructor(name, parentRef) {
     super(name, parentRef);
     this.children = [];
-    this.childrenObject = new FileChildren(this);
   }
 
   /**
@@ -96,32 +94,6 @@ class Directory extends BaseFile {
   }
 
   /**
-   * // FIXME: All functions will be transitioned to using this method instead of findFile.
-   * // Once that transition is complete, this will be replace the old findFile method.
-   * Function to find file in a directory. Returns null if unsuccesful; it is the responsibility
-   * of the calling function to otherwise deal with failure.
-   * @param {string[]} filepath Path to file to be found
-   * @param {string} filetype Type of file to find (optional)
-   * @return {BaseFile} Returns file object if found, null if not
-   */
-  findFileNew(filepath, filetype) {
-    if (filepath.length > 1 && filepath[filepath.length - 1] === '') {
-      filepath.splice(-1, 1);
-    } else if (filepath.length === 0 && filetype === Directory) {
-      return this;
-    }
-
-    const filename = filepath[0];
-    const typeToFind = filepath.length === 1 ? filetype : Directory;
-    const found = this.childrenObject.findChild((c) => {
-      if (typeToFind && !(c instanceof typeToFind)) return false;
-      return (c.name === filename);
-    });
-    if (filepath.length === 1 || !found) return found;
-    return found.findFileNew(filepath.slice(1), filetype);
-  }
-
-  /**
    * Attempt to find correct parent directory and create new file as its
    * child.
    * @param {string[]} filepath Path to file from working directory, including name of new file
@@ -136,47 +108,11 @@ class Directory extends BaseFile {
       if (!dir) return null;
       return dir.createChild([filename], filetype);
     }
-    let file;
-    if (filetype === Directory) file = new Directory(filename, this);
-    else file = new File(filename, this);
-    try {
-      this.childrenObject.addChild(file);
-      this.children.push(file);
-      return file;
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  /**
-   * // FIXME: All functions will be transitioned to using this method instead of createChild.
-   * // Once that transition is complete, this will be replace the old createChild method.
-   * Attempt to find correct parent directory and create new file as its
-   * child.
-   * @param {string[]} filepath Path to file from working directory, including name of new file
-   * @param {string} filetype Type of file (dir, txt)
-   * @return {BaseFile} Newly created BaseFile, or null on failure
-   */
-  createChildNew(filepath, filetype) {
-    if (filepath.length === 0) return null;
-    const filename = filepath.slice(-1)[0];
-    if (filepath.length > 1) {
-      const dir = this.findFileNew(filepath.slice(0, -1), Directory);
-      if (!dir) return null;
-      return dir.createChildNew([filename], filetype);
-    }
-    let file;
-    if (filetype === Directory) file = new Directory(filename, this);
-    else file = new File(filename, this);
-    try {
-      // FIXME: try-catch and references to this.children array will be removed when
-      // done refactoring to use FileChildren collection
-      this.childrenObject.addChild(file);
-      this.children.push(file);
-      return file;
-    } catch (err) {
-      throw err;
-    }
+    const file = filetype === Directory
+      ? new Directory(filename, this)
+      : new File(filename, this);
+    this.children.push(file);
+    return file;
   }
 }
 

@@ -1,6 +1,5 @@
 const { File } = require('../FileStructure');
 const ShellCommandResult = require('../Shell/CommandResult');
-const { FileExistsError, FileNotFoundError } = require('../Errors');
 
 /**
  * Mark file or directory as modified. Create new file if one doesn't exist at path.
@@ -15,14 +14,12 @@ function touch() {
 
   this.args.forEach((arg) => {
     const path = arg.split('/');
-    try {
-      this.shell.currentDir.createChildNew(path, File);
-    } catch (err) {
-      if (err instanceof FileExistsError) {
-        err.file.lastModified = new Date();
-      } else if (err instanceof FileNotFoundError) {
-        res.stdErr.push(`touch: cannout touch ${arg}: No such file or directory`);
-      }
+    const fileAtLoc = this.shell.currentDir.findFile(path);
+    if (!fileAtLoc) {
+      const file = this.shell.currentDir.createChild(path, File);
+      if (!file) res.stdErr.push(`touch: cannout touch ${arg}: No such file or directory`);
+    } else {
+      fileAtLoc.lastModified = new Date();
     }
   });
   return res;
