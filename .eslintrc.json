@@ -1,0 +1,18 @@
+{
+  "extends": "airbnb-base",
+  "parser": "babel-eslint",
+  "plugins": [
+    "babel"
+  ],
+
+  "overrides": [
+    {
+      "files": ["**/*.spec.js"],
+      "rules": {
+        "prefer-arrow-callback": false,
+        "func-names": false
+      },
+      "env": { "mocha": true }
+    }
+  ]
+}

@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-
 const { Builder, Capabilities, Key } = require('selenium-webdriver');
 
 function execCommand(element, text) {

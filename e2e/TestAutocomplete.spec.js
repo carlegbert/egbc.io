@@ -1,5 +1,3 @@
-/* eslint-disable prefer-arrow-callback, func-names */
-
 const { By, Key } = require('selenium-webdriver');
 const test = require('selenium-webdriver/testing');
 const { assert } = require('chai');
