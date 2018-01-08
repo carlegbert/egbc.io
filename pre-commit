@@ -1,0 +1,9 @@
+#!/bin/sh
+
+echo "Running pre-commit script..."
+
+# Lint
+npm run lint
+
+# Run tests
+npm run test

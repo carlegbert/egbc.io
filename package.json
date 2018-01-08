@@ -16,11 +16,11 @@
     "build": "webpack -p",
     "dev": "webpack-dev-server",
     "lint": "eslint src",
+    "postinstall": "cp pre-commit .git/hooks/pre-commit",
     "test": "mocha src/**/*.spec.js",
-    "cov": "nyc mocha src/**/*.spec.js",
-    "cov-target": "nyc mocha",
-    "test-ui": "mocha e2e/",
-    "test-all": "mocha e2e/ src/**/*.spec.js"
+    "test:all": "mocha e2e/ src/**/*.spec.js",
+    "test:cov": "nyc mocha src/**/*.spec.js",
+    "test:ui": "mocha e2e/"
   },
   "devDependencies": {
     "babel-core": "^6.21.0",
