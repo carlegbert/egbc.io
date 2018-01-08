@@ -2,6 +2,7 @@
 
 const Shell = require('./Shell/Shell');
 const ShellCommand = require('./Shell/Command');
+const { cat, help } = require('./Programs');
 const { print } = require('./util/io');
 const homeDir = require('./content');
 
@@ -30,13 +31,15 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   aboutBtn.onclick = () => {
-    const aboutRes = new ShellCommand('cat ~/about.txt', shell).cat();
     print(`${shell.getPS1String()} cat ~/about.txt`, shell.outputElement);
+    const aboutCommand = new ShellCommand('cat ~/about.txt', shell);
+    const aboutRes = cat.apply(aboutCommand);
     print(aboutRes.getDefaultOutput(), shell.outputElement);
   };
 
   helpBtn.onclick = () => {
-    const helpRes = new ShellCommand('help').help();
+    const helpCommand = new ShellCommand('help');
+    const helpRes = help.apply(helpCommand);
     print(`${shell.getPS1String()} help`, shell.outputElement);
     print(helpRes.getDefaultOutput(), shell.outputElement);
   };
