@@ -1,11 +1,12 @@
 const { assert } = require('chai');
 const { testShellFactory } = require('../util/test-helpers');
-const { Directory, File } = require('../FileStructure');
+const { Directory, File, Path } = require('../FileStructure');
 const ShellCommandResult = require('../Shell/CommandResult');
 
 describe('mkdir', function () {
   const testShell = testShellFactory();
   const children = testShell.fileStructure.children;
+  const testDirPath = new Path('testDir');
 
   beforeEach(function () {
     children.splice(0, 9);
@@ -23,7 +24,7 @@ describe('mkdir', function () {
   });
 
   it('does nothing when called with directory name that already exists', function () {
-    testShell.fileStructure.createChild(['testDir'], Directory);
+    testShell.fileStructure.createChild(testDirPath, Directory);
     const res = testShell.executeCommand('mkdir testDir');
     assert.instanceOf(res, ShellCommandResult);
     assert.empty(res.stdErr, 'expected res.stdErr to be empty');
@@ -44,7 +45,7 @@ describe('mkdir', function () {
   });
 
   it('creates nested directory', function () {
-    const testDir = testShell.fileStructure.createChild(['testDir'], Directory);
+    const testDir = testShell.fileStructure.createChild(testDirPath, Directory);
     const res = testShell.executeCommand('mkdir testDir/nestedTestDir');
     assert.instanceOf(res, ShellCommandResult);
     assert.empty(res.stdErr, 'expected res.stdErr to be empty');
@@ -65,7 +66,8 @@ describe('mkdir', function () {
   });
 
   it('fails to create directory when called with non-dir existing filepath', function () {
-    testShell.fileStructure.createChild(['testFile']);
+    const p = new Path('testFile');
+    testShell.fileStructure.createChild(p);
     const res = testShell.executeCommand('mkdir testFile');
     assert.equal(children.length, 1);
     assert.instanceOf(res, ShellCommandResult);

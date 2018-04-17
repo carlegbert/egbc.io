@@ -2,13 +2,16 @@ const { assert } = require('chai');
 
 const { testShellFactory } = require('../util/test-helpers');
 const ShellCommandResult = require('../Shell/CommandResult');
-const { Directory } = require('../FileStructure');
+const { Directory, Path } = require('../FileStructure');
 
 describe('ls', function () {
+  const p1 = new Path('testDir');
+  const p2 = new Path('nestedTestDir');
+  const p3 = new Path('file');
   const testShell = testShellFactory();
-  const testDir = testShell.fileStructure.createChild(['testDir'], Directory);
-  testDir.createChild(['nestedTestDir'], Directory);
-  testShell.fileStructure.createChild(['file'], Directory);
+  const testDir = testShell.fileStructure.createChild(p1, Directory);
+  testDir.createChild(p2, Directory);
+  testShell.fileStructure.createChild(p3, Directory);
 
   it('lists files', function () {
     const res = testShell.executeCommand('ls testDir');

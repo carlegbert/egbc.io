@@ -122,7 +122,7 @@ class Directory extends BaseFile {
     if (filepath.length === 0) return null;
     const filename = filepath.basename();
     if (filepath.length > 1) {
-      const dir = this.findFile(filepath.highestDir(), Directory);
+      const dir = this.findFile(filepath.highestDir().arr, Directory);
       if (!dir) return null;
       return dir.createChild(new Path(filename), filetype);
     }

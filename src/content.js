@@ -1,7 +1,7 @@
-const { Directory, LinkFile } = require('./FileStructure');
+const { Directory, LinkFile, Path } = require('./FileStructure');
 
 const homeDir = new Directory('~');
-const links = homeDir.createChild(['~', 'links'], Directory);
+const links = homeDir.createChild(new Path('~/links'), Directory);
 
 links.children = [
   new LinkFile('github', links, 'https://github.com/carlegbert'),
@@ -10,7 +10,7 @@ links.children = [
   new LinkFile('gibson - soundings for double bass quartet', links, 'https://www.youtube.com/watch?v=_VYZMzoVeZA'),
 ];
 
-const about = homeDir.createChild(['~', 'about.txt']);
+const about = homeDir.createChild(new Path('~/about.txt'));
 
 about.contents = [
   '<p>Thanks for visiting my personal website. I\'m currently employed as a QA engineer Incomm in Portland, OR, where I work on test and build automation and perform manual QA. I\'m not interested in employment opportunities at this time. I\'m comfortable with JS and Python and also have some familiarity with C#, and am generally unafraid of learning new languages, frameworks, and tools.</p>',

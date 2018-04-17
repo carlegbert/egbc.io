@@ -1,6 +1,7 @@
 const { assert } = require('chai');
 
 const { testShellFactory } = require('../util/test-helpers');
+const { Path, Directory } = require('../FileStructure');
 const ShellCommandResult = require('../Shell/CommandResult');
 
 describe('touch', function () {
@@ -32,7 +33,7 @@ describe('touch', function () {
   });
 
   it('updates lastModified when invoked on existing file', function () {
-    const testFile = testShell.fileStructure.createChild(['testFile']);
+    const testFile = testShell.fileStructure.createChild(new Path('testFile'));
     const oldLastModified = testShell.lastModified;
     const res = testShell.executeCommand('touch testFile');
     assert.instanceOf(res, ShellCommandResult);
@@ -77,5 +78,15 @@ describe('touch', function () {
     assert.empty(res.stdOut, 'expected res.stdOut to be empty');
     assert.equal(res.stdErr.length, 1, 'expected res.stdErr.length to equal 1');
     assert.equal(res.stdErr[0], 'touch: missing file operand');
+  });
+
+  it('creates file in directory', function () {
+    const dir = testShell.fileStructure.createChild(new Path('testDir'), Directory);
+    const res = testShell.executeCommand('touch testDir/newFile');
+    assert.instanceOf(res, ShellCommandResult);
+    assert.empty(res.stdOut, 'expected res.stdOut to be empty');
+    assert.empty(res.stdErr, 'expected res.stdErr to be empty');
+    assert.equal(dir.children.length, 1, 'expected testDir to have one child file');
+    assert.equal(dir.children[0].name, 'newFile', 'expected newFile to be created in testDir');
   });
 });

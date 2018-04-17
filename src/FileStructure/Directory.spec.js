@@ -2,31 +2,50 @@ const { assert } = require('chai');
 
 const Directory = require('./Directory');
 const File = require('./File');
+const Path = require('./Path');
 
 describe('Directory unit tests', function () {
-  const testDir = new Directory('testDir', null);
-  const emptyTestDir = new Directory('emptyTestDir', null);
+  const testDirPath = new Path('testDir');
+  const emptyTestDirPath = new Path('emptyTestDir');
+  const testDir = new Directory(testDirPath, null);
+  const emptyTestDir = new Directory(emptyTestDirPath, null);
 
   describe('#createChild()', function () {
-    after(function () {
+    afterEach(function () {
       testDir.children = [];
     });
 
     it('Creates child directory', function () {
-      const childDir = testDir.createChild(['childDir'], Directory);
+      const childDir = testDir.createChild(new Path('testChild'), Directory);
       assert.instanceOf(childDir, Directory);
     });
 
     it('Creates child file', function () {
-      const childFile = testDir.createChild(['']);
+      const childFile = testDir.createChild(new Path('testChild'));
       assert.instanceOf(childFile, File);
+    });
+
+    it('Creates nested child directory', function () {
+      const dir = testDir.createChild(new Path('firstDir'), Directory);
+      const nestedDir = testDir.createChild(new Path('firstDir/nestedDir'), Directory);
+      assert.instanceOf(nestedDir, Directory);
+      assert.equal(dir.children.length, 1);
+      assert.include(dir.children, nestedDir);
+    });
+
+    it('Creates nested child file', function () {
+      const dir = testDir.createChild(new Path('firstDir'), Directory);
+      const nestedFile = testDir.createChild(new Path('firstDir/nestedFile'));
+      assert.instanceOf(nestedFile, File);
+      assert.equal(dir.children.length, 1);
+      assert.include(dir.children, nestedFile);
     });
   });
 
   describe('#getChildrenByTypes()', function () {
     before(function () {
-      testDir.createChild(['firstDirChild'], Directory);
-      testDir.createChild(['testDirFile']);
+      testDir.createChild(new Path('firstDirChild'), Directory);
+      testDir.createChild(new Path('testDirFile'));
     });
 
     after(function () {
@@ -72,8 +91,8 @@ describe('Directory unit tests', function () {
     let secondChild;
 
     before(function () {
-      child = testDir.createChild(['child'], Directory);
-      secondChild = child.createChild(['secondChild'], Directory);
+      child = testDir.createChild(new Path('child'), Directory);
+      secondChild = child.createChild(new Path('secondChild'), Directory);
     });
 
     after(function () {
