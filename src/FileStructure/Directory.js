@@ -72,6 +72,7 @@ class Directory extends BaseFile {
     let found = null;
     const pathArg = filepath[0];
     const typeToFind = filepath.length === 1 ? filetype : Directory;
+
     switch (pathArg) {
       case '.':
         found = this;
@@ -99,26 +100,6 @@ class Directory extends BaseFile {
    * @return {BaseFile} Newly created BaseFile, or null on failure
    */
   createChild(filepath, filetype) {
-    if (filepath instanceof Path) return this.createChildFromPath(filepath, filetype);
-    return this.createChildFromString(filepath, filetype);
-  }
-
-  createChildFromString(filepath, filetype) {
-    if (filepath.length === 0) return null;
-    const filename = filepath.slice(-1)[0];
-    if (filepath.length > 1) {
-      const dir = this.findFile(filepath.slice(0, -1), Directory);
-      if (!dir) return null;
-      return dir.createChild([filename], filetype);
-    }
-    const file = filetype === Directory
-      ? new Directory(filename, this)
-      : new File(filename, this);
-    this.children.push(file);
-    return file;
-  }
-
-  createChildFromPath(filepath, filetype) {
     if (filepath.length === 0) return null;
     const filename = filepath.basename();
     if (filepath.length > 1) {
