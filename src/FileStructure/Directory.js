@@ -1,5 +1,6 @@
 const BaseFile = require('./BaseFile');
 const File = require('./File');
+const Path = require('./Path');
 
 /**
  * @extends {BaseFile}
@@ -82,11 +83,8 @@ class Directory extends BaseFile {
         found = this.findTopParent();
         break;
       default:
-        this.children.forEach((child) => {
-          if (pathArg === child.name && (!typeToFind || child instanceof typeToFind)) {
-            found = child;
-          }
-        });
+        found = this.children.find(child =>
+          (pathArg === child.name && (!typeToFind || child instanceof typeToFind)));
     }
 
     if (filepath.length === 1 || !found) return found;
@@ -96,17 +94,37 @@ class Directory extends BaseFile {
   /**
    * Attempt to find correct parent directory and create new file as its
    * child.
-   * @param {string[]} filepath Path to file from working directory, including name of new file
+   * @param {Path} filepath Path to file from working directory, including name of new file
    * @param {string} filetype Type of file (dir, txt)
    * @return {BaseFile} Newly created BaseFile, or null on failure
    */
   createChild(filepath, filetype) {
+    if (filepath instanceof Path) return this.createChildFromPath(filepath, filetype);
+    return this.createChildFromString(filepath, filetype);
+  }
+
+  createChildFromString(filepath, filetype) {
     if (filepath.length === 0) return null;
     const filename = filepath.slice(-1)[0];
     if (filepath.length > 1) {
       const dir = this.findFile(filepath.slice(0, -1), Directory);
       if (!dir) return null;
       return dir.createChild([filename], filetype);
+    }
+    const file = filetype === Directory
+      ? new Directory(filename, this)
+      : new File(filename, this);
+    this.children.push(file);
+    return file;
+  }
+
+  createChildFromPath(filepath, filetype) {
+    if (filepath.length === 0) return null;
+    const filename = filepath.basename();
+    if (filepath.length > 1) {
+      const dir = this.findFile(filepath.highestDir(), Directory);
+      if (!dir) return null;
+      return dir.createChild(new Path(filename), filetype);
     }
     const file = filetype === Directory
       ? new Directory(filename, this)

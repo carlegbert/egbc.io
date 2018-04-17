@@ -45,10 +45,10 @@ describe('Path unit tests', function () {
     });
   });
 
-  describe('#base()', function () {
+  describe('#lowestDir()', function () {
     it('returns correct array member', function () {
       const p = new Path(['one', 'two', 'three']);
-      const res = p.base();
+      const res = p.lowestDir();
       assert.equal(res, 'one');
     });
   });
@@ -70,6 +70,24 @@ describe('Path unit tests', function () {
       assert.equal(p.length, 1);
       assert.deepEqual(p, nxt);
       assert.notEqual(p, nxt);
+    });
+  });
+
+  describe('#basename()', function () {
+    it('Returns basename', function () {
+      const p = new Path(['one', 'two', 'three']);
+      const basename = p.basename();
+      assert.equal(basename, 'three');
+    });
+  });
+
+  describe('#highestDir()', function () {
+    it('Returns the highest-level directory', function () {
+      const p = new Path(['one', 'two', 'three']);
+      const dir = p.highestDir();
+      assert.instanceOf(dir, Path);
+      assert.equal(dir.length, 2);
+      assert.equal(dir.str, 'one/two');
     });
   });
 });

@@ -35,8 +35,23 @@ class Path {
   /**
    * @return {String} First element of this.arr
    */
-  base() {
+  lowestDir() {
     return this.arr[0];
+  }
+
+  /**
+   * @return {String} Name of file
+   */
+  basename() {
+    return this.arr.slice(-1)[0];
+  }
+
+  /**
+   * @return {Path} Path of the highest directory
+   */
+  highestDir() {
+    if (this.length <= 1) return null;
+    return new Path((this.arr.slice(0, -1)));
   }
 }
 

@@ -1,6 +1,6 @@
 const { getChar, print, printInline } = require('../util/io');
 const { getElementById } = require('../util/selectors');
-const { Directory, File } = require('../FileStructure');
+const { Directory, File, Path } = require('../FileStructure');
 const Programs = require('../Programs');
 const ShellCommand = require('./Command');
 const ShellCommandResult = require('./CommandResult');
@@ -133,9 +133,9 @@ class Shell {
     const otherArgs = afterSymbol.length === 1 ? [] : afterSymbol.slice(pattern.length);
     const newInput = inputString.slice(0, i) + otherArgs.join(' ');
     const res = this.executeCommand(newInput);
-    const filepath = afterSymbol[0];
-    const file = this.currentDir.findFile([filepath], File)
-      || this.currentDir.createChild([filepath], File);
+    const filepath = new Path(afterSymbol[0]);
+    const file = this.currentDir.findFile(filepath, File)
+      || this.currentDir.createChild(filepath, File);
     if (!file) return new ShellCommandResult(null, `bash: ${filepath}: No such file or directory`);
     if (file.contents === ['']) file.contents = [];
     file.contents = pattern === '>' ? [res.stdOut] : file.contents.concat(res.stdOut);
