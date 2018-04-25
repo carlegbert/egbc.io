@@ -2,7 +2,7 @@
 /* eslint-disable consistent-return */
 
 const { copyText, getChar, textEquals } = require('../../util/io');
-const { File } = require('../../FileStructure');
+const { File, Path } = require('../../FileStructure');
 const ViBuffer = require('./ViBuffer');
 
 /**
@@ -12,12 +12,11 @@ class Vi {
   /**
    * @constructor
    * @param {Object} shellRef Reference to parent Shell object
-   * @param {string[]} filePath
+   * @param {Path} filePath
    * @param {Object} file Reference to TxtFile to write to (optional)
    */
   constructor(shellRef, filePath, file = null) {
     this.shellRef = shellRef;
-    this.filePath = filePath;
     this.file = file;
     this.mode = 'normal';
     this.heldNum = '';
@@ -25,6 +24,9 @@ class Vi {
     this.editorElement = document.getElementById('editor');
     this.editorConsoleElement = document.getElementById('editor-console');
     this.buffer = null;
+    this.filePath = filePath
+      ? new Path(filePath)
+      : null;
   }
 
   createBuffer() {
