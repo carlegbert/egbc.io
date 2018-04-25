@@ -2,12 +2,11 @@
 
 const Shell = require('./Shell/Shell');
 const ShellCommand = require('./Shell/Command');
-const { cat, help } = require('./Programs');
+const { cat, help, ls } = require('./Programs');
 const { print } = require('./util/io');
 const homeDir = require('./content');
 
 require('./styles.css');
-
 
 document.addEventListener('DOMContentLoaded', () => {
   const shell = new Shell(homeDir);
@@ -15,7 +14,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const PS1 = document.getElementById('PS1');
   const aboutBtn = document.getElementById('about-btn');
   const helpBtn = document.getElementById('help-btn');
-  PS1.innerHTML = shell.getPS1String();
+  const ps1String = shell.getPS1String();
+
+  print(`${ps1String} cat ~/about.txt`, shell.outputElement);
+  let aboutCommand = new ShellCommand('cat ~/about.txt', shell);
+  let aboutRes = cat.apply(aboutCommand);
+  print(aboutRes.getDefaultOutput(), shell.outputElement);
+
+  print(`${ps1String} ls links`, shell.outputElement);
+  const lsCommand = new ShellCommand('ls links', shell);
+  const lsRes = ls.apply(lsCommand);
+  print(lsRes.getDefaultOutput(), shell.outputElement);
+
+  PS1.innerHTML = ps1String;
 
   let blinking = setInterval(() => {
     cursor.style.display = (cursor.style.display === 'none' ? '' : 'none');
@@ -32,8 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   aboutBtn.onclick = () => {
     print(`${shell.getPS1String()} cat ~/about.txt`, shell.outputElement);
-    const aboutCommand = new ShellCommand('cat ~/about.txt', shell);
-    const aboutRes = cat.apply(aboutCommand);
+    aboutCommand = new ShellCommand('cat ~/about.txt', shell);
+    aboutRes = cat.apply(aboutCommand);
     print(aboutRes.getDefaultOutput(), shell.outputElement);
   };
 
