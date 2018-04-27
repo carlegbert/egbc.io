@@ -2,13 +2,10 @@ const { assert } = require('chai');
 
 const Directory = require('./Directory');
 const File = require('./File');
-const Path = require('./Path');
 
 describe('Directory unit tests', function () {
-  const testDirPath = new Path('testDir');
-  const emptyTestDirPath = new Path('emptyTestDir');
-  const testDir = new Directory(testDirPath, null);
-  const emptyTestDir = new Directory(emptyTestDirPath, null);
+  const testDir = new Directory('testDir', null);
+  const emptyTestDir = new Directory('emptyTestDir', null);
 
   describe('#createChild()', function () {
     afterEach(function () {
@@ -16,26 +13,26 @@ describe('Directory unit tests', function () {
     });
 
     it('Creates child directory', function () {
-      const childDir = testDir.createChild(new Path('testChild'), Directory);
+      const childDir = testDir.createChild('testChild', Directory);
       assert.instanceOf(childDir, Directory);
     });
 
     it('Creates child file', function () {
-      const childFile = testDir.createChild(new Path('testChild'));
+      const childFile = testDir.createChild('testChild');
       assert.instanceOf(childFile, File);
     });
 
     it('Creates nested child directory', function () {
-      const dir = testDir.createChild(new Path('firstDir'), Directory);
-      const nestedDir = testDir.createChild(new Path('firstDir/nestedDir'), Directory);
+      const dir = testDir.createChild('firstDir', Directory);
+      const nestedDir = testDir.createChild('firstDir/nestedDir', Directory);
       assert.instanceOf(nestedDir, Directory);
       assert.equal(dir.children.length, 1);
       assert.include(dir.children, nestedDir);
     });
 
     it('Creates nested child file', function () {
-      const dir = testDir.createChild(new Path('firstDir'), Directory);
-      const nestedFile = testDir.createChild(new Path('firstDir/nestedFile'));
+      const dir = testDir.createChild('firstDir', Directory);
+      const nestedFile = testDir.createChild('firstDir/nestedFile');
       assert.instanceOf(nestedFile, File);
       assert.equal(dir.children.length, 1);
       assert.include(dir.children, nestedFile);
@@ -44,8 +41,8 @@ describe('Directory unit tests', function () {
 
   describe('#getChildrenByTypes()', function () {
     before(function () {
-      testDir.createChild(new Path('firstDirChild'), Directory);
-      testDir.createChild(new Path('testDirFile'));
+      testDir.createChild('firstDirChild', Directory);
+      testDir.createChild('testDirFile');
     });
 
     after(function () {
@@ -91,8 +88,8 @@ describe('Directory unit tests', function () {
     let secondChild;
 
     before(function () {
-      child = testDir.createChild(new Path('child'), Directory);
-      secondChild = child.createChild(new Path('secondChild'), Directory);
+      child = testDir.createChild('child', Directory);
+      secondChild = child.createChild('secondChild', Directory);
     });
 
     after(function () {
