@@ -60,19 +60,16 @@ class Directory extends BaseFile {
   /**
    * Function to find file in a directory. Returns null if unsuccesful; it is the responsibility
    * of the calling function to otherwise deal with failure.
-   * @param {string[]} filepath Path to file to be found
+   * @param {Path|string|string[]} filepath Path to file to be found
    * @param {string} filetype Type of file to find (optional)
    * @return {BaseFile} Returns file object if found, null if not
    */
   findFile(filepath, filetype) {
-    if (filepath.length > 1 && filepath[filepath.length - 1] === '') {
-      filepath.splice(-1, 1);
-    } else if (filepath.length === 0 && filetype === Directory) {
-      return this;
-    }
+    if (!(filepath instanceof Path)) filepath = new Path(filepath);
+    if (filepath.length === 0 && filetype === Directory) return this;
 
     let found = null;
-    const pathArg = filepath[0];
+    const pathArg = filepath.lowestDir();
     const typeToFind = filepath.length === 1 ? filetype : Directory;
 
     switch (pathArg) {
@@ -91,7 +88,7 @@ class Directory extends BaseFile {
     }
 
     if (filepath.length === 1 || !found) return found;
-    return found.findFile(filepath.slice(1), filetype);
+    return found.findFile(filepath.next(), filetype);
   }
 
   /**
@@ -106,7 +103,7 @@ class Directory extends BaseFile {
     if (filepath.length === 0) return null;
     const filename = filepath.basename();
     if (filepath.length > 1) {
-      const dir = this.findFile(filepath.highestDir().arr, Directory);
+      const dir = this.findFile(filepath.highestDir(), Directory);
       if (!dir) return null;
       return dir.createChild(new Path(filename), filetype);
     }
