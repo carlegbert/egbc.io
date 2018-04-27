@@ -1,4 +1,4 @@
-### wwwterm-es6
+### [wwwterm-es6](https://www.carlegbert.com)
 ##### Carl Egbert - egbertcarl@gmail.com
 
 [wwwterm](https://github.com/carlegbert/wwwterm) rewritten in ES6. Transpiled to ES5 via babel/webpack.
