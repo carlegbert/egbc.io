@@ -1,5 +1,5 @@
 const ShellCommandResult = require('../Shell/CommandResult');
-const { Directory, Path } = require('../FileStructure');
+const { Directory } = require('../FileStructure');
 
 /**
  * Create new directory
@@ -14,11 +14,10 @@ function mkdir() {
   }
   this.args.forEach((arg) => {
     const path = arg.split('/');
-    const filepath = new Path(arg);
     const fileAtLoc = this.shell.currentDir.findFile(path);
     let file;
     if (!fileAtLoc) {
-      file = this.shell.currentDir.createChild(filepath, Directory);
+      file = this.shell.currentDir.createChild(arg, Directory);
       if (!file) res.stdErr.push(`mkdir: cannot create directory ${arg}: No such file or directory`);
       else res.data.push(file);
     } else if (!(fileAtLoc instanceof Directory)) {

@@ -2,7 +2,7 @@
 /* eslint-disable consistent-return */
 
 const { copyText, getChar, textEquals } = require('../../util/io');
-const { File, Path } = require('../../FileStructure');
+const { File } = require('../../FileStructure');
 const ViBuffer = require('./ViBuffer');
 
 /**
@@ -24,9 +24,7 @@ class Vi {
     this.editorElement = document.getElementById('editor');
     this.editorConsoleElement = document.getElementById('editor-console');
     this.buffer = null;
-    this.filePath = filePath
-      ? new Path(filePath)
-      : null;
+    this.filePath = filePath;
   }
 
   createBuffer() {

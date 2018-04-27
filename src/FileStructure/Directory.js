@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+
 const BaseFile = require('./BaseFile');
 const File = require('./File');
 const Path = require('./Path');
@@ -95,11 +97,12 @@ class Directory extends BaseFile {
   /**
    * Attempt to find correct parent directory and create new file as its
    * child.
-   * @param {Path} filepath Path to file from working directory, including name of new file
+   * @param {Path|string|string[]} filepath Path to new file from working directory, including name
    * @param {string} filetype Type of file (dir, txt)
    * @return {BaseFile} Newly created BaseFile, or null on failure
    */
   createChild(filepath, filetype) {
+    if (!(filepath instanceof Path)) filepath = new Path(filepath);
     if (filepath.length === 0) return null;
     const filename = filepath.basename();
     if (filepath.length > 1) {

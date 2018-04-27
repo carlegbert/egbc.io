@@ -1,4 +1,4 @@
-const { File, Path } = require('../FileStructure');
+const { File } = require('../FileStructure');
 const ShellCommandResult = require('../Shell/CommandResult');
 
 /**
@@ -14,10 +14,9 @@ function touch() {
 
   this.args.forEach((arg) => {
     const path = arg.split('/');
-    const filepath = new Path(arg);
     const fileAtLoc = this.shell.currentDir.findFile(path);
     if (!fileAtLoc) {
-      const file = this.shell.currentDir.createChild(filepath, File);
+      const file = this.shell.currentDir.createChild(arg, File);
       if (!file) res.stdErr.push(`touch: cannout touch ${arg}: No such file or directory`);
     } else {
       fileAtLoc.lastModified = new Date();

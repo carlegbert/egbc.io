@@ -1,13 +1,11 @@
 const { assert } = require('chai');
 
 const { testShellFactory } = require('../util/test-helpers');
-const { Path } = require('../FileStructure');
 const ShellCommandResult = require('../Shell/CommandResult');
 
 describe('pwd', function () {
-  const p = new Path('testDir');
   const testShell = testShellFactory();
-  const testDir = testShell.fileStructure.createChild(p);
+  const testDir = testShell.fileStructure.createChild('testDir');
 
   it('returns name of current directory', function () {
     const res = testShell.executeCommand('pwd');

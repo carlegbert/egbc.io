@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 
 const { testShellFactory } = require('../util/test-helpers');
-const { Path, Directory } = require('../FileStructure');
+const { Directory } = require('../FileStructure');
 const ShellCommandResult = require('../Shell/CommandResult');
 
 describe('touch', function () {
@@ -33,7 +33,7 @@ describe('touch', function () {
   });
 
   it('updates lastModified when invoked on existing file', function () {
-    const testFile = testShell.fileStructure.createChild(new Path('testFile'));
+    const testFile = testShell.fileStructure.createChild('testFile');
     const oldLastModified = testShell.lastModified;
     const res = testShell.executeCommand('touch testFile');
     assert.instanceOf(res, ShellCommandResult);
@@ -81,7 +81,7 @@ describe('touch', function () {
   });
 
   it('creates file in directory', function () {
-    const dir = testShell.fileStructure.createChild(new Path('testDir'), Directory);
+    const dir = testShell.fileStructure.createChild('testDir', Directory);
     const res = testShell.executeCommand('touch testDir/newFile');
     assert.instanceOf(res, ShellCommandResult);
     assert.empty(res.stdOut, 'expected res.stdOut to be empty');

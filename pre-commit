@@ -3,7 +3,7 @@
 echo "Running pre-commit script..."
 
 # Lint
-npm run lint > /dev/null
+npm run lint
 
 # Run tests
-npm run test > /dev/null
+npm run test
