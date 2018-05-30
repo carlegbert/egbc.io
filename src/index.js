@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const lsRes = ls.apply(lsCommand);
   print(lsRes.getDefaultOutput(), shell.outputElement);
 
+  print("<br /><br />Type 'help' for a list of available commands.", shell.outputElement);
+
   PS1.innerHTML = ps1String;
 
   let blinking = setInterval(() => {
