@@ -15,8 +15,7 @@
   "scripts": {
     "build": "webpack -p",
     "dev": "webpack-dev-server",
-    "lint": "eslint src",
-    "postinstall": "cp pre-commit .git/hooks/pre-commit",
+    "lint": "eslint src e2e",
     "test": "mocha src/**/*.spec.js",
     "test:all": "mocha e2e/ src/**/*.spec.js",
     "test:cov": "nyc mocha src/**/*.spec.js",
