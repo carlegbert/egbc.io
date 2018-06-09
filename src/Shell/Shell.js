@@ -5,17 +5,17 @@ const ShellCommand = require('./Command');
 const ShellCommandResult = require('./CommandResult');
 
 /**
- * Programs.help cannot be exported in Programs/index.js due to requiring
+ * programs.help cannot be exported in programs/index.js due to requiring
  * it in order to iterate through all other available programs; hence,
  * this hack.
  */
-const Programs = require('../Programs');
-Programs.help = require('../Programs/help');
+const programs = require('../programs');
+programs.help = require('../programs/help');
 
-const PROGRAM_NAMES = Object.keys(Programs);
+const PROGRAM_NAMES = Object.keys(programs);
 
 const getValidTypesForProgram = (name) => {
-  const program = Programs[name];
+  const program = programs[name];
   return program ? program.filetypes : [Directory, File];
 };
 
@@ -129,7 +129,7 @@ class Shell {
     if (inputString.includes('>')) return this.redirect(inputString, '>');
 
     const shellCommand = new ShellCommand(inputString, this);
-    const program = Programs[shellCommand.command];
+    const program = programs[shellCommand.command];
     if (!program) return new ShellCommandResult([], `${shellCommand.command}: command not found`);
     return program.run(shellCommand);
   }

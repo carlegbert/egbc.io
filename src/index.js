@@ -2,7 +2,7 @@
 
 const Shell = require('./Shell/Shell');
 const ShellCommand = require('./Shell/Command');
-const { cat, help, ls } = require('./Programs');
+const { cat, help, ls } = require('./programs');
 const { print } = require('./util/io');
 const homeDir = require('./content');
 
