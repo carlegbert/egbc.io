@@ -44,8 +44,7 @@ class ShellCommand {
   }
 
   /**
-   * List of all valid commands, used for autocompletion and to validate input
-   * before using eval
+   * List of all valid commands, used for autocompletion
    * @return {string[]} List of valid commands that can be executed
    */
   static validCommands() {

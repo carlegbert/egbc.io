@@ -2,7 +2,6 @@ const cat = require('./cat');
 const cd = require('./cd');
 const clear = require('./clear');
 const echo = require('./echo');
-const help = require('./help');
 const ls = require('./ls');
 const mkdir = require('./mkdir');
 const pwd = require('./pwd');
@@ -15,7 +14,6 @@ module.exports = {
   cd,
   clear,
   echo,
-  help,
   ls,
   mkdir,
   pwd,

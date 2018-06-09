@@ -1,12 +1,17 @@
 const ShellCommandResult = require('../Shell/CommandResult');
 
-/**
- * Clear #terminal-output. Removes elemnts from DOM rather than just scrolling.
- * @return {ShellCommandResult}
- */
-function clear() {
-  this.shell.outputElement.innerHTML = '';
-  return new ShellCommandResult();
-}
+const clear = {
+  name: 'clear',
+  filetypes: [],
+  /**
+   * Clear #terminal-output. Removes elements from DOM rather than just scrolling.
+   * @return {ShellCommandResult}
+   */
+  run: (cmd) => {
+    const shell = cmd.shell;
+    shell.outputElement.innerHTML = '';
+    return new ShellCommandResult();
+  },
+};
 
 module.exports = clear;

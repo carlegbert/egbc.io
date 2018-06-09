@@ -18,12 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   print(`${ps1String} cat ~/about.txt`, shell.outputElement);
   let aboutCommand = new ShellCommand('cat ~/about.txt', shell);
-  let aboutRes = cat.apply(aboutCommand);
+  let aboutRes = cat.run(aboutCommand);
   print(aboutRes.getDefaultOutput(), shell.outputElement);
 
   print(`${ps1String} ls links`, shell.outputElement);
   const lsCommand = new ShellCommand('ls links', shell);
-  const lsRes = ls.apply(lsCommand);
+  const lsRes = ls.run(lsCommand);
   print(lsRes.getDefaultOutput(), shell.outputElement);
 
   print("<br /><br />Type 'help' for a list of available commands.", shell.outputElement);
@@ -46,13 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
   aboutBtn.onclick = () => {
     print(`${shell.getPS1String()} cat ~/about.txt`, shell.outputElement);
     aboutCommand = new ShellCommand('cat ~/about.txt', shell);
-    aboutRes = cat.apply(aboutCommand);
+    aboutRes = cat.run(aboutCommand);
     print(aboutRes.getDefaultOutput(), shell.outputElement);
   };
 
   helpBtn.onclick = () => {
     const helpCommand = new ShellCommand('help');
-    const helpRes = help.apply(helpCommand);
+    const helpRes = help.run(helpCommand);
     print(`${shell.getPS1String()} help`, shell.outputElement);
     print(helpRes.getDefaultOutput(), shell.outputElement);
   };

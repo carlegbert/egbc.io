@@ -1,9 +1,16 @@
 const { getChar, print, printInline } = require('../util/io');
 const { getElementById } = require('../util/selectors');
 const { Directory, File, Path } = require('../FileStructure');
-const Programs = require('../Programs');
 const ShellCommand = require('./Command');
 const ShellCommandResult = require('./CommandResult');
+
+/**
+ * Programs.help cannot be exported in Programs/index.js due to requiring
+ * it in order to iterate through all other available programs; hence,
+ * this hack.
+ */
+const Programs = require('../Programs');
+Programs.help = require('../Programs/help');
 
 /**
  * Object encapsulating shell session
@@ -117,7 +124,7 @@ class Shell {
     const shellCommand = new ShellCommand(inputString, this);
     const program = Programs[shellCommand.command];
     if (!program) return new ShellCommandResult([], `${shellCommand.command}: command not found`);
-    return program.apply(shellCommand);
+    return program.run(shellCommand);
   }
 
   /**

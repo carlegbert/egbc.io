@@ -51,12 +51,6 @@ class BufferLine {
     this.setText(txt);
   }
 
-  reset() {
-    this.chars = [];
-    this.innerHTML = '';
-    this.renderChildren();
-  }
-
   renderCursor(x, insertMode = false) {
     let adjustedX;
     const max = insertMode ? this.chars.length - 1 : this.chars.length - 2;

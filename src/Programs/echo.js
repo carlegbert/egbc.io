@@ -1,12 +1,16 @@
 const ShellCommandResult = require('../Shell/CommandResult');
 
-/**
- * Print text
- * @return {ShellCommandResult}
- */
-function echo() {
-  const output = this.args.join(' ');
-  return new ShellCommandResult([output]);
-}
+const echo = {
+  name: 'echo',
+  filetypes: [],
+  /**
+   * Print text
+   * @return {ShellCommandResult}
+   */
+  run: (cmd) => {
+    const output = cmd.args.join(' ');
+    return new ShellCommandResult([output]);
+  },
+};
 
 module.exports = echo;
