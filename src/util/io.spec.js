@@ -36,4 +36,18 @@ describe('io helper unit tests', function () {
       assert.isFalse(res);
     });
   });
+
+  describe('#removeExtraSpaces', function () {
+    it('removes extra spaces from string', function () {
+      const input = '      a      b      c     d     e f g   h ';
+      const result = io.removeExtraSpaces(input);
+      assert.equal(result, 'a b c d e f g h');
+    });
+
+    it('leaves string with no spaces unchanged', function () {
+      const input = 'abracadabra';
+      const result = io.removeExtraSpaces(input);
+      assert.equal(input, result);
+    });
+  });
 });

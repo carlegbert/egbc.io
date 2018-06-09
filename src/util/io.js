@@ -92,9 +92,9 @@ function printInline(output, target) {
 }
 
 function removeExtraSpaces(str) {
-  const i = str.indexOf('  ');
-  if (i === -1) return str;
-  return removeExtraSpaces(str.slice(i + 1));
+  return str.split(' ')
+    .filter(word => word !== ' ' && word !== '')
+    .join(' ');
 }
 
 /**
