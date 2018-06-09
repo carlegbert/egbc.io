@@ -30,12 +30,4 @@ describe('echo', function () {
     assert.equal(res.stdOut.length, 1);
     assert.empty(res.stdOut[0]);
   });
-
-  it('does not pick up flags', function () {
-    const res = testShell.executeCommand('echo some words -a -b -c');
-    assert.instanceOf(res, ShellCommandResult);
-    assert.empty(res.stdErr);
-    assert.equal(res.stdOut.length, 1);
-    assert.equal(res.stdOut[0], 'some words');
-  });
 });

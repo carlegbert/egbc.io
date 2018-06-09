@@ -14,7 +14,6 @@ class ShellCommand {
   constructor(input, shell) {
     this.originalInput = input;
     this.args = [];
-    this.flags = [];
     this.command = '';
     this.shell = shell;
 
@@ -22,22 +21,14 @@ class ShellCommand {
   }
 
   /**
-   * Parse input string into flags & args
+   * Parse input string into base command and args
    */
   parseInput() {
-    let normalizedInput = removeExtraSpaces(this.originalInput);
+    let normalizedInput = removeExtraSpaces(this.originalInput).trim();
     if (normalizedInput[0] === ' ') normalizedInput = normalizedInput.slice(1);
     const splitInput = normalizedInput.split(' ');
     this.command = splitInput[0];
-    if (splitInput.length > 1) {
-      splitInput.slice(1).forEach((word) => {
-        if (word.length > 0 && word[0] === '-') {
-          this.flags.push(word);
-        } else if (word.length > 0 && word !== ' ') {
-          this.args.push(word);
-        }
-      });
-    }
+    this.args = splitInput.slice(1);
   }
 }
 

@@ -36,7 +36,7 @@ class Shell {
     this.inputString = '';
     this.bashHistory = [];
     this.historyIndex = 0;
-    this.tabPressed = false;
+    this.tabWait = false;
     this.inputPromptElement = getElementById('input');
     this.PS1Element = getElementById('PS1');
     this.outputElement = getElementById('terminal-output');
@@ -67,22 +67,22 @@ class Shell {
    */
   shellKeystroke(event) {
     if (event.which === 13) { // enter
-      this.tabPressed = false;
+      this.tabWait = false;
       event.preventDefault();
       this.handleEnter();
     } else if (event.which === 8) { // backspace
-      this.tabPressed = false;
+      this.tabWait = false;
       event.preventDefault();
       this.inputString = this.inputString.slice(0, (this.inputString.length - 1));
       this.inputPromptElement.innerHTML = this.inputString.replace(/ /g, '&nbsp;');
     } else if (event.which === 38 && this.historyIndex > 0) { // up arrow
-      this.tabPressed = false;
+      this.tabWait = false;
       event.preventDefault();
       this.historyIndex -= 1;
       this.inputString = this.bashHistory[this.historyIndex];
       this.inputPromptElement.innerHTML = this.inputString;
     } else if (event.which === 40 && this.historyIndex < this.bashHistory.length) { // down
-      this.tabPressed = false;
+      this.tabWait = false;
       event.preventDefault();
       this.historyIndex += 1;
       if (this.historyIndex === this.bashHistory.length) this.inputString = '';
@@ -92,7 +92,7 @@ class Shell {
       event.preventDefault();
       this.handleTab();
     } else {
-      this.tabPressed = false;
+      this.tabWait = false;
       const k = getChar(event);
       this.inputString += k;
       const kSpaceAdjusted = k === ' ' ? '&nbsp;' : k;
@@ -175,7 +175,7 @@ class Shell {
       options = this.getAutocompleteFiles(partial, getValidTypesForProgram(cmd.command));
       if (options.length === 0) options = this.getAutocompleteFiles(partial, [Directory]);
     }
-    if (options.length === 1) this.executeAutoComplete(partial, options[0]);
+    if (options.length === 1) this.completeWord(partial, options[0]);
     else if (options.length > 1) this.printAutoCompleteOptions(options);
   }
 
@@ -187,18 +187,11 @@ class Shell {
    */
   static filterAutoCompleteOptions(partial, options) {
     const len = partial.length;
-    const validOptions = [];
-    options.forEach((opt) => {
-      if (opt.length >= len && opt.slice(0, len) === partial) {
-        validOptions.push(opt);
-      }
-    });
-    if (validOptions.length > 1) {
-      const longestPartial = Shell.checkForSameBeginning(partial, validOptions);
-      if (longestPartial === partial) return validOptions;
-      return [longestPartial];
-    }
-    return validOptions;
+    const validOptions = options.filter(opt =>
+      (opt.length >= len && opt.slice(0, len) === partial));
+    const longestPartial = Shell.checkSuggestionsForSameBeginning(partial, validOptions);
+    if (longestPartial === partial) return validOptions;
+    return [longestPartial];
   }
 
   /**
@@ -209,7 +202,7 @@ class Shell {
    * @param {string[]} options Available options
    * @return {string} A string representing the longest matching beginning.
    * */
-  static checkForSameBeginning(partial, options) {
+  static checkSuggestionsForSameBeginning(partial, options) {
     const sortedOpts = options.slice().sort((a, b) => a.length - b.length);
     const shortestOpt = sortedOpts[0];
     let longestPartial = partial;
@@ -247,11 +240,11 @@ class Shell {
    * @param {string[]} options Options to print
    */
   printAutoCompleteOptions(options) {
-    if (this.tabPressed) {
+    if (this.tabWait) {
       print(this.getPS1String() + this.inputString, this.outputElement);
       printInline(options, this.outputElement);
     } else {
-      this.tabPressed = true;
+      this.tabWait = true;
     }
   }
 
@@ -260,14 +253,13 @@ class Shell {
    * @param {string} partial Word to be completed
    * @param {string} complete Word to be autocompleted to
    */
-  executeAutoComplete(partial, complete) {
+  completeWord(partial, complete) {
     const splitPartial = partial.split('/');
     const wordPartial = splitPartial[splitPartial.length - 1];
     const completion = complete.slice(wordPartial.length);
     this.inputString += completion;
     this.inputPromptElement.append(completion);
   }
-
 
   killChildProcess() {
     this.childProcess = null;
