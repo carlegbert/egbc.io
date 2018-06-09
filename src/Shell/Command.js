@@ -1,7 +1,4 @@
-/* eslint-disable class-methods-use-this */
-
 const { removeExtraSpaces } = require('../util/io');
-const { Directory, File } = require('../FileStructure');
 
 /**
  * Object encapsulating information to be passed to a shell operation,
@@ -41,44 +38,6 @@ class ShellCommand {
         }
       });
     }
-  }
-
-  /**
-   * List of all valid commands, used for autocompletion
-   * @return {string[]} List of valid commands that can be executed
-   */
-  static validCommands() {
-    return [
-      'clear',
-      'pwd',
-      'whoami',
-      'cd',
-      'ls',
-      'cat',
-      'touch',
-      'mkdir',
-      'echo',
-      'vi',
-      'help',
-    ];
-  }
-
-  /**
-  /**
-   * Determine valid filetypes for command arguments
-   * @param {string} cmdName Command name, eg, 'ls', 'cat', etc
-   * @return {string[]} array of valid filetypes
-   */
-  static getValidTypes(cmdName) {
-    const typeDict = {
-      ls: [Directory],
-      cd: [Directory],
-      mkdir: [Directory],
-      cat: [File],
-      '>': [File],
-      vi: [File],
-    };
-    return typeDict[cmdName] || [Directory, File];
   }
 }
 

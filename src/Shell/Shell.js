@@ -12,6 +12,13 @@ const ShellCommandResult = require('./CommandResult');
 const Programs = require('../Programs');
 Programs.help = require('../Programs/help');
 
+const PROGRAM_NAMES = Object.keys(Programs);
+
+const getValidTypesForProgram = (name) => {
+  const program = Programs[name];
+  return program ? program.filetypes : [Directory, File];
+};
+
 /**
  * Object encapsulating shell session
  * @class
@@ -159,13 +166,13 @@ class Shell {
     let partial;
     if (!cmd.command) {
       partial = '';
-      options = ShellCommand.validCommands();
+      options = PROGRAM_NAMES;
     } else if (!spaceAtEnd && cmd.args.length === 0) {
       partial = cmd.command;
-      options = Shell.filterAutoCompleteOptions(partial, ShellCommand.validCommands());
+      options = Shell.filterAutoCompleteOptions(partial, PROGRAM_NAMES);
     } else {
       partial = cmd.args[cmd.args.length - 1] || '';
-      options = this.getAutocompleteFiles(partial, ShellCommand.getValidTypes(cmd.command));
+      options = this.getAutocompleteFiles(partial, getValidTypesForProgram(cmd.command));
       if (options.length === 0) options = this.getAutocompleteFiles(partial, [Directory]);
     }
     if (options.length === 1) this.executeAutoComplete(partial, options[0]);
@@ -228,12 +235,10 @@ class Shell {
     const dirPath = partialAsArray.slice(0, -1);
     const dir = this.currentDir.findFile(dirPath, Directory);
     const fileOptions = dir.getChildrenByTypes(filetypes);
-    const options = [];
-    fileOptions.forEach((f) => {
-      let optName = f.name;
-      if (f instanceof Directory) optName += '/';
-      options.push(optName);
-    });
+    /* eslint-disable arrow-body-style */
+    const options = fileOptions
+      .map((f) => { return (f instanceof Directory) ? `${f.name}/` : f.name; });
+    /* eslint-enable arrow-body-style */
     return Shell.filterAutoCompleteOptions(partialName, options);
   }
 
