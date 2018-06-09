@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 
 const { testShellFactory } = require('../util/test-helpers');
-const ShellCommandResult = require('../Shell/CommandResult');
+const ShellCommandResult = require('../Shell/ShellCommandResult');
 const { Directory } = require('../FileStructure');
 
 describe('ls', function () {

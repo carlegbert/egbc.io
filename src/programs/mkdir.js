@@ -1,4 +1,4 @@
-const ShellCommandResult = require('../Shell/CommandResult');
+const ShellCommandResult = require('../Shell/ShellCommandResult');
 const { Directory } = require('../FileStructure');
 
 const mkdir = {

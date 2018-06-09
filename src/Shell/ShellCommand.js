@@ -24,11 +24,10 @@ class ShellCommand {
    * Parse input string into base command and args
    */
   parseInput() {
-    let normalizedInput = removeExtraSpaces(this.originalInput).trim();
-    if (normalizedInput[0] === ' ') normalizedInput = normalizedInput.slice(1);
-    const splitInput = normalizedInput.split(' ');
-    this.command = splitInput[0];
-    this.args = splitInput.slice(1);
+    let args = removeExtraSpaces(this.originalInput).trim();
+    args = args.split(' ');
+    this.command = args[0];
+    this.args = args.slice(1);
   }
 }
 

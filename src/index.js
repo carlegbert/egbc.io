@@ -1,7 +1,7 @@
 /* eslint-env browser */
 
 const Shell = require('./Shell/Shell');
-const ShellCommand = require('./Shell/Command');
+const ShellCommand = require('./Shell/ShellCommand');
 const { cat, help, ls } = require('./programs');
 const { print } = require('./util/io');
 const homeDir = require('./content');

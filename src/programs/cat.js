@@ -1,5 +1,5 @@
 const { Directory, File } = require('../FileStructure');
-const ShellCommandResult = require('../Shell/CommandResult');
+const ShellCommandResult = require('../Shell/ShellCommandResult');
 
 const cat = {
   name: 'cat',

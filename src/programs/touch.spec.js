@@ -2,7 +2,7 @@ const { assert } = require('chai');
 
 const { testShellFactory } = require('../util/test-helpers');
 const { Directory } = require('../FileStructure');
-const ShellCommandResult = require('../Shell/CommandResult');
+const ShellCommandResult = require('../Shell/ShellCommandResult');
 
 describe('touch', function () {
   const testShell = testShellFactory();

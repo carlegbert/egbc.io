@@ -1,8 +1,8 @@
 const { getChar, print, printInline } = require('../util/io');
 const { getElementById } = require('../util/selectors');
 const { Directory, File, Path } = require('../FileStructure');
-const ShellCommand = require('./Command');
-const ShellCommandResult = require('./CommandResult');
+const ShellCommand = require('./ShellCommand');
+const ShellCommandResult = require('./ShellCommandResult');
 
 /**
  * programs.help cannot be exported in programs/index.js due to requiring
@@ -105,7 +105,7 @@ class Shell {
    * process Enter keystroke
    */
   handleEnter() {
-    if (!this.inputString.match(/[^ ]/g)) { // regex for anything but space
+    if (!this.inputString.match(/[^ ]/g)) {
       print(this.getPS1String(), this.outputElement);
     } else {
       print(this.getPS1String() + this.inputString.replace(' ', '&nbsp;'), this.outputElement);

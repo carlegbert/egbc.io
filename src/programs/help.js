@@ -1,5 +1,5 @@
 const programs = require('./index');
-const ShellCommandResult = require('../Shell/CommandResult');
+const ShellCommandResult = require('../Shell/ShellCommandResult');
 
 const help = {
   name: 'help',
