@@ -1,19 +1,21 @@
 ### [wwwterm-es6](https://www.carlegbert.com)
 ##### Carl Egbert - egbertcarl@gmail.com
 
-[wwwterm](https://github.com/carlegbert/wwwterm) rewritten in ES6. Transpiled to ES5 via babel/webpack.
+A mock linux terminal written in plain javascript serving as a personal website.
 
 #### building the project
 
-* you will need webpack (`npm install -g webpack`)
 * `npm install`
 * to run the dev server: `npm dev` (page served at localhost:8080)
 * for an optimized build: `npm build`
 
 #### running tests
 
-* start the dev server with `npm dev`
-* `npm test`
+In order to run the UI tests, you will need Java and Google Chrome installed, and to have the chromedriver binary in your PATH variable. You will also need to be running the dev server.
+
+* To run unit tests: `npm run test`
+* To run ui tests: `npm run test:ui`
+* To run both: `npm run test:all`
 
 #### current working commands/features
 
@@ -36,9 +38,7 @@
 * vi
 
 #### TODO
-* better instantiation for file objects
 * line wrapping for vi
-* 'localstorage' dir
 * more automation
 * pipe with |
 * results of ls are clickable & other user-friendliness
