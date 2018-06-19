@@ -37,7 +37,7 @@ class Shell {
     this.inputString = '';
     this.bashHistory = [];
     this.historyIndex = 0;
-    this.tabWait = false;
+    this.prevKeyWasTab = false;
     this.inputPromptElement = getElementById('input');
     this.PS1Element = getElementById('PS1');
     this.outputElement = getElementById('terminal-output');
@@ -68,37 +68,35 @@ class Shell {
    */
   shellKeystroke(event) {
     if (event.which === 13) { // enter
-      this.tabWait = false;
       event.preventDefault();
       this.handleEnter();
     } else if (event.which === 8) { // backspace
-      this.tabWait = false;
       event.preventDefault();
       this.inputString = this.inputString.slice(0, (this.inputString.length - 1));
       this.inputPromptElement.innerHTML = this.inputString.replace(/ /g, '&nbsp;');
     } else if (event.which === 38 && this.historyIndex > 0) { // up arrow
-      this.tabWait = false;
       event.preventDefault();
       this.historyIndex -= 1;
       this.inputString = this.bashHistory[this.historyIndex];
       this.inputPromptElement.innerHTML = this.inputString;
     } else if (event.which === 40 && this.historyIndex < this.bashHistory.length) { // down
-      this.tabWait = false;
       event.preventDefault();
       this.historyIndex += 1;
       if (this.historyIndex === this.bashHistory.length) this.inputString = '';
       else this.inputString = this.bashHistory[this.historyIndex];
       this.inputPromptElement.innerHTML = this.inputString;
     } else if (event.which === 9) { // tab
+      this.prevKeyWasTab = true;
       event.preventDefault();
       this.handleTab();
     } else {
-      this.tabWait = false;
       const k = getChar(event);
       this.inputString += k;
       const kSpaceAdjusted = k === ' ' ? '&nbsp;' : k;
       this.inputPromptElement.innerHTML += kSpaceAdjusted;
     }
+
+    if (event.which !== 9) this.prevKeyWasTab = false;
     this.inputPromptElement.scrollIntoView(false);
   }
 
@@ -180,19 +178,9 @@ class Shell {
       if (options.length === 0) options = autocomplete.getFiles(partialName, [Directory], dir);
     }
     if (options.length === 1) this.completeWord(partial, options[0]);
-    else if (options.length > 1) this.printAutoCompleteOptions(options);
-  }
-
-  /**
-   * prints valid autocomplete options. to be called only if there are multiple options.
-   * @param {string[]} options Options to print
-   */
-  printAutoCompleteOptions(options) {
-    if (this.tabWait) {
+    else if (options.length > 1 && this.prevKeyWasTab) {
       print(this.getPS1String() + this.inputString, this.outputElement);
       printInline(options, this.outputElement);
-    } else {
-      this.tabWait = true;
     }
   }
 
