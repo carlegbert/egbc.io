@@ -8,7 +8,7 @@ const { Directory } = require('../FileStructure');
  * @param {string[]} options Available options
  * @return {string} A string representing the longest matching beginning.
  * */
-const checkSuggestionsForSameBeginning = (partial, options) => {
+const findLongestCommonBeginning = (partial, options) => {
   const sortedOpts = options.slice().sort((a, b) => a.length - b.length);
   const shortestOpt = sortedOpts[0];
   if (!shortestOpt) return partial;
@@ -31,7 +31,7 @@ const checkSuggestionsForSameBeginning = (partial, options) => {
  */
 const filterOptions = (partial, options) => {
   const validOptions = options.filter(opt => opt.startsWith(partial));
-  const longestPartial = checkSuggestionsForSameBeginning(partial, validOptions);
+  const longestPartial = findLongestCommonBeginning(partial, validOptions);
   if (longestPartial === partial) return validOptions;
   return [longestPartial];
 };
@@ -53,5 +53,6 @@ const getFiles = (partial, filetypes, dir) => {
 
 module.exports = {
   filterOptions,
+  findLongestCommonBeginning,
   getFiles,
 };
