@@ -29,15 +29,11 @@ const findLongestCommonBeginning = (partial, options) => {
  * @param {string[]} options List of files or commands to check against partial
  * @return {string[]} Array of strings from options that match against partial
  */
-const filterOptions = (partial, options) => {
-  const validOptions = options.filter(opt => opt.startsWith(partial));
-  const longestPartial = findLongestCommonBeginning(partial, validOptions);
-  if (longestPartial === partial) return validOptions;
-  return [longestPartial];
-};
+const filterOptions = (partial, options) =>
+  options.filter(opt => opt.startsWith(partial));
 
 /**
- * returns list of all files in a directory for autocompletion purposes.
+ * returns list of all files in a directory matching filetype and starting with partial
  * @param {string} partial Filepath to be completed, eg, 'path/to/fi' or 'pat'
  * @param {Class[]} filetypes Optional filetypes to filter for
  * @return {string[]} array of filenames
@@ -45,10 +41,10 @@ const filterOptions = (partial, options) => {
 const getFiles = (partial, filetypes, dir) => {
   const fileOptions = dir.getChildrenByTypes(filetypes);
   /* eslint-disable arrow-body-style */
-  const options = fileOptions
+  return fileOptions
+    .filter(f => f.name.startsWith(partial))
     .map((f) => { return (f instanceof Directory) ? `${f.name}/` : f.name; });
   /* eslint-enable arrow-body-style */
-  return filterOptions(partial, options);
 };
 
 module.exports = {

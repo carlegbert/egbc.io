@@ -3,7 +3,7 @@ const { getElementById } = require('../util/selectors');
 const { Directory, File, Path } = require('../FileStructure');
 const ShellCommand = require('./ShellCommand');
 const ShellCommandResult = require('./ShellCommandResult');
-const autocomplete = require('./autocomplete');
+const ac = require('./autocomplete');
 
 /**
  * programs.help cannot be exported in programs/index.js due to requiring
@@ -86,9 +86,9 @@ class Shell {
       else this.inputString = this.bashHistory[this.historyIndex];
       this.inputPromptElement.innerHTML = this.inputString;
     } else if (event.which === 9) { // tab
-      this.prevKeyWasTab = true;
       event.preventDefault();
       this.handleTab();
+      this.prevKeyWasTab = true;
     } else {
       const k = getChar(event);
       this.inputString += k;
@@ -168,16 +168,19 @@ class Shell {
       options = PROGRAM_NAMES;
     } else if (!spaceAtEnd && cmd.args.length === 0) {
       partial = cmd.command;
-      options = autocomplete.filterOptions(partial, PROGRAM_NAMES);
+      options = ac.filterOptions(partial, PROGRAM_NAMES);
     } else {
       partial = cmd.args[cmd.args.length - 1] || '';
       const typedPath = partial.split('/');
       const partialName = typedPath.pop();
       const dir = this.currentDir.findFile(typedPath, Directory);
-      options = autocomplete.getFiles(partialName, getValidTypesForProgram(cmd.command), dir);
-      if (options.length === 0) options = autocomplete.getFiles(partialName, [Directory], dir);
+      options = ac.getFiles(partialName, getValidTypesForProgram(cmd.command), dir);
+      if (options.length === 0) options = ac.getFiles(partialName, [Directory], dir);
     }
-    if (options.length === 1) this.completeWord(partial, options[0]);
+
+    const longestCommonBeginning = ac.findLongestCommonBeginning(partial, options);
+    if (longestCommonBeginning !== partial) this.completeWord(partial, longestCommonBeginning);
+    else if (options.length === 1) this.completeWord(partial, options[0]);
     else if (options.length > 1 && this.prevKeyWasTab) {
       print(this.getPS1String() + this.inputString, this.outputElement);
       printInline(options, this.outputElement);
@@ -185,7 +188,7 @@ class Shell {
   }
 
   /**
-   * executes autocomplete. to be called only if there is one valid autocomplete option.
+   * executes autocomplete for a single word.
    * @param {string} partial Word to be completed
    * @param {string} complete Word to be autocompleted to
    */
