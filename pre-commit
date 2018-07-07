@@ -1,9 +1,9 @@
 #!/bin/sh
 
+set -e
+
 echo "Running pre-commit script..."
 
-# Lint
-npm run lint
-
-# Run tests
-npm run test
+set -x
+npm run lint > /dev/null
+npm run test > /dev/null
