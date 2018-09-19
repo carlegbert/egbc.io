@@ -90,7 +90,7 @@ test.describe('Shell Commands', function () {
       execCommand(body, 'cat about.txt');
       terminalOutput.getText().then((txt) => {
         assert.include(txt, 'cat about.txt');
-        assert.include(txt, 'personal website');
+        assert.include(txt, 'double bassist');
       });
     });
   });
