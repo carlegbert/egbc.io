@@ -13,8 +13,8 @@
     ]
   },
   "scripts": {
-    "build": "webpack -p",
-    "dev": "webpack-dev-server",
+    "build": "parcel build src/index.html",
+    "start": "parcel src/index.html",
     "lint": "eslint src e2e",
     "test": "mocha src/**/*.spec.js",
     "test:all": "mocha e2e/ src/**/*.spec.js",
@@ -26,21 +26,17 @@
     "babel-eslint": "^7.1.1",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
-    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-2": "^6.18.0",
     "chai": "^4.0.2",
-    "css-loader": "^0.28.5",
     "eslint": "^4.8.0",
     "eslint-config-airbnb-base": "^11.0.0",
     "eslint-plugin-babel": "^4.0.0",
     "eslint-plugin-import": "latest",
     "file-loader": "^0.11.2",
-    "html-webpack-plugin": "^2.30.1",
     "mocha": "^5.2.0",
     "nyc": "^11.2.1",
-    "selenium-webdriver": "^3.4.0",
-    "style-loader": "^0.18.2",
-    "webpack": "^3.5.5",
-    "webpack-dev-server": "^2.7.1"
+    "parcel-bundler": "^1.10.3",
+    "selenium-webdriver": "^3.4.0"
   }
 }
