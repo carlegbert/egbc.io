@@ -1,13 +1,12 @@
-### [wwwterm-es6](https://www.carlegbert.com)
-##### Carl Egbert - egbertcarl@gmail.com
+### [carlegbert.com](https://www.carlegbert.com)
 
 A mock linux terminal written in plain javascript serving as a personal website.
 
 #### building the project
 
 * `npm install`
-* to run the dev server: `npm dev` (page served at localhost:8080)
-* for an optimized build: `npm build`
+* to run the dev server: `npm run start` (page served at localhost:8080)
+* for an optimized build: `npm run build`
 
 #### running tests
 
