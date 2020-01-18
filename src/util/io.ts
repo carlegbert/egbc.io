@@ -1,6 +1,10 @@
 /* eslint-disable no-param-reassign */
 /* eslint-env browser */
 
+export interface PrintableElement {
+  innerHTML: string
+}
+
 /**
  * function for parsing keycode from keystroke event into a
  * single character. necessary because of poor keystroke event
@@ -65,14 +69,7 @@ export function getChar(event: KeyboardEvent): string {
   return '';
 }
 
-/**
- * print output to screen. format if necessary
- * TODO: consider refactoring into seperate functions for
- * single string and array.
- * @param {string|string[]} output String or array of strings to print
- * @param {HTMLElement} target HTML element to print to
- */
-export function print(output: string | string[], target: HTMLElement): void {
+export function print(output: string | string[], target: PrintableElement): void {
   if (typeof output === 'string') {
     target.innerHTML += `<li>${output}</li>`;
     return;
@@ -80,12 +77,7 @@ export function print(output: string | string[], target: HTMLElement): void {
   output.forEach(line => print(line, target));
 }
 
-/**
- * print output to screen without linebreaks
- * @param {string[]} output Array of strings to print
- * @param {HTMLElement} target HTML element to print to
- */
-export function printInline(output: string[], target: HTMLElement): void {
+export function printInline(output: string[], target: PrintableElement): void {
   output.forEach((line) => {
     target.innerHTML += `<li class='inline'>${line}</li>`;
   });
@@ -100,7 +92,7 @@ export function removeExtraSpaces(str: string): string {
 /**
  * Evaluates equality of two arrays of strings
  */
-export function textEquals(textA: string, textB: string): boolean {
+export function textEquals(textA: string[], textB: string[]): boolean {
   if (textA.length !== textB.length) return false;
   for (let i = 0; i < textA.length; i += 1) {
     if (textA[i] !== textB[i]) return false;
@@ -108,10 +100,10 @@ export function textEquals(textA: string, textB: string): boolean {
   return true;
 }
 
-export function isArrayOfStrings(arr: unknown[]): arr is string[] {
-  if (!(arr instanceof Array)) return false;
-  for (let i = 0; i < arr.length; i += 1) {
-    if (typeof arr[i] !== 'string') return false;
+export function isArrayOfStrings(item?: unknown): item is string[] {
+  if (!(item instanceof Array)) return false;
+  for (let i = 0; i < item.length; i += 1) {
+    if (typeof item[i] !== 'string') return false;
   }
   return true;
 }

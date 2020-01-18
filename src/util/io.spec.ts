@@ -1,6 +1,6 @@
-const { assert } = require('chai');
+import { assert } from 'chai';
 
-const io = require('./io');
+import * as io from './io';
 
 describe('io helper unit tests', function () {
   describe('#isArrayOfStrings()', function () {
