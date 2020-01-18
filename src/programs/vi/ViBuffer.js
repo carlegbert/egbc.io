@@ -2,7 +2,6 @@
 /* eslint-disable class-methods-use-this, no-param-reassign */
 
 const BufferLine = require('./BufferLine');
-const { copyText } = require('../../util/io');
 
 /*
  * Object encapsulating a vi buffer. Performs tasks
@@ -14,7 +13,7 @@ class ViBuffer {
    * @param {string[]} text
    */
   constructor(text) {
-    this.text = copyText(text);
+    this.text = text.slice();
     this.cursorX = 0;
     this.cursorY = 0;
     this.element = document.getElementById('editor-buffer');

@@ -1,7 +1,7 @@
 /* eslint-env browser */
 /* eslint-disable consistent-return */
 
-const { copyText, getChar, textEquals } = require('../../util/io');
+const { getChar, textEquals } = require('../../util/io');
 const { File } = require('../../FileStructure');
 const ViBuffer = require('./ViBuffer');
 
@@ -234,7 +234,7 @@ class Vi {
   writeFile() {
     if (!this.file) this.file = this.shellRef.currentDir.createChild(this.filePath, File);
     if (!this.file) return 'E212: Can\'t open file for writing: No such file or directory';
-    this.file.contents = copyText(this.buffer.text);
+    this.file.contents = this.buffer.text.slice();
     const msg = `"${this.file.fullPath}" written`;
     return msg;
   }

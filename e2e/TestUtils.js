@@ -1,7 +1,7 @@
 const { Builder, Capabilities, Key } = require('selenium-webdriver');
 
-const PORT = "1234"
-const URL = `http://localhost:${PORT}`
+const PORT = '1234';
+const URL = `http://localhost:${PORT}`;
 
 function execCommand(element, text) {
   text.split('').forEach((ch) => {

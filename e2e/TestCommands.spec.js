@@ -11,7 +11,7 @@ test.describe('Shell Commands', function () {
 
   test.before(function () {
     this.timeout(10000);
-    driver.get('http://localhost:8080');
+    driver.get(URL);
     body = driver.findElement(By.css('body'));
     terminalOutput = driver.findElement(By.id('terminal-output'));
   });
