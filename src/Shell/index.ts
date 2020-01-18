@@ -2,9 +2,9 @@ import { getChar, print, printInline, PrintableElement } from '../util/io'
 import { getElementById } from '../util/selectors'
 import * as ac from './autocomplete'
 import { FixMe } from 'types'
+import ShellCommand from './ShellCommand'
 
 const { Directory, File, Path } = require('../FileStructure')
-const ShellCommand = require('./ShellCommand')
 const ShellCommandResult = require('./ShellCommandResult')
 
 /**
@@ -218,7 +218,7 @@ export default class Shell {
     } else {
       partial = cmd.args[cmd.args.length - 1] || ''
       const typedPath = partial.split('/')
-      const partialName = typedPath.pop()
+      const partialName = typedPath.pop() || ''
       const dir = this.currentDir.findFile(
         typedPath,
         Directory as FixMe.FileConstructor,
