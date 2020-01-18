@@ -1,6 +1,4 @@
-import { PrintableElement } from "./io";
-
-/* eslint-env browser */
+import { PrintableElement } from './io'
 
 /**
  * Classes such as Shell and Vi hold references to DOM selectors.
@@ -9,14 +7,16 @@ import { PrintableElement } from "./io";
  * eg, for unit testing purposes.
  */
 
+const nop = () => undefined
+
 export function getElementById(id: string): PrintableElement {
-  let element: PrintableElement | null;
+  let element: PrintableElement | null
   try {
-    element = document.getElementById(id);
+    element = document.getElementById(id)
   } catch (err) {
     // return mock html element
-    return { innerHTML: ''};
+    return { innerHTML: '', scrollIntoView: nop, append: nop }
   }
   if (!element) throw new Error(`Element with id ${id} not found`)
-  return element;
+  return element
 }

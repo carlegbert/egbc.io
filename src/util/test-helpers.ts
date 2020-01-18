@@ -1,5 +1,6 @@
+import Shell from '../Shell'
+
 const { Directory } = require('../FileStructure')
-const Shell = require('../Shell/Shell')
 
 export const testShellFactory = () => {
   const testFileStructure = new Directory('~', null)

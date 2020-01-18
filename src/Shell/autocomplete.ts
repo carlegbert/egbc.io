@@ -10,7 +10,7 @@ const { Directory } = require('../FileStructure')
  * @param {string[]} options Available options
  * @return {string} A string representing the longest matching beginning.
  * */
-const findLongestCommonBeginning = (
+export const findLongestCommonBeginning = (
   partial: string,
   options: string[],
 ): string => {
@@ -34,7 +34,7 @@ const findLongestCommonBeginning = (
  * @param {string[]} options List of files or commands to check against partial
  * @return {string[]} Array of strings from options that match against partial
  */
-const filterOptions = (partial: string, options: string[]) =>
+export const filterOptions = (partial: string, options: string[]) =>
   options.filter(opt => opt.startsWith(partial))
 
 /**
@@ -43,19 +43,13 @@ const filterOptions = (partial: string, options: string[]) =>
  * @param {Class[]} filetypes Optional filetypes to filter for
  * @return {string[]} array of filenames
  */
-const getFiles = (
+export const getFiles = (
   partial: string,
-  filetypes: FixMe.FileConstructor,
+  filetypes: FixMe.Any,
   dir: FixMe.Any,
 ): string[] => {
   const fileOptions: FixMe.File[] = dir.getChildrenByTypes(filetypes)
   return fileOptions
     .filter(f => f.name.startsWith(partial))
     .map(f => (f instanceof Directory ? `${f.name}/` : f.name))
-}
-
-module.exports = {
-  filterOptions,
-  findLongestCommonBeginning,
-  getFiles,
 }
