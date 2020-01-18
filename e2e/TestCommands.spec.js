@@ -1,7 +1,8 @@
 const { By } = require('selenium-webdriver');
 const test = require('selenium-webdriver/testing');
 const { assert } = require('chai');
-const { configuredDriver, execCommand } = require('./TestUtils');
+
+const { configuredDriver, execCommand, URL } = require('./TestUtils');
 
 test.describe('Shell Commands', function () {
   const driver = configuredDriver();

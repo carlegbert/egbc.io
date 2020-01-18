@@ -2,7 +2,7 @@ const { By, Key } = require('selenium-webdriver');
 const test = require('selenium-webdriver/testing');
 const { assert } = require('chai');
 
-const { configuredDriver, execCommand } = require('./TestUtils');
+const { configuredDriver, execCommand, URL } = require('./TestUtils');
 
 test.describe('Autocomplete', function () {
   const driver = configuredDriver();
@@ -12,7 +12,7 @@ test.describe('Autocomplete', function () {
 
   test.before(function () {
     this.timeout(10000);
-    driver.get('http://localhost:8080');
+    driver.get(URL);
     body = driver.findElement(By.css('body'));
     terminalOutput = driver.findElement(By.id('terminal-output'));
     input = driver.findElement(By.id('input'));
