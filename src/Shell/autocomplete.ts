@@ -1,4 +1,6 @@
-const { Directory } = require('../FileStructure');
+import { FixMe } from 'types'
+
+const { Directory } = require('../FileStructure')
 
 /**
  * Make sure a list of different autocomplete options aren't identical up to a
@@ -8,20 +10,23 @@ const { Directory } = require('../FileStructure');
  * @param {string[]} options Available options
  * @return {string} A string representing the longest matching beginning.
  * */
-const findLongestCommonBeginning = (partial, options) => {
-  const sortedOpts = options.slice().sort((a, b) => a.length - b.length);
-  const shortestOpt = sortedOpts[0];
-  if (!shortestOpt) return partial;
-  let longestPartial = partial;
+const findLongestCommonBeginning = (
+  partial: string,
+  options: string[],
+): string => {
+  const sortedOpts = options.slice().sort((a, b) => a.length - b.length)
+  const shortestOpt = sortedOpts[0]
+  if (!shortestOpt) return partial
+  let longestPartial = partial
   for (let i = partial.length; i < shortestOpt.length; i += 1) {
-    const charToCheckFor = shortestOpt[i];
+    const charToCheckFor = shortestOpt[i]
     for (let j = 1; j < options.length; j += 1) {
-      if (options[j][i] !== charToCheckFor) return longestPartial;
+      if (options[j][i] !== charToCheckFor) return longestPartial
     }
-    longestPartial += shortestOpt[i];
+    longestPartial += shortestOpt[i]
   }
-  return longestPartial;
-};
+  return longestPartial
+}
 
 /**
  * Filter array of strings into options that match up with partial argument.
@@ -29,8 +34,8 @@ const findLongestCommonBeginning = (partial, options) => {
  * @param {string[]} options List of files or commands to check against partial
  * @return {string[]} Array of strings from options that match against partial
  */
-const filterOptions = (partial, options) =>
-  options.filter(opt => opt.startsWith(partial));
+const filterOptions = (partial: string, options: string[]) =>
+  options.filter(opt => opt.startsWith(partial))
 
 /**
  * returns list of all files in a directory matching filetype and starting with partial
@@ -38,17 +43,19 @@ const filterOptions = (partial, options) =>
  * @param {Class[]} filetypes Optional filetypes to filter for
  * @return {string[]} array of filenames
  */
-const getFiles = (partial, filetypes, dir) => {
-  const fileOptions = dir.getChildrenByTypes(filetypes);
-  /* eslint-disable arrow-body-style */
+const getFiles = (
+  partial: string,
+  filetypes: FixMe.FileConstructor,
+  dir: FixMe.Any,
+): string[] => {
+  const fileOptions: FixMe.File[] = dir.getChildrenByTypes(filetypes)
   return fileOptions
     .filter(f => f.name.startsWith(partial))
-    .map((f) => { return (f instanceof Directory) ? `${f.name}/` : f.name; });
-  /* eslint-enable arrow-body-style */
-};
+    .map(f => (f instanceof Directory ? `${f.name}/` : f.name))
+}
 
 module.exports = {
   filterOptions,
   findLongestCommonBeginning,
   getFiles,
-};
+}
