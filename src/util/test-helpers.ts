@@ -1,7 +1,7 @@
-const { Directory } = require('../FileStructure');
-const Shell = require('../Shell/Shell');
+const { Directory } = require('../FileStructure')
+const Shell = require('../Shell/Shell')
 
 export const testShellFactory = () => {
-  const testFileStructure = new Directory('~', null);
-  return new Shell(testFileStructure);
-};
+  const testFileStructure = new Directory('~', null)
+  return new Shell(testFileStructure)
+}
