@@ -13,5 +13,3 @@ export default class LinkFile extends BaseFile {
     return `<span class="inline link"><a href="${this.url}" target="_blank">${this.name}<a></span>`
   }
 }
-
-module.exports = LinkFile

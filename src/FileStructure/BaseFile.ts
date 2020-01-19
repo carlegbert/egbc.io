@@ -39,5 +39,3 @@ export default class BaseFile {
     return `${this.parentRef.getFullPath()}/${this.name}`
   }
 }
-
-module.exports = BaseFile

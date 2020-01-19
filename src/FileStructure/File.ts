@@ -8,5 +8,3 @@ export default class File extends BaseFile {
     this.contents = contents || ['']
   }
 }
-
-module.exports = File

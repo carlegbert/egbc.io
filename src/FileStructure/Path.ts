@@ -40,5 +40,3 @@ export default class Path {
     return new Path(this.arr.slice(0, -1))
   }
 }
-
-module.exports = Path

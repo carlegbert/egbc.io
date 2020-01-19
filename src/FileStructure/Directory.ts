@@ -113,5 +113,3 @@ export default class Directory extends BaseFile {
     return file
   }
 }
-
-module.exports = Directory
