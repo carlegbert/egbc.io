@@ -1,7 +1,7 @@
 import cat from './cat'
 import cd from './cd'
+import clear from './clear'
 
-const clear = require('./clear')
 const echo = require('./echo')
 const ls = require('./ls')
 const mkdir = require('./mkdir')
