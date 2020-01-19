@@ -1,12 +1,13 @@
 import { Program } from './types'
 import ShellCommand from 'Shell/ShellCommand'
+import Directory from '../FileStructure/Directory'
+import File from '../FileStructure/File'
 
-const { Directory, File: _File } = require('../FileStructure')
 const ShellCommandResult = require('../Shell/ShellCommandResult')
 
 const cat: Program = {
   name: 'cat',
-  filetypes: [_File],
+  filetypes: [File],
   run: (cmd: ShellCommand) => {
     const res = new ShellCommandResult()
     if (cmd.args.length === 0) return res

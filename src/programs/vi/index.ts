@@ -1,12 +1,12 @@
 import { Program } from 'programs/types'
 import Vi from './Vi'
+import File from '../../FileStructure/File'
 
 const ShellCommandResult = require('../../Shell/ShellCommandResult')
-const { File: _File } = require('../../FileStructure')
 
 const vi: Program = {
   name: 'vi',
-  filetypes: [_File],
+  filetypes: [File],
   /**
    * Start new vi session
    * @return {ShellCommandResult}
@@ -17,7 +17,7 @@ const vi: Program = {
     let file
     try {
       fPath = cmd.args[0].split('/')
-      file = cmd.shell.currentDir.findFile(fPath, _File)
+      file = cmd.shell.currentDir.findFile(fPath, File)
     } catch (TypeError) {
       fPath = null
       file = null

@@ -1,9 +1,9 @@
 import { assert } from 'chai'
 
 import { testShellFactory } from '../util/test-helpers'
+import Directory from '../FileStructure/Directory'
 
 const ShellCommandResult = require('../Shell/ShellCommandResult')
-const { Directory } = require('../FileStructure')
 
 describe('ls', function() {
   const testShell = testShellFactory()

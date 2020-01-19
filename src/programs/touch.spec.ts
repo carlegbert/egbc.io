@@ -2,8 +2,8 @@ import { assert } from 'chai'
 
 import { testShellFactory } from '../util/test-helpers'
 import { FixMe } from 'types'
+import Directory from '../FileStructure/Directory'
 
-const { Directory } = require('../FileStructure')
 const ShellCommandResult = require('../Shell/ShellCommandResult')
 
 describe('touch', function() {

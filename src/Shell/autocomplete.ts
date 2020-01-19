@@ -1,6 +1,5 @@
 import { FixMe } from 'types'
-
-const { Directory } = require('../FileStructure')
+import Directory from '../FileStructure/Directory'
 
 /**
  * Make sure a list of different autocomplete options aren't identical up to a

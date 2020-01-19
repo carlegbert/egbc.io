@@ -1,8 +1,7 @@
 import Shell from '../Shell'
+import Directory from '../FileStructure/Directory'
 
-const { Directory } = require('../FileStructure')
-
-export const testShellFactory = () => {
+export const testShellFactory = (): Shell => {
   const testFileStructure = new Directory('~', null)
   return new Shell(testFileStructure)
 }

@@ -1,10 +1,13 @@
 import { getChar, print, printInline, PrintableElement } from '../util/io'
 import { getElementById } from '../util/selectors'
 import * as ac from './autocomplete'
-import { FixMe } from 'types'
+import { FixMe } from '../types'
 import ShellCommand from './ShellCommand'
+import programs from '../programs'
+import Directory from '../FileStructure/Directory'
+import File from '../FileStructure/File'
+import Path from '../FileStructure/Path'
 
-const { Directory, File, Path } = require('../FileStructure')
 const ShellCommandResult = require('./ShellCommandResult')
 
 /**
@@ -12,7 +15,6 @@ const ShellCommandResult = require('./ShellCommandResult')
  * it in order to iterate through all other available programs; hence,
  * this hack.
  */
-const programs = require('../programs')
 programs.help = require('../programs/help')
 
 const PROGRAM_NAMES = Object.keys(programs)
@@ -219,10 +221,7 @@ export default class Shell {
       partial = cmd.args[cmd.args.length - 1] || ''
       const typedPath = partial.split('/')
       const partialName = typedPath.pop() || ''
-      const dir = this.currentDir.findFile(
-        typedPath,
-        Directory as FixMe.FileConstructor,
-      )
+      const dir = this.currentDir.findFile(typedPath, Directory)
       options = ac.getFiles(
         partialName,
         getValidTypesForProgram(cmd.command),
@@ -250,7 +249,7 @@ export default class Shell {
    * @param {string} partial Word to be completed
    * @param {string} complete Word to be autocompleted to
    */
-  completeWord(partial: string, complete: string) {
+  completeWord(partial: string, complete: string): void {
     const splitPartial = partial.split('/')
     const wordPartial = splitPartial[splitPartial.length - 1]
     const completion = complete.slice(wordPartial.length)
@@ -258,7 +257,7 @@ export default class Shell {
     this.inputPromptElement.append(completion)
   }
 
-  killChildProcess() {
+  killChildProcess(): void {
     this.childProcess = null
   }
 }

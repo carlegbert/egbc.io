@@ -1,6 +1,7 @@
 import { Program } from './types'
+import Directory from '../FileStructure/Directory'
+import File from '../FileStructure/File'
 
-const { Directory, File } = require('../FileStructure')
 const ShellCommandResult = require('../Shell/ShellCommandResult')
 
 const touch: Program = {

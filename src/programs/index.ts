@@ -23,5 +23,4 @@ const programs: { [key: string]: Program } = {
   vi,
 }
 
-module.exports = programs
 export default programs
