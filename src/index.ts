@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   helpBtn.onclick = () => {
-    const helpCommand = new ShellCommand('help')
+    const helpCommand = new ShellCommand('help', shell)
     const helpRes = bin.help.run(helpCommand)
     print(`${shell.getPS1String()} help`, shell.outputElement)
     print(helpRes.getDefaultOutput(), shell.outputElement)

@@ -12,7 +12,7 @@ export default class Directory extends BaseFile {
     this.children = []
   }
 
-  getChildrenByTypes(types: FixMe.FileConstructor[]): BaseFile[] {
+  getChildrenByTypes(types: FixMe.Any[]): BaseFile[] {
     return this.children.filter(child =>
       types.some(type => child instanceof type),
     )

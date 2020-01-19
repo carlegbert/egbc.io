@@ -17,7 +17,7 @@
     "clean": "rm -rf dist/ .cache/",
     "lint": "eslint src e2e",
     "start": "parcel src/index.html",
-    "test": "mocha -r ts-node/register src/**/*.spec.{js,ts}",
+    "test": "mocha -r ts-node/register src/**/*.spec.ts",
     "test:cov": "nyc npm run test",
     "test:ui": "mocha e2e/"
   },
