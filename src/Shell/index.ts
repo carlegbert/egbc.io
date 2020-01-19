@@ -37,13 +37,13 @@ export default class Shell {
   public outputElement: PrintableElement
   public currentDir: FixMe.File
   public user: string
+  public childProcess: FixMe.Process | null
 
   private inputString: string
   private bashHistory: string[]
   private historyIndex: number
   private prevKeyWasTab: boolean
   private inputPromptElement: PrintableElement
-  private childProcess: FixMe.Process | null
 
   constructor(fileStructure: FixMe.File) {
     this.fileStructure = fileStructure

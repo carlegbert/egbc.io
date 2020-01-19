@@ -7,10 +7,10 @@ import mkdir from './mkdir'
 import pwd from './pwd'
 import touch from './touch'
 import whoami from './whoami'
+import vi from './vi'
+import { Program } from './types'
 
-const vi = require('./vi')
-
-module.exports = {
+const programs: { [key: string]: Program } = {
   cat,
   cd,
   clear,
@@ -22,3 +22,6 @@ module.exports = {
   whoami,
   vi,
 }
+
+module.exports = programs
+export default programs
