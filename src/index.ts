@@ -2,7 +2,7 @@
 
 import Shell from './Shell'
 import ShellCommand from './Shell/ShellCommand'
-import bin from '~/programs'
+import * as bin from './programs'
 import { print } from './util/io'
 import homeDir from '~/content'
 

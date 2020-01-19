@@ -35,8 +35,8 @@ export default class Shell {
   public fileStructure: FixMe.File
   public PS1Element: PrintableElement
   public outputElement: PrintableElement
+  public currentDir: FixMe.File
 
-  private currentDir: FixMe.File
   private user: string
   private inputString: string
   private bashHistory: string[]
