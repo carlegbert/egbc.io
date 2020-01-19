@@ -36,8 +36,8 @@ export default class Shell {
   public PS1Element: PrintableElement
   public outputElement: PrintableElement
   public currentDir: FixMe.File
+  public user: string
 
-  private user: string
   private inputString: string
   private bashHistory: string[]
   private historyIndex: number

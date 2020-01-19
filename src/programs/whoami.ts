@@ -1,6 +1,8 @@
-const ShellCommandResult = require('../Shell/ShellCommandResult');
+import { Program } from './types'
 
-const whoami = {
+const ShellCommandResult = require('../Shell/ShellCommandResult')
+
+const whoami: Program = {
   name: 'whoami',
   filetypes: [],
   /**
@@ -8,6 +10,6 @@ const whoami = {
    * @return {ShellCommandResult}
    */
   run: cmd => new ShellCommandResult([cmd.shell.user]),
-};
+}
 
-module.exports = whoami;
+export default whoami
