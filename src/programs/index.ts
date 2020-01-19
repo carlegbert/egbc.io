@@ -1,6 +1,6 @@
 import cat from './cat'
+import cd from './cd'
 
-const cd = require('./cd')
 const clear = require('./clear')
 const echo = require('./echo')
 const ls = require('./ls')
