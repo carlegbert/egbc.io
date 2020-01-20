@@ -3,7 +3,7 @@ import { assert } from 'chai'
 import { testShellFactory } from '../util/test-helpers'
 import Directory from '../FileStructure/Directory'
 
-const ShellCommandResult = require('../Shell/ShellCommandResult')
+import ShellCommandResult from '../Shell/ShellCommandResult'
 
 describe('ls', function() {
   const testShell = testShellFactory()

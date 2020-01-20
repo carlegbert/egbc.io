@@ -2,7 +2,7 @@ import { assert } from 'chai'
 
 import { testShellFactory } from '../util/test-helpers'
 
-const ShellCommandResult = require('../Shell/ShellCommandResult')
+import ShellCommandResult from '../Shell/ShellCommandResult'
 
 describe('clear', function() {
   const testShell = testShellFactory()

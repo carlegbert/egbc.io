@@ -3,5 +3,4 @@ export namespace FixMe {
   export type File = any
   export type Any = any
   export type Process = any
-  export type ShellCommandResult = any
 }

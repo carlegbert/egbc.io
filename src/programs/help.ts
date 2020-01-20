@@ -1,7 +1,7 @@
 import { Program } from './types'
 
 const programs = require('./index')
-const ShellCommandResult = require('../Shell/ShellCommandResult')
+import ShellCommandResult from '../Shell/ShellCommandResult'
 
 const help: Program = {
   name: 'help',

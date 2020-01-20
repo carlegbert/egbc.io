@@ -1,6 +1,6 @@
 import { Program } from './types'
 
-const ShellCommandResult = require('../Shell/ShellCommandResult')
+import ShellCommandResult from '../Shell/ShellCommandResult'
 
 const pwd: Program = {
   name: 'pwd',

@@ -4,7 +4,7 @@ import { testShellFactory } from '../util/test-helpers'
 import Directory from '../FileStructure/Directory'
 import File from '../FileStructure/File'
 
-const ShellCommandResult = require('../Shell/ShellCommandResult')
+import ShellCommandResult from '../Shell/ShellCommandResult'
 
 describe('mkdir', function() {
   const testShell = testShellFactory()

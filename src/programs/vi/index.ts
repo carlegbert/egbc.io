@@ -2,7 +2,7 @@ import { Program } from 'programs/types'
 import Vi from './Vi'
 import File from '../../FileStructure/File'
 
-const ShellCommandResult = require('../../Shell/ShellCommandResult')
+import ShellCommandResult from '../../Shell/ShellCommandResult'
 
 const vi: Program = {
   name: 'vi',

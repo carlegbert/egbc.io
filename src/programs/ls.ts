@@ -1,7 +1,7 @@
 import { Program } from './types'
 import Directory from '../FileStructure/Directory'
 
-const ShellCommandResult = require('../Shell/ShellCommandResult')
+import ShellCommandResult from '../Shell/ShellCommandResult'
 
 const ls: Program = {
   name: 'ls',

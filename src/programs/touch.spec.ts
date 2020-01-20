@@ -4,7 +4,7 @@ import { testShellFactory } from '../util/test-helpers'
 import { FixMe } from 'types'
 import Directory from '../FileStructure/Directory'
 
-const ShellCommandResult = require('../Shell/ShellCommandResult')
+import ShellCommandResult from '../Shell/ShellCommandResult'
 
 describe('touch', function() {
   const testShell = testShellFactory()

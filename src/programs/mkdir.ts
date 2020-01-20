@@ -1,14 +1,14 @@
 import { Program } from './types'
 import Directory from '../FileStructure/Directory'
 
-const ShellCommandResult = require('../Shell/ShellCommandResult')
+import ShellCommandResult from '../Shell/ShellCommandResult'
 
 const mkdir: Program = {
   name: 'mkdir',
   filetypes: [Directory],
   run: cmd => {
-    const res = new ShellCommandResult()
-    res.data = []
+    const res = new ShellCommandResult<Directory[]>()
+    const created: Directory[] = []
     if (cmd.args.length === 0) {
       res.stdErr.push('mkdir: missing operand')
       return res
@@ -23,11 +23,12 @@ const mkdir: Program = {
           res.stdErr.push(
             `mkdir: cannot create directory ${arg}: No such file or directory`,
           )
-        else res.data.push(file)
+        else created.push(file)
       } else if (!(fileAtLoc instanceof Directory)) {
         res.stdErr.push(`mkdir: cannot create directory '${arg}': File exists`)
       }
     })
+    res.data = created
     return res
   },
 }

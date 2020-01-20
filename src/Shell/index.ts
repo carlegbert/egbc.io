@@ -7,8 +7,7 @@ import programs from '../programs'
 import Directory from '../FileStructure/Directory'
 import File from '../FileStructure/File'
 import Path from '../FileStructure/Path'
-
-const ShellCommandResult = require('./ShellCommandResult')
+import ShellCommandResult from './ShellCommandResult'
 
 /**
  * programs.help cannot be exported in programs/index.js due to requiring
@@ -165,7 +164,7 @@ export default class Shell {
     if (!program)
       return new ShellCommandResult(
         [],
-        `${shellCommand.command}: command not found`,
+        [`${shellCommand.command}: command not found`],
       )
     return program.run(shellCommand)
   }
@@ -176,14 +175,14 @@ export default class Shell {
    * @param {string} pattern Redirect operator (either > or >>)
    * @return {Object} ShellCommandResult containing stderr to print to screen if necessary
    */
-  redirect(inputString: string, pattern: string): FixMe.ShellCommandResult {
+  redirect(inputString: string, pattern: string): ShellCommandResult {
     const i = inputString.indexOf(pattern)
     const afterSymbol = inputString
       .slice(i + pattern.length)
       .trim()
       .split(' ')
     if (!afterSymbol || afterSymbol.length === 0)
-      return new ShellCommandResult([], 'Syntax error')
+      return new ShellCommandResult([], ['Syntax error'])
     const otherArgs =
       afterSymbol.length === 1 ? [] : afterSymbol.slice(pattern.length)
     const newInput = inputString.slice(0, i) + otherArgs.join(' ')
@@ -193,10 +192,9 @@ export default class Shell {
       this.currentDir.findFile(filepath, File) ||
       this.currentDir.createChild(filepath, File)
     if (!file)
-      return new ShellCommandResult(
-        null,
+      return new ShellCommandResult(null, [
         `bash: ${filepath}: No such file or directory`,
-      )
+      ])
     if (file.contents === ['']) file.contents = []
     file.contents =
       pattern === '>' ? [res.stdOut] : file.contents.concat(res.stdOut)

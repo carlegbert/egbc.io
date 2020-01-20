@@ -2,7 +2,7 @@
  * Object containing results of shell action
  * @class
  */
-class ShellCommandResult {
+export default class ShellCommandResult<T = unknown> {
   /**
    * @constructor
    * @param {string[]} stdOut Results of succesful action
@@ -10,19 +10,21 @@ class ShellCommandResult {
    * @param {*} data Wildcard data that the command may need to pass back (for example,
    * a newly created file)
    */
-  constructor(stdOut, stdErr, data) {
-    this.stdOut = stdOut || [];
-    this.stdErr = stdErr || [];
-    this.data = data;
+  public stdOut: string[]
+  public stdErr: string[]
+  public data: T | undefined
+  constructor(stdOut?: string[] | null, stdErr?: string[] | null, data?: T) {
+    this.stdOut = stdOut || []
+    this.stdErr = stdErr || []
+    this.data = data
   }
 
   /**
    * return stdErr if it is not undefined, stdOut if it isn't,
    * and an empty array if neither are.
-   * @return {string[]}
    */
-  getDefaultOutput() {
-    return this.stdOut.concat(this.stdErr);
+  getDefaultOutput(): string[] {
+    return this.stdOut.concat(this.stdErr)
   }
 
   /**
@@ -31,14 +33,8 @@ class ShellCommandResult {
    * @param {ShellCommandResult} otherResult
    * @return {ShellCommandResult}
    */
-  combine(otherResult) {
-    this.stdErr += otherResult.stdErr;
-    this.stdOut += otherResult.stdOut;
-    // TODO: figure out test cases for times when shell command results with data need to be
-    // combined, then figure out a how to combine those ambiguous pieces of data other than
-    // concatenating and praying
-    this.data += otherResult.data;
+  combine(otherResult: ShellCommandResult): void {
+    this.stdErr.concat(otherResult.stdErr)
+    this.stdOut.concat(otherResult.stdOut)
   }
 }
-
-module.exports = ShellCommandResult;

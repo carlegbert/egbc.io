@@ -3,7 +3,7 @@ import ShellCommand from 'Shell/ShellCommand'
 import Directory from '../FileStructure/Directory'
 import File from '../FileStructure/File'
 
-const ShellCommandResult = require('../Shell/ShellCommandResult')
+import ShellCommandResult from '../Shell/ShellCommandResult'
 
 const cat: Program = {
   name: 'cat',
