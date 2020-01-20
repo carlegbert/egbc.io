@@ -13,4 +13,9 @@ describe('help', function() {
     assert.isNotEmpty(res.stdOut)
     assert.isEmpty(res.stdErr)
   })
+
+  it('shows information about programs', function() {
+    const res = testShell.executeCommand('help')
+    assert.include(res.stdOut, 'mkdir')
+  })
 })

@@ -8,15 +8,7 @@ import Directory from '../FileStructure/Directory'
 import File from '../FileStructure/File'
 import Path from '../FileStructure/Path'
 import ShellCommandResult from './ShellCommandResult'
-
-/**
- * programs.help cannot be exported in programs/index.js due to requiring
- * it in order to iterate through all other available programs; hence,
- * this hack.
- */
-programs.help = require('../programs/help')
-
-const PROGRAM_NAMES = Object.keys(programs)
+import { Program } from 'programs/types'
 
 const getValidTypesForProgram = (name: string) => {
   const program = programs[name]
@@ -39,6 +31,7 @@ export default class Shell {
   public currentDir: FixMe.File
   public user: string
   public childProcess: FixMe.Process | null
+  public programs: { [programName: string]: Program }
 
   private inputString: string
   private bashHistory: string[]
@@ -58,6 +51,7 @@ export default class Shell {
     this.PS1Element = getElementById('PS1')
     this.outputElement = getElementById('terminal-output')
     this.childProcess = null
+    this.programs = programs
   }
 
   /**
@@ -207,14 +201,15 @@ export default class Shell {
   handleTab() {
     const spaceAtEnd = this.inputString[this.inputString.length - 1] === ' '
     const cmd = new ShellCommand(this.inputString, this)
+    const programNames = Object.keys(this.programs)
     let options
     let partial
     if (!cmd.command) {
       partial = ''
-      options = PROGRAM_NAMES
+      options = programNames
     } else if (!spaceAtEnd && cmd.args.length === 0) {
       partial = cmd.command
-      options = ac.filterOptions(partial, PROGRAM_NAMES)
+      options = ac.filterOptions(partial, programNames)
     } else {
       partial = cmd.args[cmd.args.length - 1] || ''
       const typedPath = partial.split('/')

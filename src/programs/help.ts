@@ -1,14 +1,13 @@
 import { Program } from './types'
 
-const programs = require('./index')
 import ShellCommandResult from '../Shell/ShellCommandResult'
 
 const help: Program = {
   name: 'help',
   filetypes: [],
-  run: () => {
+  run: shellCommand => {
     const data = ['Available commands:']
-      .concat(Object.keys(programs))
+      .concat(Object.keys(shellCommand.shell.programs))
       .concat([
         'History navigation with &uarr;&darr;',
         'tab autocompletion',
@@ -18,4 +17,4 @@ const help: Program = {
   },
 }
 
-module.exports = help
+export default help

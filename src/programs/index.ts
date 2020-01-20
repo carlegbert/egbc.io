@@ -2,6 +2,7 @@ import cat from './cat'
 import cd from './cd'
 import clear from './clear'
 import echo from './echo'
+import help from './help'
 import ls from './ls'
 import mkdir from './mkdir'
 import pwd from './pwd'
@@ -15,6 +16,7 @@ const programs: { [key: string]: Program } = {
   cd,
   clear,
   echo,
+  help,
   ls,
   mkdir,
   pwd,
