@@ -15,14 +15,16 @@ describe('mkdir', function() {
   })
 
   it('creates directory', function() {
-    const res = testShell.executeCommand('mkdir testDir')
+    const res = testShell.executeCommand('mkdir testDir') as ShellCommandResult<
+      Directory[]
+    >
     assert.instanceOf(res, ShellCommandResult)
     assert.isEmpty(res.stdErr, 'expected res.stdErr to be empty')
     assert.isEmpty(res.stdOut, 'expected res.stdOut to be empty')
     assert.equal(children.length, 1)
     assert.instanceOf(children[0], Directory)
     assert.equal(children[0].name, 'testDir')
-    assert.equal(res.data[0], children[0])
+    assert.equal(res.data && res.data[0], children[0])
   })
 
   it('does nothing when called with directory name that already exists', function() {
@@ -35,27 +37,32 @@ describe('mkdir', function() {
   })
 
   it('creates multiple directories', function() {
-    const res = testShell.executeCommand('mkdir testDir secondTestDir')
+    const res = testShell.executeCommand(
+      'mkdir testDir secondTestDir',
+    ) as ShellCommandResult<Directory[]>
     assert.instanceOf(res, ShellCommandResult)
     assert.isEmpty(res.stdErr, 'expected res.stdErr to be empty')
     assert.isEmpty(res.stdOut, 'expected res.stdOut to be empty')
-    assert.equal(res.data.length, 2)
+    assert.equal(res.data?.length, 2)
     assert.equal(children.length, 2)
-    assert.include(children, res.data[0])
-    assert.include(children, res.data[1])
-    assert.instanceOf(res.data[0], Directory)
+    assert.include(children, res.data && res.data[0])
+    assert.include(children, res.data && res.data[1])
+    assert.instanceOf(res.data && res.data[0], Directory)
   })
 
   it('creates nested directory', function() {
     const testDir = testShell.fileStructure.createChild('testDir', Directory)
-    const res = testShell.executeCommand('mkdir testDir/nestedTestDir')
+    const res = testShell.executeCommand(
+      'mkdir testDir/nestedTestDir',
+    ) as ShellCommandResult<Directory[]>
+    const createdDir = res.data && res.data[0]
     assert.instanceOf(res, ShellCommandResult)
     assert.isEmpty(res.stdErr, 'expected res.stdErr to be empty')
     assert.isEmpty(res.stdOut, 'expected res.stdOut to be empty')
     assert.equal(testDir.children.length, 1)
-    assert.instanceOf(res.data[0], Directory)
-    assert.include(testDir.children, res.data[0])
-    assert.equal(res.data[0].name, 'nestedTestDir')
+    assert.instanceOf(createdDir, Directory)
+    assert.include(testDir.children, createdDir)
+    assert.equal(createdDir?.name, 'nestedTestDir')
   })
 
   it('fails to create directory when called with bad path', function() {
@@ -86,7 +93,10 @@ describe('mkdir', function() {
   })
 
   it('creates dir and returns error message when called with both good and bad arguments', function() {
-    const res = testShell.executeCommand('mkdir testDir x/y/z')
+    const res = testShell.executeCommand(
+      'mkdir testDir x/y/z',
+    ) as ShellCommandResult<Directory[]>
+    const createdDir = res.data && res.data[0]
     assert.equal(children.length, 1)
     assert.instanceOf(res, ShellCommandResult)
     assert.isEmpty(res.stdOut, 'expected res.stdOut to be empty')
@@ -95,8 +105,8 @@ describe('mkdir', function() {
       res.stdErr[0],
       'mkdir: cannot create directory x/y/z: No such file or directory',
     )
-    assert.equal(res.data.length, 1)
-    assert.include(children, res.data[0])
+    assert.equal(res.data?.length, 1)
+    assert.include(children, createdDir)
   })
 
   it('fails when not passed an argument', function() {
