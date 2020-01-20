@@ -1,9 +1,9 @@
-const { assert } = require('chai')
-const autocomplete = require('./autocomplete')
+import { assert } from 'chai'
+import * as autocomplete from './autocomplete'
 
 describe('autocomplete unit tests', function() {
   describe('#findLongestCommonBeginning()', function() {
-    it('returns partial if options are empty', function() {
+    it('returns partial if options are isEmpty', function() {
       const partial = 'no_matches'
       const options: string[] = []
       const result = autocomplete.findLongestCommonBeginning(partial, options)
@@ -33,17 +33,17 @@ describe('autocomplete unit tests', function() {
   })
 
   describe('#filterOptions()', function() {
-    it('finds no matches from empty array', function() {
+    it('finds no matches from isEmpty array', function() {
       const partial = 'no_matches'
       const options: string[] = []
       const result = autocomplete.filterOptions(partial, options)
-      assert.empty(result)
+      assert.isEmpty(result)
     })
     it('finds no matches from array with elements', function() {
       const partial = 'no_matches'
       const options = ['there', 'are', 'no', 'matches']
       const result = autocomplete.filterOptions(partial, options)
-      assert.empty(result)
+      assert.isEmpty(result)
     })
     it('finds single valid match', function() {
       const partial = 'one_match'

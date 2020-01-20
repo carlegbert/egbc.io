@@ -1,6 +1,6 @@
 import Shell from './'
 
-const { removeExtraSpaces } = require('../util/io')
+import { removeExtraSpaces } from '../util/io'
 
 /**
  * Object encapsulating information to be passed to a shell operation,
