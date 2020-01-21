@@ -138,5 +138,3 @@ export default class ViBuffer {
     this.renderCursor()
   }
 }
-
-module.exports = ViBuffer

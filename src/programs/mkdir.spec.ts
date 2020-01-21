@@ -2,7 +2,7 @@ import { assert } from 'chai'
 
 import { testShellFactory } from '../util/test-helpers'
 import Directory from '../FileStructure/Directory'
-import File from '../FileStructure/File'
+import TextFile from '../FileStructure/TextFile'
 
 import ShellCommandResult from '../Shell/ShellCommandResult'
 
@@ -82,7 +82,7 @@ describe('mkdir', function() {
     const res = testShell.executeCommand('mkdir testFile')
     assert.equal(children.length, 1)
     assert.instanceOf(res, ShellCommandResult)
-    assert.instanceOf(children[0], File)
+    assert.instanceOf(children[0], TextFile)
     assert.isEmpty(res.stdOut, 'expected res.stdOut to be empty')
     assert.isEmpty(res.data, 'expected res.data to be empty')
     assert.equal(res.stdErr.length, 1, 'stderr has incorrect number of members')

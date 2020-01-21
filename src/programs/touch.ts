@@ -1,12 +1,12 @@
 import { Program } from './types'
 import Directory from '../FileStructure/Directory'
-import File from '../FileStructure/File'
+import TextFile from '../FileStructure/TextFile'
 
 import ShellCommandResult from '../Shell/ShellCommandResult'
 
 const touch: Program = {
   name: 'touch',
-  filetypes: [Directory, File],
+  filetypes: [Directory, TextFile],
   run: cmd => {
     const res = new ShellCommandResult()
     if (cmd.args.length === 1) {
@@ -18,7 +18,7 @@ const touch: Program = {
       const path = arg.split('/')
       const fileAtLoc = cmd.shell.currentDir.findFile(path)
       if (!fileAtLoc) {
-        const file = cmd.shell.currentDir.createChild(arg, File)
+        const file = cmd.shell.currentDir.createChild(arg, TextFile)
         if (!file)
           res.stdErr.push(
             `touch: cannout touch ${arg}: No such file or directory`,

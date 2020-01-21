@@ -2,7 +2,7 @@ import { getChar, textEquals } from '../../util/io'
 import Shell from 'Shell'
 import { FixMe } from 'types'
 import { ViMode } from './types'
-import File from '../../FileStructure/Directory'
+import TextFile from '../../FileStructure/Directory'
 import ViBuffer from './ViBuffer'
 import { Process } from 'programs/types'
 
@@ -261,7 +261,7 @@ export default class Vi implements Process {
 
   writeFile() {
     if (!this.file)
-      this.file = this.shellRef.currentDir.createChild(this.filePath, File)
+      this.file = this.shellRef.currentDir.createChild(this.filePath, TextFile)
     if (!this.file)
       return "E212: Can't open file for writing: No such file or directory"
     this.file.contents = this.buffer.text.slice()

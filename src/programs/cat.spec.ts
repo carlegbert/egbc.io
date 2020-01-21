@@ -2,17 +2,17 @@ import { assert } from 'chai'
 
 import { testShellFactory } from '../util/test-helpers'
 import Directory from '../FileStructure/Directory'
-import File from '../FileStructure/File'
+import TextFile from '../FileStructure/TextFile'
 
 import ShellCommandResult from '../Shell/ShellCommandResult'
 
 describe('cat', function() {
   const testShell = testShellFactory()
   const textObject = ['test line one', 'test line two']
-  const testFile = testShell.fileStructure.createChild('testFile', File)
+  const testFile = testShell.fileStructure.createChild('testFile', TextFile)
   const secondTestFile = testShell.fileStructure.createChild(
     'secondTestFile',
-    File,
+    TextFile,
   )
   testFile.contents = textObject
   secondTestFile.contents = ['test line three']

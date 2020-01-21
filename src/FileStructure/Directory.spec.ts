@@ -1,7 +1,7 @@
 import { assert } from 'chai'
 
 import Directory from './Directory'
-import File from './File'
+import TextFile from './TextFile'
 
 describe('Directory unit tests', function() {
   const testDir = new Directory('testDir', null)
@@ -19,7 +19,7 @@ describe('Directory unit tests', function() {
 
     it('Creates child file', function() {
       const childFile = testDir.createChild('testChild')
-      assert.instanceOf(childFile, File)
+      assert.instanceOf(childFile, TextFile)
     })
 
     it('Creates nested child directory', function() {
@@ -36,7 +36,7 @@ describe('Directory unit tests', function() {
     it('Creates nested child file', function() {
       const dir = testDir.createChild('firstDir', Directory) as Directory
       const nestedFile = testDir.createChild('firstDir/nestedFile') as Directory
-      assert.instanceOf(nestedFile, File)
+      assert.instanceOf(nestedFile, TextFile)
       assert.equal(dir.children.length, 1)
       assert.include(dir.children, nestedFile)
     })
@@ -59,25 +59,25 @@ describe('Directory unit tests', function() {
     })
 
     it('Finds file children', function() {
-      const files = testDir.getChildrenByTypes([File])
+      const files = testDir.getChildrenByTypes([TextFile])
       assert.equal(files.length, 1)
-      assert.instanceOf(files[0], File)
+      assert.instanceOf(files[0], TextFile)
     })
 
     it('Finds all children', function() {
-      const children = testDir.getChildrenByTypes([Directory, File])
+      const children = testDir.getChildrenByTypes([Directory, TextFile])
       assert.equal(children.length, 2)
     })
 
     it('Finds all children when no types are passed in', function() {
-      const children = testDir.getChildrenByTypes([Directory, File])
+      const children = testDir.getChildrenByTypes([Directory, TextFile])
       assert.equal(children.length, 2)
     })
 
     it('Returns empty array when directory is empty', function() {
-      const dirs = emptyTestDir.getChildrenByTypes([File])
+      const dirs = emptyTestDir.getChildrenByTypes([TextFile])
       const files = emptyTestDir.getChildrenByTypes([Directory])
-      const allTypes = emptyTestDir.getChildrenByTypes([Directory, File])
+      const allTypes = emptyTestDir.getChildrenByTypes([Directory, TextFile])
       const noTypes = emptyTestDir.getChildrenByTypes([])
       assert.isEmpty(dirs)
       assert.isEmpty(files)

@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 import BaseFile from './BaseFile'
-import File from './File'
+import TextFile from './TextFile'
 import { FixMe } from 'types'
 import Path from './Path'
 
@@ -108,7 +108,7 @@ export default class Directory extends BaseFile {
     const file =
       filetype === Directory
         ? new Directory(filename, this)
-        : new File(filename, this)
+        : new TextFile(filename, this)
     this.children.push(file)
     return file
   }

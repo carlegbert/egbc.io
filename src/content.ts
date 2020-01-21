@@ -1,6 +1,6 @@
 import Directory from './FileStructure/Directory'
 import LinkFile from './FileStructure/LinkFile'
-import File from './FileStructure/File'
+import TextFile from './FileStructure/TextFile'
 
 const homeDir = new Directory('~', null)
 const links = homeDir.createChild('~/links', Directory) as Directory
@@ -16,7 +16,7 @@ links.children = [
   ),
 ]
 
-const about = homeDir.createChild('~/about.txt') as File
+const about = homeDir.createChild('~/about.txt') as TextFile
 
 about.contents = [
   "<p>I am a software engineer based in Portland, OR. Before beginning my career in the tech industry, I was a professional classical double bassist. I've performed with the Oregon and Eugene Symphonies, the Chintimini Chamber Music Festival, the Aspen Festival Orchestra, and many other professional ensembles.</p>",

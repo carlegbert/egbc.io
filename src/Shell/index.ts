@@ -5,14 +5,14 @@ import { FixMe } from '../types'
 import ShellCommand from './ShellCommand'
 import programs from '../programs'
 import Directory from '../FileStructure/Directory'
-import File from '../FileStructure/File'
+import TextFile from '../FileStructure/TextFile'
 import Path from '../FileStructure/Path'
 import ShellCommandResult from './ShellCommandResult'
 import { Program, Process } from 'programs/types'
 
 const getValidTypesForProgram = (name: string) => {
   const program = programs[name]
-  return program ? program.filetypes : [Directory, File]
+  return program ? program.filetypes : [Directory, TextFile]
 }
 
 /**
@@ -182,8 +182,8 @@ export default class Shell {
     const res = this.executeCommand(newInput)
     const filepath = new Path(afterSymbol[0])
     const file =
-      this.currentDir.findFile(filepath, File) ||
-      this.currentDir.createChild(filepath, File)
+      this.currentDir.findFile(filepath, TextFile) ||
+      this.currentDir.createChild(filepath, TextFile)
     if (!file)
       return new ShellCommandResult(null, [
         `bash: ${filepath}: No such file or directory`,

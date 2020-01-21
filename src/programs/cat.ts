@@ -1,13 +1,13 @@
 import { Program } from './types'
 import ShellCommand from 'Shell/ShellCommand'
 import Directory from '../FileStructure/Directory'
-import File from '../FileStructure/File'
+import TextFile from '../FileStructure/TextFile'
 
 import ShellCommandResult from '../Shell/ShellCommandResult'
 
 const cat: Program = {
   name: 'cat',
-  filetypes: [File],
+  filetypes: [TextFile],
   run: (cmd: ShellCommand) => {
     const res = new ShellCommandResult()
     cmd.args.slice(1).forEach(arg => {
