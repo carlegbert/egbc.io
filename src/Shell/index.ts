@@ -8,7 +8,7 @@ import Directory from '../FileStructure/Directory'
 import File from '../FileStructure/File'
 import Path from '../FileStructure/Path'
 import ShellCommandResult from './ShellCommandResult'
-import { Program } from 'programs/types'
+import { Program, Process } from 'programs/types'
 
 const getValidTypesForProgram = (name: string) => {
   const program = programs[name]
@@ -30,7 +30,7 @@ export default class Shell {
   public outputElement: PrintableElement
   public currentDir: FixMe.File
   public user: string
-  public childProcess: FixMe.Process | null
+  public childProcess: Process | null
   public programs: { [programName: string]: Program }
 
   private inputString: string
@@ -57,7 +57,7 @@ export default class Shell {
   /**
    * @return {string} PS1 string
    */
-  getPS1String() {
+  getPS1String(): string {
     return (
       `<span class="user">${this.user}@www.carlegbert.com:</span>` +
       `<span class="path">${this.currentDir.fullPath}</span>$&nbsp;`
@@ -69,16 +69,15 @@ export default class Shell {
    * if there is one active
    * @param {Object} event Keystroke event
    */
-  parseKeystroke(event: KeyboardEvent) {
-    if (!this.childProcess) this.shellKeystroke(event)
-    else this.childProcess.parseKeystroke(event)
+  directKeystroke(event: KeyboardEvent): void {
+    if (!this.childProcess) {
+      this.handleKeystroke(event)
+    } else if (this.childProcess.handleKeystroke) {
+      this.childProcess.handleKeystroke(event)
+    }
   }
 
-  /**
-   * Process keystroke
-   * @param {Object} event Keystroke event
-   */
-  shellKeystroke(event: KeyboardEvent) {
+  handleKeystroke(event: KeyboardEvent): void {
     if (event.which === 13) {
       // enter
       event.preventDefault()
@@ -126,7 +125,7 @@ export default class Shell {
   /**
    * process Enter keystroke
    */
-  handleEnter() {
+  handleEnter(): void {
     if (!this.inputString.match(/[^ ]/g)) {
       print(this.getPS1String(), this.outputElement)
     } else {

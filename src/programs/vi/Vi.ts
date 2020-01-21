@@ -4,11 +4,12 @@ import { FixMe } from 'types'
 import { ViMode } from './types'
 import File from '../../FileStructure/Directory'
 import ViBuffer from './ViBuffer'
+import { Process } from 'programs/types'
 
 /**
  * Class representing a single instance of Vi
  */
-export default class Vi {
+export default class Vi implements Process {
   /**
    * @constructor
    * @param {Object} shellRef Reference to parent Shell object
@@ -68,7 +69,7 @@ export default class Vi {
     this.editorConsoleElement.innerHTML = errText
   }
 
-  parseKeystroke(event: KeyboardEvent) {
+  handleKeystroke(event: KeyboardEvent) {
     if (this.mode === ViMode.Normal) this.normalKeystroke(event)
     else if (this.mode === ViMode.Insert) this.insertKeystroke(event)
     else if (this.mode === ViMode.Command) this.commandKeystroke(event)

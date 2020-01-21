@@ -7,3 +7,7 @@ export interface Program {
   filetypes: FixMe.Any
   run: (cmd: ShellCommand) => ShellCommandResult
 }
+
+export interface Process {
+  handleKeystroke?: (e: KeyboardEvent) => void
+}

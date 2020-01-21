@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 700)
 
   document.onkeydown = event => {
-    shell.parseKeystroke(event)
+    shell.directKeystroke(event)
     cursor.style.display = ''
     clearInterval(blinking)
     blinking = setInterval(() => {
