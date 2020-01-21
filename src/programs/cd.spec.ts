@@ -7,8 +7,14 @@ import ShellCommandResult from '../Shell/ShellCommandResult'
 
 describe('cd', function() {
   const testShell = testShellFactory()
-  const testDir = testShell.fileStructure.createChild('testDir', Directory)
-  const nestedTestDir = testDir.createChild('nestedTestDir', Directory)
+  const testDir = testShell.fileStructure.createChild(
+    'testDir',
+    Directory,
+  ) as Directory
+  const nestedTestDir = testDir.createChild(
+    'nestedTestDir',
+    Directory,
+  ) as Directory
 
   beforeEach(function() {
     testShell.currentDir = testShell.fileStructure

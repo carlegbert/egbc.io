@@ -8,11 +8,14 @@ import ShellCommandResult from '../Shell/ShellCommandResult'
 describe('cat', function() {
   const testShell = testShellFactory()
   const textObject = ['test line one', 'test line two']
-  const testFile = testShell.fileStructure.createChild('testFile', TextFile)
+  const testFile = testShell.fileStructure.createChild(
+    'testFile',
+    TextFile,
+  ) as TextFile
   const secondTestFile = testShell.fileStructure.createChild(
     'secondTestFile',
     TextFile,
-  )
+  ) as TextFile
   testFile.contents = textObject
   secondTestFile.contents = ['test line three']
 

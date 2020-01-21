@@ -52,7 +52,7 @@ export default class Directory extends BaseFile {
    */
   findFile(
     filepath: Path | string | string[] | null,
-    filetype: FixMe.Any,
+    filetype?: FixMe.Any,
   ): BaseFile | null {
     if (!filepath) return null
 

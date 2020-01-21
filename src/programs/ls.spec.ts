@@ -7,7 +7,10 @@ import ShellCommandResult from '../Shell/ShellCommandResult'
 
 describe('ls', function() {
   const testShell = testShellFactory()
-  const testDir = testShell.fileStructure.createChild('testDir', Directory)
+  const testDir = testShell.fileStructure.createChild(
+    'testDir',
+    Directory,
+  ) as Directory
   testDir.createChild('nestedTestDir', Directory)
   testShell.fileStructure.createChild('file', Directory)
 

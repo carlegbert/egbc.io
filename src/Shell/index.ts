@@ -1,7 +1,6 @@
 import { getChar, print, printInline, PrintableElement } from '../util/io'
 import { getElementById } from '../util/selectors'
 import * as ac from './autocomplete'
-import { FixMe } from '../types'
 import ShellCommand from './ShellCommand'
 import programs from '../programs'
 import ShellCommandResult from './ShellCommandResult'
@@ -23,10 +22,10 @@ export default class Shell {
    * @constructor
    * @param {Directory} fileStructure base dir tied to shell session
    */
-  public fileStructure: FixMe.File
+  public fileStructure: Directory
   public PS1Element: PrintableElement
   public outputElement: PrintableElement
-  public currentDir: FixMe.File
+  public currentDir: Directory
   public user: string
   public childProcess: Process | null
   public programs: { [programName: string]: Program }
@@ -37,7 +36,7 @@ export default class Shell {
   private prevKeyWasTab: boolean
   private inputPromptElement: PrintableElement
 
-  constructor(fileStructure: FixMe.File) {
+  constructor(fileStructure: Directory) {
     this.fileStructure = fileStructure
     this.currentDir = fileStructure
     this.user = 'guest'
@@ -180,15 +179,15 @@ export default class Shell {
     const res = this.executeCommand(newInput)
     const filepath = new Path(afterSymbol[0])
     const file =
-      this.currentDir.findFile(filepath, TextFile) ||
-      this.currentDir.createChild(filepath, TextFile)
+      (this.currentDir.findFile(filepath, TextFile) as TextFile) ||
+      (this.currentDir.createChild(filepath, TextFile) as TextFile)
     if (!file)
       return new ShellCommandResult(null, [
         `bash: ${filepath}: No such file or directory`,
       ])
     if (file.contents === ['']) file.contents = []
     file.contents =
-      pattern === '>' ? [res.stdOut] : file.contents.concat(res.stdOut)
+      pattern === '>' ? res.stdOut : file.contents.concat(res.stdOut)
     return new ShellCommandResult(null, res.stdErr)
   }
 

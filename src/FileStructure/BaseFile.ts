@@ -18,11 +18,12 @@ export default class BaseFile {
   public name: string
   public parentRef: Directory | null
   public fullPath: string
+  public lastModified: Date
 
   constructor(name: string, parentRef: Directory | null = null) {
     this.name = name
     this.parentRef = parentRef
-
+    this.lastModified = new Date()
     this.fullPath = this.getFullPath()
   }
 

@@ -2,7 +2,7 @@ import { getChar, textEquals } from '../../util/io'
 import Shell from 'Shell'
 import { FixMe } from 'types'
 import { ViMode } from './types'
-import TextFile from '../../FileStructure/Directory'
+import { TextFile } from '../../FileStructure'
 import ViBuffer from './ViBuffer'
 import { Process } from 'programs/types'
 
@@ -17,7 +17,7 @@ export default class Vi implements Process {
    * @param {Object} file Reference to TxtFile to write to (optional)
    */
   private shellRef: Shell
-  private file: FixMe.File
+  private file: TextFile | null
   private mode: ViMode
   private heldNum: string
   private commandText: string
@@ -30,7 +30,7 @@ export default class Vi implements Process {
   constructor(
     shellRef: Shell,
     filePath: FixMe.Any,
-    file: FixMe.File | null = null,
+    file: TextFile | null = null,
   ) {
     this.shellRef = shellRef
     this.file = file
@@ -261,7 +261,10 @@ export default class Vi implements Process {
 
   writeFile() {
     if (!this.file)
-      this.file = this.shellRef.currentDir.createChild(this.filePath, TextFile)
+      this.file = this.shellRef.currentDir.createChild(
+        this.filePath,
+        TextFile,
+      ) as TextFile
     if (!this.file)
       return "E212: Can't open file for writing: No such file or directory"
     this.file.contents = this.buffer.text.slice()

@@ -14,7 +14,7 @@ const cat: Program = {
       const file = cmd.shell.currentDir.findFile(path)
       if (file && file instanceof Directory) {
         res.stdErr.push(`cat: ${file.name}: Is a directory`)
-      } else if (file) {
+      } else if (file && file instanceof TextFile) {
         res.stdOut = res.stdOut.concat(file.contents)
       } else {
         res.stdErr.push(`cat: ${arg}: No such file or directory`)

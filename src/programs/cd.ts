@@ -13,7 +13,10 @@ const cd: Program = {
     const dir =
       cmd.args.length === 1
         ? shell.fileStructure
-        : shell.currentDir.findFile(cmd.args[1].split('/'), Directory)
+        : (shell.currentDir.findFile(
+            cmd.args[1].split('/'),
+            Directory,
+          ) as Directory)
     if (dir) {
       shell.currentDir = dir
       shell.PS1Element.innerHTML = shell.getPS1String()

@@ -17,7 +17,7 @@ const vi: Program = {
     let file
     try {
       fPath = cmd.args[0].split('/')
-      file = cmd.shell.currentDir.findFile(fPath, TextFile)
+      file = cmd.shell.currentDir.findFile(fPath, TextFile) as TextFile
     } catch (TypeError) {
       fPath = null
       file = null

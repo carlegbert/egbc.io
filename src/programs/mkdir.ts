@@ -18,7 +18,7 @@ const mkdir: Program = {
       const fileAtLoc = cmd.shell.currentDir.findFile(path)
       let file
       if (!fileAtLoc) {
-        file = cmd.shell.currentDir.createChild(arg, Directory)
+        file = cmd.shell.currentDir.createChild(arg, Directory) as Directory
         if (!file)
           res.stdErr.push(
             `mkdir: cannot create directory ${arg}: No such file or directory`,

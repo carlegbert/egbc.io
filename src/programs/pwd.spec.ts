@@ -3,10 +3,14 @@ import { assert } from 'chai'
 import { testShellFactory } from '../util/test-helpers'
 
 import ShellCommandResult from '../Shell/ShellCommandResult'
+import { Directory } from '../FileStructure'
 
 describe('pwd', function() {
   const testShell = testShellFactory()
-  const testDir = testShell.fileStructure.createChild('testDir')
+  const testDir = testShell.fileStructure.createChild(
+    'testDir',
+    Directory,
+  ) as Directory
 
   it('returns name of current directory', function() {
     const res = testShell.executeCommand('pwd')

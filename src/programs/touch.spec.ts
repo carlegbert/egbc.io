@@ -1,14 +1,12 @@
 import { assert } from 'chai'
 
 import { testShellFactory } from '../util/test-helpers'
-import { FixMe } from 'types'
-import { Directory } from '../FileStructure'
-
+import { Directory, BaseFile, TextFile } from '../FileStructure'
 import ShellCommandResult from '../Shell/ShellCommandResult'
 
 describe('touch', function() {
   const testShell = testShellFactory()
-  const children: FixMe.File[] = testShell.fileStructure.children
+  const children: BaseFile[] = testShell.fileStructure.children
 
   afterEach(function() {
     children.splice(0, 9)
@@ -39,7 +37,7 @@ describe('touch', function() {
   })
 
   it('updates lastModified when invoked on existing file', function() {
-    const testFile = testShell.fileStructure.createChild('testFile')
+    const testFile = testShell.fileStructure.createChild('testFile') as TextFile
     const oldLastModified = testFile.lastModified
     const res = testShell.executeCommand('touch testFile')
     assert.instanceOf(res, ShellCommandResult)
@@ -103,7 +101,10 @@ describe('touch', function() {
   })
 
   it('creates file in directory', function() {
-    const dir = testShell.fileStructure.createChild('testDir', Directory)
+    const dir = testShell.fileStructure.createChild(
+      'testDir',
+      Directory,
+    ) as Directory
     const res = testShell.executeCommand('touch testDir/newFile')
     assert.instanceOf(res, ShellCommandResult)
     assert.isEmpty(res.stdOut, 'expected res.stdOut to be empty')

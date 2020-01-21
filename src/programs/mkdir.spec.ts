@@ -23,7 +23,7 @@ describe('mkdir', function() {
     assert.equal(children.length, 1)
     assert.instanceOf(children[0], Directory)
     assert.equal(children[0].name, 'testDir')
-    assert.equal(res.data && res.data[0], children[0])
+    assert.equal(res.data && res.data[0], children[0] as Directory)
   })
 
   it('does nothing when called with directory name that already exists', function() {
@@ -50,7 +50,10 @@ describe('mkdir', function() {
   })
 
   it('creates nested directory', function() {
-    const testDir = testShell.fileStructure.createChild('testDir', Directory)
+    const testDir = testShell.fileStructure.createChild(
+      'testDir',
+      Directory,
+    ) as Directory
     const res = testShell.executeCommand(
       'mkdir testDir/nestedTestDir',
     ) as ShellCommandResult<Directory[]>

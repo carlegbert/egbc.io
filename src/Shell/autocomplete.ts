@@ -1,5 +1,5 @@
 import { FixMe } from 'types'
-import { Directory } from '../FileStructure'
+import { Directory, BaseFile } from '../FileStructure'
 
 /**
  * Make sure a list of different autocomplete options aren't identical up to a
@@ -47,7 +47,7 @@ export const getFiles = (
   filetypes: FixMe.Any,
   dir: FixMe.Any,
 ): string[] => {
-  const fileOptions: FixMe.File[] = dir.getChildrenByTypes(filetypes)
+  const fileOptions: BaseFile[] = dir.getChildrenByTypes(filetypes)
   return fileOptions
     .filter(f => f.name.startsWith(partial))
     .map(f => (f instanceof Directory ? `${f.name}/` : f.name))

@@ -12,7 +12,10 @@ const ls: Program = {
       res.stdOut.push(cmd.shell.currentDir.lsHelper())
     } else {
       cmd.args.slice(1).forEach(arg => {
-        const dir = cmd.shell.currentDir.findFile(arg.split('/'), Directory)
+        const dir = cmd.shell.currentDir.findFile(
+          arg.split('/'),
+          Directory,
+        ) as Directory
         if (!dir) {
           res.stdErr.push(`ls: cannot access ${arg}: no such file or directory`)
         } else {
