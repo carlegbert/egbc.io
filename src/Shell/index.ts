@@ -149,16 +149,16 @@ export default class Shell {
    * @return {Object} Result of eval(evalStr), which should always
    * be a ShellCommandResult object
    */
-  executeCommand(inputString: string) {
+  executeCommand(inputString: string): ShellCommandResult {
     if (inputString.includes('>>')) return this.redirect(inputString, '>>')
     if (inputString.includes('>')) return this.redirect(inputString, '>')
 
     const shellCommand = new ShellCommand(inputString, this)
-    const program = programs[shellCommand.command]
+    const program = programs[shellCommand.args[0]]
     if (!program)
       return new ShellCommandResult(
         [],
-        [`${shellCommand.command}: command not found`],
+        [`${shellCommand.args[0]}: command not found`],
       )
     return program.run(shellCommand)
   }
@@ -204,11 +204,11 @@ export default class Shell {
     const programNames = Object.keys(this.programs)
     let options
     let partial
-    if (!cmd.command) {
+    if (!cmd.args[0]) {
       partial = ''
       options = programNames
-    } else if (!spaceAtEnd && cmd.args.length === 0) {
-      partial = cmd.command
+    } else if (!spaceAtEnd && cmd.args.length === 1) {
+      partial = cmd.args[0]
       options = ac.filterOptions(partial, programNames)
     } else {
       partial = cmd.args[cmd.args.length - 1] || ''
@@ -217,7 +217,7 @@ export default class Shell {
       const dir = this.currentDir.findFile(typedPath, Directory)
       options = ac.getFiles(
         partialName,
-        getValidTypesForProgram(cmd.command),
+        getValidTypesForProgram(cmd.args[0]),
         dir,
       )
       if (options.length === 0)

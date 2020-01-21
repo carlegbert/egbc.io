@@ -64,11 +64,12 @@ describe('cd', function() {
     assert.isEmpty(res.stdOut)
   })
 
-  it('only uses first arg when passed multiple args', function() {
+  it('errors when passed multiple args', function() {
     const res = testShell.executeCommand('cd testDir .. ~ fakeDir')
-    assert.equal(testShell.currentDir, testDir)
+    assert.equal(testShell.currentDir, testShell.fileStructure)
     assert.instanceOf(res, ShellCommandResult)
-    assert.isEmpty(res.stdErr)
+    assert.equal(res.stdErr?.length, 1)
+    assert.includeMembers(res.stdErr, ['cd: too many arguments'])
     assert.isEmpty(res.stdOut)
   })
 })

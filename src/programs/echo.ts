@@ -6,7 +6,7 @@ const echo: Program = {
   name: 'echo',
   filetypes: [],
   run: cmd => {
-    const output = cmd.args.join(' ')
+    const output = cmd.args.slice(1).join(' ')
     return new ShellCommandResult([output])
   },
 }

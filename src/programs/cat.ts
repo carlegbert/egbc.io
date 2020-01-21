@@ -10,8 +10,7 @@ const cat: Program = {
   filetypes: [File],
   run: (cmd: ShellCommand) => {
     const res = new ShellCommandResult()
-    if (cmd.args.length === 0) return res
-    cmd.args.forEach(arg => {
+    cmd.args.slice(1).forEach(arg => {
       const path = arg.split('/')
       const file = cmd.shell.currentDir.findFile(path)
       if (file && file instanceof Directory) {

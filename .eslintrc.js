@@ -19,6 +19,9 @@ module.exports = {
     'no-console': 2,
     'dot-notation': 2,
     'prefer-const': 2,
+    '@typescript-eslint/member-delimiter-style': {
+      multiline: 'none',
+    },
   },
 
   overrides: [

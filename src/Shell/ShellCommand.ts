@@ -15,20 +15,18 @@ export default class ShellCommand {
    */
 
   public args: string[]
-  public command: string
   public shell: Shell
 
   constructor(input: string, shell: Shell) {
     this.shell = shell
-    const args = ShellCommand.parseInput(input)
-    this.args = args.slice(1)
-    this.command = args[0]
+    const args = ShellCommand.parseArgs(input)
+    this.args = args.slice(0)
   }
 
   /**
    * Parse input string into base command and args
    */
-  private static parseInput(input: string): string[] {
+  private static parseArgs(input: string): string[] {
     return removeExtraSpaces(input)
       .trim()
       .split(' ')

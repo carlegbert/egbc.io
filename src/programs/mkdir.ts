@@ -9,11 +9,11 @@ const mkdir: Program = {
   run: cmd => {
     const res = new ShellCommandResult<Directory[]>()
     const created: Directory[] = []
-    if (cmd.args.length === 0) {
+    if (cmd.args.length === 1) {
       res.stdErr.push('mkdir: missing operand')
       return res
     }
-    cmd.args.forEach(arg => {
+    cmd.args.slice(1).forEach(arg => {
       const path = arg.split('/')
       const fileAtLoc = cmd.shell.currentDir.findFile(path)
       let file
