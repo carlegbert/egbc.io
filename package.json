@@ -39,8 +39,5 @@
     "selenium-webdriver": "3.6.0",
     "ts-node": "8.6.2",
     "typescript": "3.7.5"
-  },
-  "dependencies": {
-    "programs": "^1.0.0"
   }
 }
