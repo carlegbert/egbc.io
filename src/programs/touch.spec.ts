@@ -2,7 +2,7 @@ import { assert } from 'chai'
 
 import { testShellFactory } from '../util/test-helpers'
 import { FixMe } from 'types'
-import Directory from '../FileStructure/Directory'
+import { Directory } from '../FileStructure'
 
 import ShellCommandResult from '../Shell/ShellCommandResult'
 

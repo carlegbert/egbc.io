@@ -1,5 +1,5 @@
 import { Program } from './types'
-import Directory from '../FileStructure/Directory'
+import { Directory } from '../FileStructure'
 
 import ShellCommandResult from '../Shell/ShellCommandResult'
 

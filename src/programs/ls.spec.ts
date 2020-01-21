@@ -1,7 +1,7 @@
 import { assert } from 'chai'
 
 import { testShellFactory } from '../util/test-helpers'
-import Directory from '../FileStructure/Directory'
+import { Directory } from '../FileStructure'
 
 import ShellCommandResult from '../Shell/ShellCommandResult'
 

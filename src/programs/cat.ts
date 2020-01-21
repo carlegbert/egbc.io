@@ -1,7 +1,6 @@
 import { Program } from './types'
 import ShellCommand from 'Shell/ShellCommand'
-import Directory from '../FileStructure/Directory'
-import TextFile from '../FileStructure/TextFile'
+import { Directory, TextFile } from '../FileStructure'
 
 import ShellCommandResult from '../Shell/ShellCommandResult'
 

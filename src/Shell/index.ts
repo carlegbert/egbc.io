@@ -4,11 +4,9 @@ import * as ac from './autocomplete'
 import { FixMe } from '../types'
 import ShellCommand from './ShellCommand'
 import programs from '../programs'
-import Directory from '../FileStructure/Directory'
-import TextFile from '../FileStructure/TextFile'
-import Path from '../FileStructure/Path'
 import ShellCommandResult from './ShellCommandResult'
 import { Program, Process } from 'programs/types'
+import { Directory, TextFile, Path } from '../FileStructure'
 
 const getValidTypesForProgram = (name: string) => {
   const program = programs[name]
