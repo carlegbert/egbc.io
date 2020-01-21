@@ -194,9 +194,6 @@ export default class Shell {
     return new ShellCommandResult(null, res.stdErr)
   }
 
-  /**
-   * handle tab for autocompletion
-   */
   handleTab() {
     const spaceAtEnd = this.inputString[this.inputString.length - 1] === ' '
     const cmd = new ShellCommand(this.inputString, this)
@@ -210,7 +207,7 @@ export default class Shell {
       partial = cmd.args[0]
       options = ac.filterOptions(partial, programNames)
     } else {
-      partial = cmd.args[cmd.args.length - 1] || ''
+      partial = cmd.args.slice(1)[cmd.args.length - 2] || ''
       const typedPath = partial.split('/')
       const partialName = typedPath.pop() || ''
       const dir = this.currentDir.findFile(typedPath, Directory)
