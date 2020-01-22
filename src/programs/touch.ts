@@ -1,7 +1,7 @@
 import { Program } from './types'
 
 import ShellCommandResult from '../Shell/ShellCommandResult'
-import { Directory, TextFile } from '../FileStructure'
+import { Directory, TextFile } from '../fs'
 
 const touch: Program = {
   name: 'touch',

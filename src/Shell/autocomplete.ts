@@ -1,5 +1,5 @@
 import { FixMe } from 'types'
-import { Directory, BaseFile } from '../FileStructure'
+import { Directory, BaseFile } from '../fs'
 
 /**
  * Make sure a list of different autocomplete options aren't identical up to a

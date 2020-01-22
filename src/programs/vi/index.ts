@@ -1,6 +1,6 @@
 import { Program } from 'programs/types'
 import Vi from './Vi'
-import TextFile from '../../FileStructure/TextFile'
+import TextFile from '../../fs/TextFile'
 
 import ShellCommandResult from '../../Shell/ShellCommandResult'
 

@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { Directory, TextFile } from './'
+import { Directory, TextFile } from '.'
 
 describe('Directory unit tests', function() {
   const testDir = new Directory('testDir', null)

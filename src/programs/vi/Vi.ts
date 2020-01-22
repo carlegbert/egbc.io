@@ -2,7 +2,7 @@ import { getChar, textEquals } from '../../util/io'
 import Shell from 'Shell'
 import { FixMe } from 'types'
 import { ViMode } from './types'
-import { TextFile } from '../../FileStructure'
+import { TextFile } from '../../fs'
 import ViBuffer from './ViBuffer'
 import { Process } from 'programs/types'
 

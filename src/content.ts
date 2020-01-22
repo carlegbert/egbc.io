@@ -1,4 +1,4 @@
-import { Directory, LinkFile, TextFile } from './FileStructure'
+import { Directory, LinkFile, TextFile } from './fs'
 
 const homeDir = new Directory('~', null)
 const links = homeDir.createChild('~/links', Directory) as Directory

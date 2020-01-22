@@ -3,7 +3,7 @@ import { assert } from 'chai'
 import { testShellFactory } from '../util/test-helpers'
 
 import ShellCommandResult from '../Shell/ShellCommandResult'
-import { Directory } from '../FileStructure'
+import { Directory } from '../fs'
 
 describe('pwd', function() {
   const testShell = testShellFactory()

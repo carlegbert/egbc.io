@@ -5,7 +5,7 @@ import ShellCommand from './ShellCommand'
 import programs from '../programs'
 import ShellCommandResult from './ShellCommandResult'
 import { Program, Process } from 'programs/types'
-import { Directory, TextFile, Path } from '../FileStructure'
+import { Directory, TextFile, Path } from '../fs'
 
 const getValidTypesForProgram = (name: string) => {
   const program = programs[name]
