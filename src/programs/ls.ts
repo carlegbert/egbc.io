@@ -1,6 +1,8 @@
 import { Program } from './types'
 
 import ShellCommandResult from '../Shell/ShellCommandResult'
+import { errorIs } from '../util/errors'
+import { FSErrors } from '../fs'
 
 const ls: Program = {
   name: 'ls',
@@ -18,6 +20,7 @@ const ls: Program = {
           str += dir.lsHelper()
           res.stdOut.push(str)
         } catch (e) {
+          errorIs(e, FSErrors.DirectoryNotFound)
           res.stdErr.push(`ls: cannot access ${arg}: no such file or directory`)
         }
       })

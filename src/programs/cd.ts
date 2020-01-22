@@ -1,7 +1,7 @@
 import { Program } from './types'
-import { Directory } from '../fs'
-
+import { Directory, FSErrors } from '../fs'
 import ShellCommandResult from '../Shell/ShellCommandResult'
+import { errorIs } from '../util/errors'
 
 const cd: Program = {
   name: 'cd',
@@ -19,6 +19,7 @@ const cd: Program = {
       shell.PS1Element.innerHTML = shell.getPS1String()
       return new ShellCommandResult()
     } catch (e) {
+      errorIs(e, FSErrors.DirectoryNotFound)
       return new ShellCommandResult(null, [
         `${cmd.args[1]}: directory not found`,
       ])
