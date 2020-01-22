@@ -6,7 +6,7 @@ import ShellCommandResult from '../Shell/ShellCommandResult'
 
 describe('touch', function() {
   const testShell = testShellFactory()
-  const children: BaseFile[] = testShell.fileStructure.children
+  const children: BaseFile[] = testShell.deprecatedFileStructure.children
 
   afterEach(function() {
     children.splice(0, 9)
@@ -37,7 +37,9 @@ describe('touch', function() {
   })
 
   it('updates lastModified when invoked on existing file', function() {
-    const testFile = testShell.fileStructure.createChild('testFile') as TextFile
+    const testFile = testShell.deprecatedFileStructure.createChild(
+      'testFile',
+    ) as TextFile
     const oldLastModified = testFile.lastModified
     const res = testShell.executeCommand('touch testFile')
     assert.instanceOf(res, ShellCommandResult)
@@ -101,7 +103,7 @@ describe('touch', function() {
   })
 
   it('creates file in directory', function() {
-    const dir = testShell.fileStructure.createChild(
+    const dir = testShell.deprecatedFileStructure.createChild(
       'testDir',
       Directory,
     ) as Directory

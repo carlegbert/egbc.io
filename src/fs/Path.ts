@@ -8,12 +8,12 @@ export default class Path {
 
   constructor(patharg: string | string[]) {
     if (typeof patharg === 'string') {
-      this.arr = patharg.split('/')
+      this.arr = patharg.split('/').filter(Boolean)
     } else {
-      this.arr = patharg.slice(0)
+      this.arr = patharg.filter(Boolean)
     }
     // don't let arr or str be empty
-    if (this.arr.length === 0 || patharg === '') {
+    if (this.arr.length === 0) {
       this.arr = ['.']
     }
 

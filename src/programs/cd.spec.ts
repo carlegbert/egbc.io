@@ -7,7 +7,7 @@ import ShellCommandResult from '../Shell/ShellCommandResult'
 
 describe('cd', function() {
   const testShell = testShellFactory()
-  const testDir = testShell.fileStructure.createChild(
+  const testDir = testShell.deprecatedFileStructure.createChild(
     'testDir',
     Directory,
   ) as Directory
@@ -17,7 +17,7 @@ describe('cd', function() {
   ) as Directory
 
   beforeEach(function() {
-    testShell.currentDir = testShell.fileStructure
+    testShell.currentDir = testShell.deprecatedFileStructure
   })
 
   it('changes directories', function() {
@@ -45,7 +45,7 @@ describe('cd', function() {
   it('changes to filestructure root when called with no args', function() {
     testShell.currentDir = nestedTestDir
     const res = testShell.executeCommand('cd')
-    assert.equal(testShell.currentDir, testShell.fileStructure)
+    assert.equal(testShell.currentDir, testShell.deprecatedFileStructure)
     assert.instanceOf(res, ShellCommandResult)
     assert.isEmpty(res.stdErr)
     assert.isEmpty(res.stdOut)
@@ -54,7 +54,7 @@ describe('cd', function() {
   it('changes to filestructure root when called with tilde', function() {
     testShell.currentDir = nestedTestDir
     const res = testShell.executeCommand('cd ~')
-    assert.equal(testShell.currentDir, testShell.fileStructure)
+    assert.equal(testShell.currentDir, testShell.deprecatedFileStructure)
     assert.instanceOf(res, ShellCommandResult)
     assert.isEmpty(res.stdErr)
     assert.isEmpty(res.stdOut)
@@ -62,7 +62,7 @@ describe('cd', function() {
 
   it('returns stderr when passed bad arg', function() {
     const res = testShell.executeCommand('cd fakeDir')
-    assert.equal(testShell.currentDir, testShell.fileStructure)
+    assert.equal(testShell.currentDir, testShell.deprecatedFileStructure)
     assert.instanceOf(res, ShellCommandResult)
     assert.isEmpty(res.stdOut)
     assert.equal(res.stdErr.length, 1)
@@ -72,7 +72,7 @@ describe('cd', function() {
 
   it('errors when passed multiple args', function() {
     const res = testShell.executeCommand('cd testDir .. ~ fakeDir')
-    assert.equal(testShell.currentDir, testShell.fileStructure)
+    assert.equal(testShell.currentDir, testShell.deprecatedFileStructure)
     assert.instanceOf(res, ShellCommandResult)
     assert.equal(res.stdErr?.length, 1)
     assert.includeMembers(res.stdErr, ['cd: too many arguments'])

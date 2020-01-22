@@ -10,19 +10,19 @@ const cd: Program = {
     const shell = cmd.shell
     if (cmd.args.length > 2)
       return new ShellCommandResult([], ['cd: too many arguments'])
-    const dir =
-      cmd.args.length === 1
-        ? shell.fileStructure
-        : (shell.currentDir.findFile(
-            cmd.args[1].split('/'),
-            Directory,
-          ) as Directory)
-    if (dir) {
+    try {
+      const dir =
+        cmd.args.length === 1
+          ? shell.fs.home
+          : shell.fs.findDirectory(cmd.args[1])
       shell.currentDir = dir
       shell.PS1Element.innerHTML = shell.getPS1String()
       return new ShellCommandResult()
+    } catch (e) {
+      return new ShellCommandResult(null, [
+        `${cmd.args[1]}: directory not found`,
+      ])
     }
-    return new ShellCommandResult(null, [`${cmd.args[1]}: directory not found`])
   },
 }
 

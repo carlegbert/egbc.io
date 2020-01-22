@@ -1,5 +1,4 @@
 import { Program } from './types'
-import { Directory } from '../fs'
 
 import ShellCommandResult from '../Shell/ShellCommandResult'
 
@@ -12,17 +11,14 @@ const ls: Program = {
       res.stdOut.push(cmd.shell.currentDir.lsHelper())
     } else {
       cmd.args.slice(1).forEach(arg => {
-        const dir = cmd.shell.currentDir.findFile(
-          arg.split('/'),
-          Directory,
-        ) as Directory
-        if (!dir) {
-          res.stdErr.push(`ls: cannot access ${arg}: no such file or directory`)
-        } else {
+        try {
+          const dir = cmd.shell.fs.findDirectory(arg)
           let str = ''
           if (cmd.args.length > 2) str += `${arg}:`
           str += dir.lsHelper()
           res.stdOut.push(str)
+        } catch (e) {
+          res.stdErr.push(`ls: cannot access ${arg}: no such file or directory`)
         }
       })
     }

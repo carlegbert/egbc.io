@@ -1,15 +1,14 @@
 /* eslint-env browser */
 
-import Shell from './Shell'
 import ShellCommand from './Shell/ShellCommand'
 import bin from './programs'
 import { print } from './util/io'
-import homeDir from './content'
 
 import './styles.css'
+import initShell from './init'
 
 document.addEventListener('DOMContentLoaded', () => {
-  const shell = new Shell(homeDir)
+  const shell = initShell()
   const cursor = document.getElementById('shell-cursor') as HTMLElement
   const PS1 = document.getElementById('PS1') as HTMLElement
   const aboutBtn = document.getElementById('about-btn') as HTMLElement

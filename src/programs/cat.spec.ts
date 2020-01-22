@@ -8,11 +8,11 @@ import ShellCommandResult from '../Shell/ShellCommandResult'
 describe('cat', function() {
   const testShell = testShellFactory()
   const textObject = ['test line one', 'test line two']
-  const testFile = testShell.fileStructure.createChild(
+  const testFile = testShell.deprecatedFileStructure.createChild(
     'testFile',
     TextFile,
   ) as TextFile
-  const secondTestFile = testShell.fileStructure.createChild(
+  const secondTestFile = testShell.deprecatedFileStructure.createChild(
     'secondTestFile',
     TextFile,
   ) as TextFile
@@ -71,7 +71,7 @@ describe('cat', function() {
   })
 
   it('fails when called on directory', function() {
-    testShell.fileStructure.createChild('testDir', Directory)
+    testShell.deprecatedFileStructure.createChild('testDir', Directory)
     const res = testShell.executeCommand('cat testDir')
     assert.instanceOf(res, ShellCommandResult)
     assert.equal(res.stdOut.length, 0)

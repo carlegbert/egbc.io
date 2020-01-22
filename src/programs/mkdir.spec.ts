@@ -7,7 +7,7 @@ import ShellCommandResult from '../Shell/ShellCommandResult'
 
 describe('mkdir', function() {
   const testShell = testShellFactory()
-  const children = testShell.fileStructure.children
+  const children = testShell.deprecatedFileStructure.children
 
   beforeEach(function() {
     children.splice(0, 9)
@@ -27,7 +27,7 @@ describe('mkdir', function() {
   })
 
   it('does nothing when called with directory name that already exists', function() {
-    testShell.fileStructure.createChild('testDir', Directory)
+    testShell.deprecatedFileStructure.createChild('testDir', Directory)
     const res = testShell.executeCommand('mkdir testDir')
     assert.instanceOf(res, ShellCommandResult)
     assert.isEmpty(res.stdErr, 'expected res.stdErr to be empty')
@@ -50,7 +50,7 @@ describe('mkdir', function() {
   })
 
   it('creates nested directory', function() {
-    const testDir = testShell.fileStructure.createChild(
+    const testDir = testShell.deprecatedFileStructure.createChild(
       'testDir',
       Directory,
     ) as Directory
@@ -80,7 +80,7 @@ describe('mkdir', function() {
   })
 
   it('fails to create directory when called with non-dir existing filepath', function() {
-    testShell.fileStructure.createChild('testFile')
+    testShell.deprecatedFileStructure.createChild('testFile')
     const res = testShell.executeCommand('mkdir testFile')
     assert.equal(children.length, 1)
     assert.instanceOf(res, ShellCommandResult)

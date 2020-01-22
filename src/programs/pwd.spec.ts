@@ -7,7 +7,7 @@ import { Directory } from '../fs'
 
 describe('pwd', function() {
   const testShell = testShellFactory()
-  const testDir = testShell.fileStructure.createChild(
+  const testDir = testShell.deprecatedFileStructure.createChild(
     'testDir',
     Directory,
   ) as Directory
@@ -17,7 +17,7 @@ describe('pwd', function() {
     assert.instanceOf(res, ShellCommandResult)
     assert.isEmpty(res.stdErr)
     assert.equal(res.stdOut.length, 1)
-    assert.equal(res.stdOut[0], testShell.fileStructure.getFullPath())
+    assert.equal(res.stdOut[0], testShell.deprecatedFileStructure.getFullPath())
   })
 
   it('returns different name when directory changes', function() {
