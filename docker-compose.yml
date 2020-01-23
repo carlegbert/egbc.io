@@ -1,0 +1,15 @@
+version: '3.3'
+services:
+  server:
+    container_name: server
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    working_dir: /opt/app
+    command: npm run start
+    volumes:
+      - ./src:/opt/app/src
+    ports:
+      - 1234:1234
+    expose:
+      - 1234
