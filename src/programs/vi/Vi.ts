@@ -1,6 +1,5 @@
 import { getChar, textEquals } from '../../util/io'
 import Shell from 'Shell'
-import { FixMe } from 'types'
 import { ViMode } from './types'
 import { TextFile } from '../../fs'
 import ViBuffer from './ViBuffer'
@@ -24,12 +23,12 @@ export default class Vi implements Process {
   private editorElement: HTMLElement
   private editorConsoleElement: HTMLElement
   private commandTextElement: HTMLElement | null
-  private buffer: FixMe.Any
-  private filePath: FixMe.Any
+  private buffer: ViBuffer
+  private filePath: string[] | null
 
   constructor(
     shellRef: Shell,
-    filePath: FixMe.Any,
+    filePath: string[] | null,
     file: TextFile | null = null,
   ) {
     this.shellRef = shellRef
@@ -41,22 +40,17 @@ export default class Vi implements Process {
     this.editorConsoleElement = document.getElementById(
       'editor-console',
     ) as HTMLElement
-    this.buffer = null
     this.filePath = filePath
     this.commandTextElement = null
-  }
-
-  createBuffer() {
-    const bufferText = this.file !== null ? this.file.contents : ['']
-    this.buffer = new ViBuffer(bufferText)
-    this.buffer.renderAllLines()
+    this.buffer = new ViBuffer([])
   }
 
   startSession() {
     Vi.getTerminalElement().style.display = 'none'
     this.editorElement.style.display = 'block'
     this.editorConsoleElement.innerHTML = ''
-    this.createBuffer()
+    this.buffer.text = this.file !== null ? this.file.contents : ['']
+    this.buffer.renderAllLines()
   }
 
   endSession() {
@@ -262,9 +256,9 @@ export default class Vi implements Process {
   writeFile() {
     if (!this.file)
       this.file = this.shellRef.currentDir.createChild(
-        this.filePath,
+        this.filePath || [],
         TextFile,
-      ) as TextFile
+      ) as TextFile | null
     if (!this.file)
       return "E212: Can't open file for writing: No such file or directory"
     this.file.contents = this.buffer.text.slice()

@@ -14,8 +14,8 @@ export default class ViBuffer {
    */
   public text: string[]
 
-  private cursorX: number
-  private cursorY: number
+  public cursorX: number
+  public cursorY: number
   private element: HTMLElement
   private cursorElement: HTMLElement | null
   private bufferLines: BufferLine[]

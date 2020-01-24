@@ -45,7 +45,7 @@ export const filterOptions = (partial: string, options: string[]) =>
 export const getFiles = (
   partial: string,
   filetypes: FixMe.Any,
-  dir: FixMe.Any,
+  dir: Directory,
 ): string[] => {
   const fileOptions: BaseFile[] = dir.getChildrenByTypes(filetypes)
   return fileOptions

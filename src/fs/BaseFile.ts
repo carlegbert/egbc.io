@@ -1,6 +1,4 @@
-import { FixMe } from 'types'
-
-type Directory = FixMe.Any
+import Directory from './Directory'
 
 /**
  * Base File class, to be inherited from but not used directly.
@@ -31,11 +29,11 @@ export default class BaseFile {
    * Returns HTML-formatted filename
    * @return {string}
    */
-  getLsEntry() {
+  getLsEntry(): string {
     return `<span class="inline txt" id="${this.fullPath}">${this.name}</span>`
   }
 
-  getFullPath() {
+  getFullPath(): string {
     if (!this.parentRef) return this.name
     return `${this.parentRef.getFullPath()}/${this.name}`
   }

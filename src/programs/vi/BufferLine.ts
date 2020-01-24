@@ -1,4 +1,3 @@
-import { FixMe } from 'types'
 import ViBuffer from './ViBuffer'
 
 export default class BufferLine {
@@ -8,7 +7,7 @@ export default class BufferLine {
   private parentBuf: ViBuffer
   private chars: HTMLElement[]
 
-  constructor(parentBuf: FixMe.Any, y: number) {
+  constructor(parentBuf: ViBuffer, y: number) {
     this.parentBuf = parentBuf
     this.y = y
     this.element = document.createElement('bl')

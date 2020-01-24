@@ -197,7 +197,7 @@ export default class Shell {
     const spaceAtEnd = this.inputString[this.inputString.length - 1] === ' '
     const cmd = new ShellCommand(this.inputString, this)
     const programNames = Object.keys(this.programs)
-    let options
+    let options: string[]
     let partial
     if (!cmd.args[0]) {
       partial = ''
@@ -209,14 +209,21 @@ export default class Shell {
       partial = cmd.args.slice(1)[cmd.args.length - 2] || ''
       const typedPath = partial.split('/')
       const partialName = typedPath.pop() || ''
-      const dir = this.currentDir.findFile(typedPath, Directory)
-      options = ac.getFiles(
-        partialName,
-        getValidTypesForProgram(cmd.args[0]),
-        dir,
-      )
-      if (options.length === 0)
-        options = ac.getFiles(partialName, [Directory], dir)
+      const dir = this.currentDir.findFile(
+        typedPath,
+        Directory,
+      ) as Directory | null
+      if (!dir) {
+        options = []
+      } else {
+        options = ac.getFiles(
+          partialName,
+          getValidTypesForProgram(cmd.args[0]),
+          dir,
+        )
+        if (options.length === 0)
+          options = ac.getFiles(partialName, [Directory], dir)
+      }
     }
 
     const longestCommonBeginning = ac.findLongestCommonBeginning(

@@ -2,8 +2,8 @@
 
 import BaseFile from './BaseFile'
 import TextFile from './TextFile'
-import { FixMe } from 'types'
 import Path from './Path'
+import { FixMe } from 'types'
 
 export default class Directory extends BaseFile {
   public children: BaseFile[]
@@ -82,8 +82,8 @@ export default class Directory extends BaseFile {
         )
     }
 
-    if (filepath.length === 1 || !found) return found
-    return found.findFile(filepath.next(), filetype)
+    if (filepath.length === 1 || !found) return found as any
+    return (found as Directory).findFile(filepath.next(), filetype)
   }
 
   /**
