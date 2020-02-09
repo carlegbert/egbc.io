@@ -1,6 +1,3 @@
-/* eslint-env browser */
-/* eslint-disable class-methods-use-this, no-param-reassign */
-
 import BufferLine from './BufferLine'
 import { FileStructure, FSErrors } from '../../fs'
 import { errorIs } from '../../util/errors'
