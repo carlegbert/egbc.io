@@ -1,16 +1,26 @@
 import { getChar, print, printInline, PrintableElement } from '../util/io'
 import { getElementById } from '../util/selectors'
+import { errorIs } from '../util/errors'
 import * as ac from './autocomplete'
 import ShellCommand from './ShellCommand'
-import programs from '../programs'
 import ShellCommandResult from './ShellCommandResult'
-import { Program, Process } from 'programs/types'
-import { Directory, TextFile, Path, FileStructure } from '../fs'
+import programs from '../programs'
+import { Program, Process } from '../programs/types'
+import { Directory, TextFile, FileStructure, FSErrors } from '../fs'
+import { FileOpenMode } from '../fs/FileStream'
 
 const getValidTypesForProgram = (name: string) => {
   const program = programs[name]
   return program ? program.filetypes : [Directory, TextFile]
 }
+
+enum RedirectPattern {
+  Write = '<',
+  Append = '<<',
+}
+
+const mapRedirectPatternToWritingMode = (pattern: RedirectPattern) =>
+  pattern === RedirectPattern.Write ? FileOpenMode.Write : FileOpenMode.Append
 
 /**
  * Object encapsulating shell session
@@ -148,8 +158,10 @@ export default class Shell {
    * be a ShellCommandResult object
    */
   executeCommand(inputString: string): ShellCommandResult {
-    if (inputString.includes('>>')) return this.redirect(inputString, '>>')
-    if (inputString.includes('>')) return this.redirect(inputString, '>')
+    if (inputString.includes(RedirectPattern.Append))
+      return this.redirect(inputString, RedirectPattern.Append)
+    if (inputString.includes(RedirectPattern.Write))
+      return this.redirect(inputString, RedirectPattern.Write)
 
     const shellCommand = new ShellCommand(inputString, this)
     const program = programs[shellCommand.args[0]]
@@ -167,7 +179,7 @@ export default class Shell {
    * @param {string} pattern Redirect operator (either > or >>)
    * @return {Object} ShellCommandResult containing stderr to print to screen if necessary
    */
-  redirect(inputString: string, pattern: string): ShellCommandResult {
+  redirect(inputString: string, pattern: RedirectPattern): ShellCommandResult {
     const i = inputString.indexOf(pattern)
     const afterSymbol = inputString
       .slice(i + pattern.length)
@@ -175,21 +187,23 @@ export default class Shell {
       .split(' ')
     if (!afterSymbol || afterSymbol.length === 0)
       return new ShellCommandResult([], ['Syntax error'])
+    const filepath = afterSymbol[0]
     const otherArgs =
       afterSymbol.length === 1 ? [] : afterSymbol.slice(pattern.length)
     const newInput = inputString.slice(0, i) + otherArgs.join(' ')
     const res = this.executeCommand(newInput)
-    const filepath = new Path(afterSymbol[0])
-    const file =
-      (this.currentDir.findFile(filepath, TextFile) as TextFile) ||
-      (this.currentDir.createChild(filepath, TextFile) as TextFile)
-    if (!file)
+    try {
+      const fileStream = this.fs.openFileStream(
+        filepath,
+        mapRedirectPatternToWritingMode(pattern),
+      )
+      fileStream.write(res.stdOut)
+    } catch (e) {
+      errorIs(e, FSErrors.FileNotFound)
       return new ShellCommandResult(null, [
         `bash: ${filepath}: No such file or directory`,
       ])
-    if (file.contents === ['']) file.contents = []
-    file.contents =
-      pattern === '>' ? res.stdOut : file.contents.concat(res.stdOut)
+    }
     return new ShellCommandResult(null, res.stdErr)
   }
 
