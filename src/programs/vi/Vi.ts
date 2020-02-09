@@ -19,8 +19,8 @@ export default class Vi implements Process {
    */
   private shellRef: Shell
   private mode: ViMode
-  private heldNum: string = ''
-  private commandText: string = ''
+  private heldNum = ''
+  private commandText = ''
   private editorElement: HTMLElement = document.getElementById(
     'editor',
   ) as HTMLElement
@@ -38,7 +38,7 @@ export default class Vi implements Process {
     this.buffer = new ViBuffer([])
   }
 
-  startSession() {
+  public startSession(): void {
     Vi.getTerminalElement().style.display = 'none'
     this.editorElement.style.display = 'block'
     this.editorConsoleElement.innerHTML = ''
@@ -51,23 +51,19 @@ export default class Vi implements Process {
     this.buffer.renderAllLines()
   }
 
-  endSession() {
+  private endSession(): void {
     Vi.getTerminalElement().style.display = 'block'
     this.editorElement.style.display = 'none'
     this.shellRef.childProcess = null
   }
 
-  renderErrorMessage(errText: string) {
-    this.editorConsoleElement.innerHTML = errText
-  }
-
-  handleKeystroke(event: KeyboardEvent) {
+  public handleKeystroke(event: KeyboardEvent): void {
     if (this.mode === ViMode.Normal) this.normalKeystroke(event)
     else if (this.mode === ViMode.Insert) this.insertKeystroke(event)
     else if (this.mode === ViMode.Command) this.commandKeystroke(event)
   }
 
-  normalKeystroke(event: KeyboardEvent) {
+  private normalKeystroke(event: KeyboardEvent): void {
     const c = getChar(event)
 
     switch (c) {
@@ -115,7 +111,7 @@ export default class Vi implements Process {
     }
   }
 
-  processRepeat(c: string) {
+  private processRepeat(c: string): void {
     const num = this.heldNum !== '' ? parseInt(this.heldNum, 10) : 1
     if (num > 1) {
       for (let i = 0; i < num; i += 1) {
@@ -127,7 +123,7 @@ export default class Vi implements Process {
     this.heldNum = ''
   }
 
-  repeatableNormalKeystroke(c: string, repeated = false) {
+  private repeatableNormalKeystroke(c: string, repeated = false): void {
     switch (c) {
       case 'l':
         this.buffer.moveCursorHorizontally(1)
@@ -150,7 +146,7 @@ export default class Vi implements Process {
     }
   }
 
-  insertKeystroke(event: KeyboardEvent) {
+  private insertKeystroke(event: KeyboardEvent): void {
     const c = getChar(event)
     if (event.which === 27) {
       // escape
@@ -170,7 +166,7 @@ export default class Vi implements Process {
     }
   }
 
-  insertModeBackspace() {
+  private insertModeBackspace(): void {
     if (
       (this.buffer.cursorX === 0 ||
         this.buffer.text[this.buffer.cursorY].length === 0) &&
@@ -183,25 +179,25 @@ export default class Vi implements Process {
     }
   }
 
-  beginInsertMode() {
+  private beginInsertMode(): void {
     this.mode = ViMode.Insert
     this.editorConsoleElement.innerHTML = '<strong>-- INSERT --</strong>'
   }
 
-  beginNormalMode(message = '') {
+  private beginNormalMode(message = ''): void {
     this.mode = ViMode.Normal
     this.buffer.renderCursor()
     this.commandText = ''
     this.editorConsoleElement.innerHTML = message
   }
 
-  beginCommandMode() {
+  private beginCommandMode(): void {
     this.mode = ViMode.Command
     this.buffer.disableCursor()
     this.renderEmptyCommandElement()
   }
 
-  renderEmptyCommandElement() {
+  private renderEmptyCommandElement(): void {
     this.editorConsoleElement.innerHTML = ''
     const commandCursor = document.createElement('span')
     commandCursor.innerHTML = '&nbsp;'
@@ -214,7 +210,7 @@ export default class Vi implements Process {
     this.editorConsoleElement.appendChild(commandCursor)
   }
 
-  commandKeystroke(event: KeyboardEvent) {
+  private commandKeystroke(event: KeyboardEvent): void {
     const element = this.commandTextElement as HTMLElement
     const c = getChar(event)
     if (event.which === 27) {
@@ -235,7 +231,7 @@ export default class Vi implements Process {
     }
   }
 
-  evaluateCommand() {
+  private evaluateCommand(): string {
     switch (this.commandText) {
       case 'w':
         return this.writeFile()
@@ -251,7 +247,7 @@ export default class Vi implements Process {
     }
   }
 
-  writeFile() {
+  private writeFile(): string {
     if (!this.filepath) {
       return 'E32: No file name'
     }
@@ -269,7 +265,7 @@ export default class Vi implements Process {
     return `"${this.filepath}" written`
   }
 
-  quit(force = false): string {
+  private quit(force = false): string {
     // TODO: Buffer itself should reference the filepath and handle
     // writing to the file
     // TODO: Buffer should mark itself as dirty/clean rather than comparing
