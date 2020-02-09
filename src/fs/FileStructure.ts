@@ -15,12 +15,19 @@ export default class FileStructure {
     return dir
   }
 
-  public openFileStream(path: string, mode: FileOpenMode): FileStream {
+  public openFileStream(
+    path: string | undefined,
+    mode: FileOpenMode,
+  ): FileStream {
     const file = this.findOrCreateFile(path)
     return new FileStream(file, mode)
   }
 
-  public findOrCreateFile(path: string): TextFile {
+  public findOrCreateFile(path: string | undefined): TextFile {
+    if (!path) {
+      throw new FileNotFoundError()
+    }
+
     let file = this.home.findFile(path, TextFile) as TextFile | null
     if (!file) {
       file = this.home.createChild(path, TextFile) as TextFile | null
@@ -32,7 +39,8 @@ export default class FileStructure {
     return file
   }
 
-  public findFile(path: string): TextFile {
+  public findFile(path: string | undefined): TextFile {
+    if (!path) throw new FileNotFoundError(`File ${path} not found`)
     const file = this.home.findFile(path, TextFile) as TextFile | null
     if (!file) throw new FileNotFoundError(`File ${path} not found`)
     return file

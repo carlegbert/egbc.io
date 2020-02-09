@@ -1,8 +1,7 @@
-import { getChar, textEquals } from '../../util/io'
+import { getChar } from '../../util/io'
 import Shell from '../../Shell'
 import { ViMode } from './types'
 import { FSErrors } from '../../fs'
-import { FileOpenMode } from '../../fs/FileStream'
 import ViBuffer from './ViBuffer'
 import { Process } from '../types'
 import { errorIs } from '../../util/errors'
@@ -29,13 +28,11 @@ export default class Vi implements Process {
   ) as HTMLElement
   private commandTextElement: HTMLElement | null = null
   private buffer: ViBuffer
-  private filepath: string | undefined
 
-  constructor(shellRef: Shell, filepath: string | undefined) {
+  constructor(shellRef: Shell, filepath: string) {
     this.shellRef = shellRef
     this.mode = ViMode.Normal
-    this.filepath = filepath
-    this.buffer = new ViBuffer([])
+    this.buffer = ViBuffer.createBuffer(filepath, this.shellRef.fs)
   }
 
   private static getTerminalElement(): HTMLElement {
@@ -46,12 +43,6 @@ export default class Vi implements Process {
     Vi.getTerminalElement().style.display = 'none'
     this.editorElement.style.display = 'block'
     this.editorConsoleElement.innerHTML = ''
-    try {
-      this.buffer.text = this.shellRef.fs.findFile(this.filepath || '').contents
-    } catch (e) {
-      errorIs(e, FSErrors.FileNotFound)
-      this.buffer.text = ['']
-    }
     this.buffer.renderAllLines()
   }
 
@@ -244,54 +235,48 @@ export default class Vi implements Process {
       case 'q!':
         return this.quit(true)
       case 'wq':
-        this.writeFile()
-        return this.quit()
+        return this.writeAndQuit()
       default:
         return `${this.commandText} is not a valid command`
     }
   }
 
-  private writeFile(): string {
-    if (!this.filepath) {
-      return 'E32: No file name'
-    }
-
+  private writeAndQuit(): string {
     try {
-      const stream = this.shellRef.fs.openFileStream(
-        this.filepath,
-        FileOpenMode.Write,
-      )
-      stream.write(this.buffer.text.slice())
+      this.buffer.flush()
+      return this.quit()
     } catch (e) {
-      errorIs(e, FSErrors.FileNotFound)
+      errorIs(e, FSErrors.FileNotFound, FSErrors.DirectoryNotFound)
+
+      if (e.name === FSErrors.FileNotFound) {
+        return 'E32: No file name'
+      }
+
+      // Path to file was invalid
       return "E212: Can't open file for writing: No such file or directory"
     }
-    return `"${this.filepath}" written`
+  }
+
+  private writeFile(): string {
+    try {
+      const filepath = this.buffer.flush()
+      return `"${filepath}" written`
+    } catch (e) {
+      errorIs(e, FSErrors.FileNotFound, FSErrors.DirectoryNotFound)
+
+      if (e.name === FSErrors.FileNotFound) {
+        return 'E32: No file name'
+      }
+
+      // Path to file was invalid
+      return "E212: Can't open file for writing: No such file or directory"
+    }
   }
 
   private quit(force = false): string {
-    // TODO: Buffer itself should reference the filepath and handle
-    // writing to the file
-    // TODO: Buffer should mark itself as dirty/clean rather than comparing
-    // file contents to buffer contents on close
-    if (force) {
-      return ''
+    if (this.buffer.dirty && !force) {
+      return 'E37: No write since last change'
     }
-
-    try {
-      const file = this.shellRef.fs.findFile(this.filepath || '')
-      if (!textEquals(this.buffer.text, file.contents)) {
-        return 'E37: No write since last change'
-      }
-    } catch (e) {
-      errorIs(e, FSErrors.FileNotFound)
-      if (!this.buffer.isEmpty()) {
-        return 'E37: No write since last change'
-      }
-      this.endSession()
-      return ''
-    }
-
     this.endSession()
     return ''
   }

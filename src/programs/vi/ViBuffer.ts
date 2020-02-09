@@ -2,6 +2,16 @@
 /* eslint-disable class-methods-use-this, no-param-reassign */
 
 import BufferLine from './BufferLine'
+import { FileStructure, FSErrors } from '../../fs'
+import { errorIs } from '../../util/errors'
+import { FileOpenMode } from '../../fs/FileStream'
+
+interface ViBufferOptions {
+  filepath: string
+  fs: FileStructure
+  isNewFile?: boolean
+  text?: string[]
+}
 
 /*
  * Object encapsulating a vi buffer. Performs tasks
@@ -13,23 +23,48 @@ export default class ViBuffer {
    * @param {string[]} text
    */
   public text: string[]
-  public cursorX: number
-  public cursorY: number
-  private element: HTMLElement
-  private cursorElement: HTMLElement | null
-  private lines: BufferLine[]
+  public cursorX = 0
+  public cursorY = 0
+  public dirty = false
+  private element = document.getElementById('editor-buffer') as HTMLElement
+  private filepath: string
+  private fs: FileStructure
+  private cursorElement: HTMLElement | null = null
+  private lines: BufferLine[] = []
 
-  constructor(text: string[]) {
+  private constructor({ filepath, fs, text = [''] }: ViBufferOptions) {
     this.text = text.slice()
-    this.cursorX = 0
-    this.cursorY = 0
-    this.element = document.getElementById('editor-buffer') as HTMLElement
-    this.cursorElement = null
-    this.lines = []
+    this.filepath = filepath
+    this.fs = fs
   }
 
-  public isEmpty(): boolean {
-    return this.text.length >= 1 && !this.text[0]
+  public static createBuffer(filepath: string, fs: FileStructure): ViBuffer {
+    try {
+      const file = fs.findFile(filepath)
+      return new ViBuffer({ filepath, fs, text: file.contents.slice() })
+    } catch (e) {
+      errorIs(e, FSErrors.FileNotFound)
+      // If the file doesn't exist, we'll initialize the buffer with no text
+      return new ViBuffer({
+        filepath,
+        fs,
+      })
+    }
+  }
+
+  /**
+   * Flush the buffer contents to the file.
+   *
+   * If there is no filepath specified, the filesystem will throw a
+   * FileNotFound error. If the path to the file doesn't exist, the
+   * filesystem will throw a DirectoryNotFound error.
+   */
+  public flush(): string {
+    const filestream = this.fs.openFileStream(this.filepath, FileOpenMode.Write)
+    filestream.write(this.text.slice())
+
+    this.markClean()
+    return this.filepath
   }
 
   public renderAllLines(): void {
@@ -57,6 +92,7 @@ export default class ViBuffer {
       )
     newBufferLine.renderChars()
     this.resetLineIndices()
+    this.markDirty()
     return newBufferLine
   }
 
@@ -96,11 +132,13 @@ export default class ViBuffer {
 
   public addChar(c: string): void {
     this.lines[this.cursorY].addChar(this.cursorX, c)
+    this.markDirty()
   }
 
   public removeChar(x = this.cursorX): void {
     this.lines[this.cursorY].removeChar(x)
     this.renderCursor()
+    this.markDirty()
   }
 
   public removeLine(y: number): void {
@@ -108,6 +146,7 @@ export default class ViBuffer {
     this.lines.splice(y, 1)
     this.text.splice(y, 1)
     this.resetLineIndices()
+    this.markDirty()
   }
 
   public concatLines(): void {
@@ -117,6 +156,7 @@ export default class ViBuffer {
     this.removeLine(this.cursorY + 1)
     this.lines[this.cursorY].renderChars()
     this.renderCursor()
+    this.markDirty()
   }
 
   public insertLineBreak(y = this.cursorY): void {
@@ -125,6 +165,7 @@ export default class ViBuffer {
     this.lines[y].renderChars()
     this.element.insertBefore(this.lines[y].element, newBufLine.element)
     this.renderCursor()
+    this.markDirty()
   }
 
   public renderCursor(insert = false): void {
@@ -139,5 +180,13 @@ export default class ViBuffer {
     this.lines.forEach((bufLine, i) => {
       bufLine.y = i
     })
+  }
+
+  private markDirty(): void {
+    this.dirty = true
+  }
+
+  private markClean(): void {
+    this.dirty = false
   }
 }
