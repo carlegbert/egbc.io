@@ -1,9 +1,11 @@
 import { getChar, textEquals } from '../../util/io'
-import Shell from 'Shell'
+import Shell from '../../Shell'
 import { ViMode } from './types'
-import { TextFile } from '../../fs'
+import { FSErrors } from '../../fs'
+import { FileOpenMode } from '../../fs/FileStream'
 import ViBuffer from './ViBuffer'
-import { Process } from 'programs/types'
+import { Process } from '../types'
+import { errorIs } from '../../util/errors'
 
 /**
  * Class representing a single instance of Vi
@@ -16,32 +18,23 @@ export default class Vi implements Process {
    * @param {Object} file Reference to TxtFile to write to (optional)
    */
   private shellRef: Shell
-  private file: TextFile | null
   private mode: ViMode
-  private heldNum: string
-  private commandText: string
-  private editorElement: HTMLElement
-  private editorConsoleElement: HTMLElement
-  private commandTextElement: HTMLElement | null
+  private heldNum: string = ''
+  private commandText: string = ''
+  private editorElement: HTMLElement = document.getElementById(
+    'editor',
+  ) as HTMLElement
+  private editorConsoleElement: HTMLElement = document.getElementById(
+    'editor-console',
+  ) as HTMLElement
+  private commandTextElement: HTMLElement | null = null
   private buffer: ViBuffer
-  private filePath: string[] | null
+  private filepath: string | undefined
 
-  constructor(
-    shellRef: Shell,
-    filePath: string[] | null,
-    file: TextFile | null = null,
-  ) {
+  constructor(shellRef: Shell, filepath: string | undefined) {
     this.shellRef = shellRef
-    this.file = file
     this.mode = ViMode.Normal
-    this.heldNum = ''
-    this.commandText = ''
-    this.editorElement = document.getElementById('editor') as HTMLElement
-    this.editorConsoleElement = document.getElementById(
-      'editor-console',
-    ) as HTMLElement
-    this.filePath = filePath
-    this.commandTextElement = null
+    this.filepath = filepath
     this.buffer = new ViBuffer([])
   }
 
@@ -49,7 +42,12 @@ export default class Vi implements Process {
     Vi.getTerminalElement().style.display = 'none'
     this.editorElement.style.display = 'block'
     this.editorConsoleElement.innerHTML = ''
-    this.buffer.text = this.file !== null ? this.file.contents : ['']
+    try {
+      this.buffer.text = this.shellRef.fs.findFile(this.filepath || '').contents
+    } catch (e) {
+      errorIs(e, FSErrors.FileNotFound)
+      this.buffer.text = ['']
+    }
     this.buffer.renderAllLines()
   }
 
@@ -254,24 +252,46 @@ export default class Vi implements Process {
   }
 
   writeFile() {
-    if (!this.file)
-      this.file = this.shellRef.currentDir.createChild(
-        this.filePath || [],
-        TextFile,
-      ) as TextFile | null
-    if (!this.file)
+    if (!this.filepath) {
+      return 'E32: No file name'
+    }
+
+    try {
+      const stream = this.shellRef.fs.openFileStream(
+        this.filepath,
+        FileOpenMode.Write,
+      )
+      stream.write(this.buffer.text.slice())
+    } catch (e) {
+      errorIs(e, FSErrors.FileNotFound)
       return "E212: Can't open file for writing: No such file or directory"
-    this.file.contents = this.buffer.text.slice()
-    const msg = `"${this.file.fullPath}" written`
-    return msg
+    }
+    return `"${this.filepath}" written`
   }
 
-  quit(force = false) {
-    if (
-      !force &&
-      (!this.file || !textEquals(this.buffer.text, this.file.contents))
-    )
-      return 'E37: No write since last change'
+  quit(force = false): string {
+    // TODO: Buffer itself should reference the filepath and handle
+    // writing to the file
+    // TODO: Buffer should mark itself as dirty/clean rather than comparing
+    // file contents to buffer contents on close
+    if (force) {
+      return ''
+    }
+
+    try {
+      const file = this.shellRef.fs.findFile(this.filepath || '')
+      if (!textEquals(this.buffer.text, file.contents)) {
+        return 'E37: No write since last change'
+      }
+    } catch (e) {
+      errorIs(e, FSErrors.FileNotFound)
+      if (!this.buffer.isEmpty()) {
+        return 'E37: No write since last change'
+      }
+      this.endSession()
+      return ''
+    }
+
     this.endSession()
     return ''
   }

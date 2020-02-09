@@ -29,6 +29,10 @@ export default class ViBuffer {
     this.bufferLines = []
   }
 
+  public isEmpty(): boolean {
+    return this.text.length >= 1 && !this.text[0]
+  }
+
   renderAllLines() {
     this.element.innerHTML = ''
     this.bufferLines = []

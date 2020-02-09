@@ -13,16 +13,7 @@ const vi: Program = {
    */
   run: cmd => {
     const shell = cmd.shell
-    let fPath
-    let file
-    try {
-      fPath = cmd.args[0].split('/')
-      file = cmd.shell.currentDir.findFile(fPath, TextFile) as TextFile
-    } catch (TypeError) {
-      fPath = null
-      file = null
-    }
-    const viInstance = new Vi(cmd.shell, fPath, file)
+    const viInstance = new Vi(cmd.shell, cmd.args[1])
     shell.childProcess = viInstance
     viInstance.startSession()
     return new ShellCommandResult()
