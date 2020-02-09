@@ -1,8 +1,8 @@
-import { Directory, TextFile, BaseFile } from './'
+import { Directory, TextFile, BaseFile } from '.'
 import { DirectoryNotFoundError, FileNotFoundError } from './errors'
 import FileStream, { FileOpenMode } from './FileStream'
 
-export default class FileStructure {
+export default class FileSystem {
   public home: Directory
 
   constructor() {

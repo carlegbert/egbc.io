@@ -1,11 +1,11 @@
 import BufferLine from './BufferLine'
-import { FileStructure, FSErrors } from '../../fs'
+import { FileSystem, FSErrors } from '../../fs'
 import { errorIs } from '../../util/errors'
 import { FileOpenMode } from '../../fs/FileStream'
 
 interface ViBufferOptions {
   filepath: string
-  fs: FileStructure
+  fs: FileSystem
   isNewFile?: boolean
   text?: string[]
 }
@@ -25,7 +25,7 @@ export default class ViBuffer {
   public dirty = false
   private element = document.getElementById('editor-buffer') as HTMLElement
   private filepath: string
-  private fs: FileStructure
+  private fs: FileSystem
   private cursorElement: HTMLElement | null = null
   private lines: BufferLine[] = []
 
@@ -35,7 +35,7 @@ export default class ViBuffer {
     this.fs = fs
   }
 
-  public static createBuffer(filepath: string, fs: FileStructure): ViBuffer {
+  public static createBuffer(filepath: string, fs: FileSystem): ViBuffer {
     try {
       const file = fs.findFile(filepath)
       return new ViBuffer({ filepath, fs, text: file.contents.slice() })

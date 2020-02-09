@@ -7,12 +7,12 @@ import ShellCommandResult from '../Shell/ShellCommandResult'
 
 describe('ls', function() {
   const testShell = testShellFactory()
-  const testDir = testShell.deprecatedFileStructure.createChild(
+  const testDir = testShell.deprecatedFileSystem.createChild(
     'testDir',
     Directory,
   ) as Directory
   testDir.createChild('nestedTestDir', Directory)
-  testShell.deprecatedFileStructure.createChild('file', Directory)
+  testShell.deprecatedFileSystem.createChild('file', Directory)
 
   it('lists files', function() {
     const res = testShell.executeCommand('ls testDir')

@@ -6,7 +6,7 @@ import ShellCommand from './ShellCommand'
 import ShellCommandResult from './ShellCommandResult'
 import programs from '../programs'
 import { Program, Process } from '../programs/types'
-import { Directory, TextFile, FileStructure, FSErrors } from '../fs'
+import { Directory, TextFile, FileSystem, FSErrors } from '../fs'
 import { FileOpenMode } from '../fs/FileStream'
 
 const getValidTypesForProgram = (name: string) => {
@@ -32,14 +32,14 @@ export default class Shell {
    * @constructor
    * @param {Directory} fileStructure base dir tied to shell session
    */
-  public deprecatedFileStructure: Directory
+  public deprecatedFileSystem: Directory
   public PS1Element: PrintableElement
   public outputElement: PrintableElement
   public currentDir: Directory
   public user: string
   public childProcess: Process | null
   public programs: { [programName: string]: Program }
-  public fs: FileStructure
+  public fs: FileSystem
 
   private inputString: string
   private bashHistory: string[]
@@ -48,9 +48,9 @@ export default class Shell {
   private inputPromptElement: PrintableElement
 
   constructor() {
-    this.fs = new FileStructure()
-    this.deprecatedFileStructure = this.fs.home
-    this.currentDir = this.deprecatedFileStructure
+    this.fs = new FileSystem()
+    this.deprecatedFileSystem = this.fs.home
+    this.currentDir = this.deprecatedFileSystem
     this.user = 'guest'
     this.inputString = ''
     this.bashHistory = []
