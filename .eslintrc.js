@@ -15,26 +15,35 @@ module.exports = {
     module: true,
   },
   rules: {
-    'no-var': 2,
-    'no-console': 2,
-    'dot-notation': 2,
-    'prefer-const': 2,
-    '@typescript-eslint/member-delimiter-style': 0,
+    'no-var': 'error',
+    'no-console': 'error',
+    'dot-notation': 'error',
+    'prefer-const': 'error',
   },
-
   overrides: [
+    {
+      files: ['**/*.ts'],
+      rules: {
+        '@typescript-eslint/member-delimiter-style': 'off',
+        '@typescript-eslint/member-ordering': 'warn',
+        '@typescript-eslint/explicit-member-accessibility': [
+          'warn',
+          { overrides: { constructors: 'no-public' } },
+        ],
+      },
+    },
     {
       files: ['**/*.js'],
       rules: {
-        '@typescript-eslint/no-var-requires': 0,
-        '@typescript-eslint/explicit-function-return-type': 0,
+        '@typescript-eslint/no-var-requires': 'off',
+        '@typescript-eslint/explicit-function-return-type': 'off',
       },
     },
     {
       files: ['**/*.spec.js'],
       rules: {
-        'prefer-arrow-callback': 0,
-        'func-names': 0,
+        'prefer-arrow-callback': 'off',
+        'func-names': 'off',
       },
       env: { mocha: true },
     },

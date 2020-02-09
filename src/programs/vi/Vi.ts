@@ -38,6 +38,10 @@ export default class Vi implements Process {
     this.buffer = new ViBuffer([])
   }
 
+  private static getTerminalElement(): HTMLElement {
+    return document.getElementById('terminal') as HTMLElement
+  }
+
   public startSession(): void {
     Vi.getTerminalElement().style.display = 'none'
     this.editorElement.style.display = 'block'
@@ -51,16 +55,16 @@ export default class Vi implements Process {
     this.buffer.renderAllLines()
   }
 
-  private endSession(): void {
-    Vi.getTerminalElement().style.display = 'block'
-    this.editorElement.style.display = 'none'
-    this.shellRef.childProcess = null
-  }
-
   public handleKeystroke(event: KeyboardEvent): void {
     if (this.mode === ViMode.Normal) this.normalKeystroke(event)
     else if (this.mode === ViMode.Insert) this.insertKeystroke(event)
     else if (this.mode === ViMode.Command) this.commandKeystroke(event)
+  }
+
+  private endSession(): void {
+    Vi.getTerminalElement().style.display = 'block'
+    this.editorElement.style.display = 'none'
+    this.shellRef.childProcess = null
   }
 
   private normalKeystroke(event: KeyboardEvent): void {
@@ -290,9 +294,5 @@ export default class Vi implements Process {
 
     this.endSession()
     return ''
-  }
-
-  private static getTerminalElement(): HTMLElement {
-    return document.getElementById('terminal') as HTMLElement
   }
 }
