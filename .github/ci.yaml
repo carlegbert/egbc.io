@@ -1,0 +1,36 @@
+name: Build/Test/Deploy
+on: [push]
+
+jobs:
+  deps:
+    name: deps
+    runs-on: ubuntu-20.04
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12'
+
+    - name: cache
+      id: cache
+      - uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+        
+    - name: install
+      id: install
+      run: npm ci
+      if: steps.cache.outputs.cache-hit != true
+
+    - name: lint
+      id: lint
+      run: npm run lint
+
+    - name: test
+      id: test
+      run: npm run test
+
+    - name: build
+      id: build
+      run: npm run build
