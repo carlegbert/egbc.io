@@ -9,6 +9,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: troubleshoot
         id: troubleshoot
+        if: ${{github.ref == 'refs/head/troubleshoot}}
         run: echo ${{github.ref}}
       # - uses: actions/setup-node@v1
       #   with:
