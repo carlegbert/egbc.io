@@ -32,7 +32,7 @@ jobs:
       - name: deploy
         id: deploy
         if: github.ref == 'refs/head/master'
-        uses: carlegbert/github-actions-rsync
+        uses: carlegbert/github-actions-rsync@08aeec5758b48a2fab8cd0557d543149fc42e77a
         with:
           RSYNC_OPTIONS: -avzr --delete
           RSYNC_TARGET: ${{ secrets.DEST_DIR }}
