@@ -29,3 +29,16 @@ jobs:
       - name: build
         id: build
         run: npm run build
+      - name: deploy
+        id: deploy
+        if: github.ref == 'refs/head/master'
+        uses: carlegbert/github-actions-rsync
+        with:
+          RSYNC_OPTIONS: -avzr --delete
+          RSYNC_TARGET: ${{ secrets.DEST_DIR }}
+          RSYNC_SOURCE: dist/
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          SSH_USERNAME: ${{ secrets.SSH_USER }}
+          SSH_HOSTNAME: ${{ secrets.HOST }}
+          RSYNC_PASSWORD: ${{ secrets.SSH_PASSWD }}
