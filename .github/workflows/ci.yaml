@@ -31,7 +31,7 @@ jobs:
         run: npm run build
       - name: troubleshoot
         id: troubleshoot
-        run: echo ${{github.ref == 'ref/head/master'}}
+        run: echo ${{github.ref}}
       - name: deploy
         id: deploy
         if: github.ref == 'ref/head/master'
