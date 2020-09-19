@@ -3,7 +3,7 @@
 import BaseFile from './BaseFile'
 import TextFile from './TextFile'
 import Path from './Path'
-import { FixMe } from 'types'
+import { FixMe } from '../types'
 
 export default class Directory extends BaseFile {
   public children: BaseFile[]
