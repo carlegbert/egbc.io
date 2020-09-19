@@ -34,9 +34,9 @@ jobs:
         if: github.ref == 'refs/heads/troubleshoot'
         uses: carlegbert/github-actions-rsync@master
         with:
-          rsync_target: ${{ secrets.DEST_DIR }}
-          rsync_source: dist/
-          rsync_options: -avzr --delete
+          RSYNC_TARGET: ${{ secrets.DEST_DIR }}
+          RSYNC_SOURCE: dist/
+          RSYNC_OPTIONS: -avzr --delete
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
           SSH_USERNAME: ${{ secrets.SSH_USER }}
