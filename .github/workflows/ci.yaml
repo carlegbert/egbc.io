@@ -31,11 +31,11 @@ jobs:
         run: npm run build
       - name: deploy
         id: deploy
-        if: github.ref == 'refs/heads/troubleshoot'
-        uses: carlegbert/github-actions-rsync@master
+        if: github.ref == 'refs/heads/master'
+        uses: carlegbert/github-actions-rsync@v2.0.0
         with:
           RSYNC_TARGET: ${{ secrets.DEST_DIR }}
-          RSYNC_SOURCE: /dist/
+          RSYNC_SOURCE: dist/
           RSYNC_OPTIONS: -avzr --delete
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
