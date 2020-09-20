@@ -1,4 +1,4 @@
-### [carlegbert.com](https://egbc.io)
+### [egbc.io](https://egbc.io)
 
 A mock linux terminal written in plain typescript serving as a personal website.
 
