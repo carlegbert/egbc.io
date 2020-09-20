@@ -1,9 +1,9 @@
 {
   "name": "wwwterm",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "description": "personal website styled as working unix terminal",
   "main": "src/index.js",
-  "repository": "https://github.com/carlegbert/carlegbert.com",
+  "repository": "https://github.com/carlegbert/egbc.io",
   "author": "Carl Egbert <egbertcarl@gmail.com>",
   "license": "MIT",
   "nyc": {

@@ -23,7 +23,7 @@ const initShell = (): Shell => {
 
   about.contents = [
     "<p>I am a software engineer based in Portland, OR. Before beginning my career in the tech industry, I was a professional classical double bassist. I've performed with the Oregon and Eugene Symphonies, the Chintimini Chamber Music Festival, the Aspen Festival Orchestra, and many other professional ensembles.</p>",
-    '<p><a href="https://github.com/carlegbert/wwwterm-es6" target="blank">source for this site</a></p>',
+    '<p><a href="https://github.com/carlegbert/egbc.io" target="blank">source for this site</a></p>',
   ]
   return shellInstance
 }

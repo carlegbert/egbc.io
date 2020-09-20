@@ -6,14 +6,14 @@ describe('LinkFile unit tests', function() {
   const testLinkFile = new LinkFile(
     'testLinkFile',
     testDir,
-    'https://www.carlegbert.com',
+    'https://egbc.io',
   )
 
   describe('#getLsEntry()', function() {
     it('getLsEntry() returns correct string', function() {
       const lsString = testLinkFile.getLsEntry()
       const expected =
-        '<span class="inline link"><a href="https://www.carlegbert.com" target="_blank">testLinkFile<a></span>'
+        '<span class="inline link"><a href="https://egbc.io" target="_blank">testLinkFile<a></span>'
       assert.equal(lsString, expected)
     })
   })

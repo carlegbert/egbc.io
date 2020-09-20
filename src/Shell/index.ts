@@ -68,7 +68,7 @@ export default class Shell {
    */
   getPS1String(): string {
     return (
-      `<span class="user">${this.user}@www.carlegbert.com:</span>` +
+      `<span class="user">${this.user}@egbc.io:</span>` +
       `<span class="path">${this.currentDir.fullPath}</span>$&nbsp;`
     )
   }
