@@ -41,4 +41,3 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
           SSH_USERNAME: ${{ secrets.SSH_USER }}
           SSH_HOSTNAME: ${{ secrets.HOST }}
-          RSYNC_PASSWORD: ${{ secrets.SSH_PASSWD }}
