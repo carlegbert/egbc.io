@@ -6,23 +6,26 @@ import { Directory, BaseFile } from '../fs'
  * certain amount of letters, eg, if there are two options 'catalogue' and 'catamaran',
  * and a user types 'vi c <Tab>', the input should be completed to 'cata'.
  * @param {string} partial Original user input to be autocompleted
- * @param {string[]} options Available options
+ * @param {string[]} words Available options
  * @return {string} A string representing the longest matching beginning.
  * */
 export const findLongestCommonBeginning = (
   partial: string,
-  options: string[],
+  words: string[],
 ): string => {
-  const sortedOpts = options.slice().sort((a, b) => a.length - b.length)
-  const shortestOpt = sortedOpts[0]
-  if (!shortestOpt) return partial
+  const sortedWords = words.slice().sort((a, b) => a.length - b.length)
+  const [shortestWord, ...rest] = sortedWords
+  if (!shortestWord) {
+    return partial
+  }
+
   let longestPartial = partial
-  for (let i = partial.length; i < shortestOpt.length; i += 1) {
-    const charToCheckFor = shortestOpt[i]
-    for (let j = 1; j < options.length; j += 1) {
-      if (options[j][i] !== charToCheckFor) return longestPartial
+  for (let i = partial.length; i < shortestWord.length; i += 1) {
+    if (!rest.every(word => word[i] === shortestWord[i])) {
+      return longestPartial
     }
-    longestPartial += shortestOpt[i]
+
+    longestPartial += shortestWord[i]
   }
   return longestPartial
 }

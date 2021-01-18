@@ -30,6 +30,13 @@ describe('autocomplete unit tests', function () {
       const result = autocomplete.findLongestCommonBeginning(partial, options)
       assert.equal('two_match', result)
     })
+
+    it('returns empty string if words have no common beginning', () => {
+      const partial = ''
+      const options = ['foobar', 'baz']
+      const result = autocomplete.findLongestCommonBeginning(partial, options)
+      assert.equal('', result)
+    })
   })
 
   describe('#filterOptions()', function () {
