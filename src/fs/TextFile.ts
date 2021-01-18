@@ -6,6 +6,6 @@ export default class TextFile extends BaseFile {
 
   constructor(name: string, parentRef: Directory, contents?: string[]) {
     super(name, parentRef)
-    this.contents = contents || ['']
+    this.contents = contents || []
   }
 }

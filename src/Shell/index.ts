@@ -15,8 +15,8 @@ const getValidTypesForProgram = (name: string) => {
 }
 
 enum RedirectPattern {
-  Write = '<',
-  Append = '<<',
+  Write = '>',
+  Append = '>>',
 }
 
 const mapRedirectPatternToWritingMode = (pattern: RedirectPattern) =>
