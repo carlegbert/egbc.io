@@ -3,7 +3,6 @@
 import BaseFile from './BaseFile'
 import TextFile from './TextFile'
 import Path from './Path'
-import { FixMe } from '../types'
 import { FileKind } from './constants'
 
 export default class Directory extends BaseFile {
@@ -55,7 +54,7 @@ export default class Directory extends BaseFile {
    */
   findFile(
     filepath: Path | string | string[] | null,
-    filetype?: FixMe.Any,
+    filetype?: typeof BaseFile,
   ): BaseFile | null {
     if (!filepath) return null
 
@@ -98,7 +97,7 @@ export default class Directory extends BaseFile {
    */
   createChild(
     filepath: Path | string | string[],
-    filetype?: FixMe.Any,
+    filetype?: typeof BaseFile,
   ): BaseFile | null {
     if (!(filepath instanceof Path)) filepath = new Path(filepath)
     if (filepath.length === 0) return null
