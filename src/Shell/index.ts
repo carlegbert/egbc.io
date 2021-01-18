@@ -6,12 +6,13 @@ import ShellCommand from './ShellCommand'
 import ShellCommandResult from './ShellCommandResult'
 import programs from '../programs'
 import { Program, Process } from '../programs/types'
-import { Directory, TextFile, FileSystem, FSErrors } from '../fs'
+import { Directory, FileSystem, FSErrors } from '../fs'
 import { FileOpenMode } from '../fs/FileStream'
+import { FileKind } from '../fs/constants'
 
 const getValidTypesForProgram = (name: string) => {
   const program = programs[name]
-  return program ? program.filetypes : [Directory, TextFile]
+  return program ? program.filekinds : [FileKind.Directory, FileKind.Text]
 }
 
 enum RedirectPattern {
@@ -236,7 +237,7 @@ export default class Shell {
           dir,
         )
         if (options.length === 0)
-          options = ac.getFiles(partialName, [Directory], dir)
+          options = ac.getFiles(partialName, [FileKind.Directory], dir)
       }
     }
 

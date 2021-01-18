@@ -1,4 +1,4 @@
-import { FixMe } from 'types'
+import { FileKind } from '../fs/constants'
 import { Directory, BaseFile } from '../fs'
 
 /**
@@ -44,10 +44,10 @@ export const filterOptions = (partial: string, options: string[]) =>
  */
 export const getFiles = (
   partial: string,
-  filetypes: FixMe.Any,
+  filekinds: FileKind[],
   dir: Directory,
 ): string[] => {
-  const fileOptions: BaseFile[] = dir.getChildrenByTypes(filetypes)
+  const fileOptions: BaseFile[] = dir.getChildrenByTypes(filekinds)
   return fileOptions
     .filter(f => f.name.startsWith(partial))
     .map(f => (f instanceof Directory ? `${f.name}/` : f.name))

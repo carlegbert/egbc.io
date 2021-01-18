@@ -4,7 +4,7 @@ import ShellCommandResult from '../Shell/ShellCommandResult'
 
 const help: Program = {
   name: 'help',
-  filetypes: [],
+  filekinds: [],
   run: shellCommand => {
     const data = ['Available commands:']
       .concat(Object.keys(shellCommand.shell.programs))

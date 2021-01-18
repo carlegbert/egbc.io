@@ -4,7 +4,7 @@ import ShellCommandResult from '../Shell/ShellCommandResult'
 
 const whoami: Program = {
   name: 'whoami',
-  filetypes: [],
+  filekinds: [],
   /**
    * Get current user
    * @return {ShellCommandResult}

@@ -6,7 +6,7 @@ import { FSErrors } from '../fs'
 
 const ls: Program = {
   name: 'ls',
-  filetypes: [],
+  filekinds: [],
   run: cmd => {
     const res = new ShellCommandResult([])
     if (cmd.args.length === 1) {

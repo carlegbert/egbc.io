@@ -1,11 +1,12 @@
 import { Program } from './types'
-import { Directory, FSErrors } from '../fs'
+import { FSErrors } from '../fs'
+import { FileKind } from '../fs/constants'
 import ShellCommandResult from '../Shell/ShellCommandResult'
 import { errorIs } from '../util/errors'
 
 const cd: Program = {
   name: 'cd',
-  filetypes: [Directory],
+  filekinds: [FileKind.Directory],
   run: cmd => {
     const shell = cmd.shell
     if (cmd.args.length > 2)

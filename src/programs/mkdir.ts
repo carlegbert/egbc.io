@@ -1,11 +1,12 @@
 import { Program } from './types'
 import { Directory } from '../fs'
+import { FileKind } from '../fs/constants'
 
 import ShellCommandResult from '../Shell/ShellCommandResult'
 
 const mkdir: Program = {
   name: 'mkdir',
-  filetypes: [Directory],
+  filekinds: [FileKind.Directory],
   run: cmd => {
     const res = new ShellCommandResult<Directory[]>()
     const created: Directory[] = []

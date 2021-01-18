@@ -4,7 +4,7 @@ import ShellCommandResult from '../Shell/ShellCommandResult'
 
 const pwd: Program = {
   name: 'pwd',
-  filetypes: [],
+  filekinds: [],
   run: cmd => new ShellCommandResult([cmd.shell.currentDir.fullPath]),
 }
 

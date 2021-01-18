@@ -1,3 +1,4 @@
+import { FileKind } from './constants'
 import Directory from './Directory'
 
 /**
@@ -5,7 +6,7 @@ import Directory from './Directory'
  * @class
  */
 
-export default class BaseFile {
+export default abstract class BaseFile {
   /**
    * @constructor
    * @param {string} name
@@ -17,6 +18,7 @@ export default class BaseFile {
   public parentRef: Directory | null
   public fullPath: string
   public lastModified: Date
+  protected abstract kind: Readonly<FileKind>
 
   constructor(name: string, parentRef: Directory | null = null) {
     this.name = name
@@ -36,5 +38,9 @@ export default class BaseFile {
   getFullPath(): string {
     if (!this.parentRef) return this.name
     return `${this.parentRef.getFullPath()}/${this.name}`
+  }
+
+  public isKind(kind: FileKind): boolean {
+    return kind === this.kind
   }
 }

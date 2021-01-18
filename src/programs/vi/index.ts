@@ -1,12 +1,12 @@
 import { Program } from 'programs/types'
 import Vi from './Vi'
-import TextFile from '../../fs/TextFile'
 
 import ShellCommandResult from '../../Shell/ShellCommandResult'
+import { FileKind } from '../../fs/constants'
 
 const vi: Program = {
   name: 'vi',
-  filetypes: [TextFile],
+  filekinds: [FileKind.Text],
   /**
    * Start new vi session
    * @return {ShellCommandResult}

@@ -1,11 +1,12 @@
 import { Program } from './types'
 
 import ShellCommandResult from '../Shell/ShellCommandResult'
-import { Directory, TextFile } from '../fs'
+import { TextFile } from '../fs'
+import { FileKind } from '../fs/constants'
 
 const touch: Program = {
   name: 'touch',
-  filetypes: [Directory, TextFile],
+  filekinds: [FileKind.Directory, FileKind.Text],
   run: cmd => {
     const res = new ShellCommandResult()
     if (cmd.args.length === 1) {

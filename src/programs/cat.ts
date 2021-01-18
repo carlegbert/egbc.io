@@ -1,12 +1,12 @@
 import { Program } from './types'
 import ShellCommand from 'Shell/ShellCommand'
 import { Directory, TextFile } from '../fs'
-
+import { FileKind } from '../fs/constants'
 import ShellCommandResult from '../Shell/ShellCommandResult'
 
 const cat: Program = {
   name: 'cat',
-  filetypes: [TextFile],
+  filekinds: [FileKind.Text],
   run: (cmd: ShellCommand) => {
     const res = new ShellCommandResult()
     cmd.args.slice(1).forEach(arg => {

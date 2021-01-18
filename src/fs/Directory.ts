@@ -4,17 +4,20 @@ import BaseFile from './BaseFile'
 import TextFile from './TextFile'
 import Path from './Path'
 import { FixMe } from '../types'
+import { FileKind } from './constants'
 
 export default class Directory extends BaseFile {
   public children: BaseFile[]
+  kind: FileKind.Directory = FileKind.Directory
+
   constructor(name: string, parentRef: Directory | null) {
     super(name, parentRef)
     this.children = []
   }
 
-  getChildrenByTypes(types: FixMe.Any[]): BaseFile[] {
+  getChildrenByTypes(types: FileKind[]): BaseFile[] {
     return this.children.filter(child =>
-      types.some(type => child instanceof type),
+      types.some(type => child.isKind(type)),
     )
   }
 

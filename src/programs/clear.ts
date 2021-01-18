@@ -4,7 +4,7 @@ import ShellCommandResult from '../Shell/ShellCommandResult'
 
 const clear: Program = {
   name: 'clear',
-  filetypes: [],
+  filekinds: [],
   run: cmd => {
     const shell = cmd.shell
     shell.outputElement.innerHTML = ''
