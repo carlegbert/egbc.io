@@ -36,6 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
     cursor.style.display = cursor.style.display === 'none' ? '' : 'none'
   }, 700)
 
+  document.onclick = () => {
+    document.getElementById('hidden-input-hack')?.focus()
+  }
+
   document.onkeydown = event => {
     shell.directKeystroke(event)
     cursor.style.display = ''
