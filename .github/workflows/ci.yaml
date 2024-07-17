@@ -36,7 +36,7 @@ jobs:
         with:
           RSYNC_TARGET: ${{ secrets.DEST_DIR }}
           RSYNC_SOURCE: dist/
-          RSYNC_OPTIONS: -avzr
+          RSYNC_OPTIONS: -avzrO
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
           SSH_USERNAME: ${{ secrets.SSH_USER }}
